@@ -1,0 +1,106 @@
+*{
+    font-family: 'roboto', sans-serif;
+    font-weight: 100;
+}
+
+.nav__responsive-ul{
+    display: none;
+}
+
+.nav{
+    background-color: darkslateblue;
+}
+
+.nav__li{
+    display: inline-block;
+    padding: 12px;
+    color: #fff;
+}
+.nav__li:hover > a {
+    color: #ccc;
+}
+.nav__li:hover {
+    color: #ccc
+}
+
+.nav__li a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.nav__li i{
+    box-sizing: border-box;
+    text-align: right;
+    margin-right: 5px;
+}
+
+.nav__responsive-button-container{
+    position: absolute;
+    width: 100%;
+    font-size: 25px;
+    background-color: #69c;
+    margin-top: -64px; /*para que suba*/
+    z-index: 100;
+}
+
+.nav__responsive-button{
+    padding: 6px 20px;
+    text-align: right;
+    width: 100%;
+}
+
+
+
+@media only screen and (max-width: 500px){
+    .nav__ul {
+        display: none;
+    }
+
+    .nav { /* se coloca para que afecte al nav entero ya que este codigo se aplicara siempre y cuando el max de pixeles da ancho se da 530 es decir que el menu de "escriotorio" no se va a ver afectado, por eso el .na__responsive-button es indistinto si esta afuera o adentro de este codigo. */
+        height: 37px; /*Porque suma el padding mas el font-size de .nav__responsive-button */
+        width: 100%;
+    }
+
+    .nav__responsive-ul{
+        display: block;
+        position: absolute;
+        width: 100%;
+        margin-top: 37px;/*la medida del .nav*/
+        padding-top: 27px;
+        height: 37px;
+    }
+
+    .nav__li-container{
+        position: relative;
+        top: -1000px;
+        height: calc(100vh - 64px);   /*viewport height (la medida de altura de la pantalla) se le restan los 64 px 
+        los 64 son del .nav__responsiev-ul (padding + margin)
+        */
+        background-color: #9bf;
+        transition: all 1s;
+        z-index: 1;
+    }
+
+    .nav__responsive-li {
+        width: 100%;
+        padding: 9px 20px;
+    }
+    
+    .nav__responsive-li i {
+        box-sizing: border-box;
+        text-align: center;
+        margin-right: 5px;
+        width: 30px;    
+        color: #016;
+    }
+
+    .nav__responsive-li a {
+        color: #016;
+        text-decoration: none;
+    }
+
+    .nav__responsive-ul:hover > .nav__li-container {
+        top: -27px;
+    }  
+
+}
