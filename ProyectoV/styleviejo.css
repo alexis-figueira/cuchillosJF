@@ -1,0 +1,123 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-family: 'Montserrat', sans-serif;
+}
+
+body {
+    margin:0;
+    background-color: #efefef;
+}
+
+header {
+    background-color: #364552;
+    color: white;
+    height: 8rem ;
+}
+
+.redes{
+    position: absolute;
+    float: left;
+    height: 5rem;
+    width: 40px;
+    margin: 1.5rem 0 0 1.5rem;
+}
+
+.icono{
+    display: block;
+    float: left;
+    width: 30px;
+    margin-top: 6px;
+}
+
+
+header h1{
+    font-size: 3rem;
+    text-align: center;
+    padding-top: 1rem ;
+}
+
+header nav{
+    text-align: center;
+    margin: 10px 0px;
+}
+
+header nav a {
+    padding: 10px auto;
+    margin: 0px 10px 0 10px ;
+    transition: all 0.3s ease;
+    color: #fff;
+    text-decoration: none;
+}
+
+header nav a:hover{
+    color: cornflowerblue;
+    font-size: 1.1rem;
+}
+
+
+.container {
+    width: 300px;
+    margin: 0 auto;
+}
+
+section article {
+    transition: box-shadow 0.3s ease ; /* anima todas las prop del elemento si pongo all */
+    background-color: #fff;
+    margin: 1rem 0;
+    border-radius: 0.5rem;
+    padding: 0.25rem 0 ;
+}
+
+section article:hover {
+    box-shadow: 0 0.5rem 0.9rem rgba(0, 0, 0, 0.3);
+}
+
+section article h2, section article p{
+    margin: 1rem;
+}
+
+footer{
+    background-color: #222;
+    padding: 3rem;
+    color: white;
+}
+
+footer section{
+    float: right;
+}
+
+footer p {
+    margin: 0;
+}
+
+footer a{
+    transition: color 0.3s ease;
+    color: #fff ;
+    text-decoration: none;
+    
+}
+
+footer a:hover{
+    color: cornflowerblue;
+}
+
+
+aside{
+    transition: all 1s ease;
+    position: absolute;
+    float: left;
+    background-color: black;
+    width: 20px;
+    height: 20px;
+}
+
+aside:hover{
+    width: 15rem;
+    height: 30rem;
+    background-color: black;
+
+}

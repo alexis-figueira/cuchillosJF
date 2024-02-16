@@ -1,125 +1,105 @@
 *{
-    margin: 0;
-    padding: 0;
-}
-
-html {
     font-family: 'Montserrat', sans-serif;
+    font-weight: 100px; 
 }
 
-body {
-    margin:0;
-    background-color: #efefef;
+.menu__mobile-ul{
+    display: none;
 }
 
-header {
-    background-color: #364552;
-    color: white;
-    height: 8rem ;
+.menu{
+    background-color: #416864;
 }
 
-.redes{
-    position: absolute;
-    float: left;
-    height: 5rem;
-    width: 40px;
-    margin: 1.5rem 0 0 1.5rem;
+.menu__li {
+    display: inline-block;
+    padding: 12px;
+    color: #fff;
 }
 
-.icono{
-    display: block;
-    float: left;
-    width: 30px;
-    margin-top: 6px;
-}
-
-
-header h1{
-    font-size: 3rem;
-    text-align: center;
-    padding-top: 1rem ;
-}
-
-header nav{
-    text-align: center;
-    margin: 10px 0px;
-}
-
-header nav a {
-    padding: 10px auto;
-    margin: 0px 10px 0 10px ;
-    transition: all 0.3s ease;
+.menu__li a {
     color: #fff;
     text-decoration: none;
 }
 
-header nav a:hover{
-    color: cornflowerblue;
-    font-size: 1.1rem;
+.menu__li:hover{
+    color:#ccc;
 }
 
-
-.container {
-    width: 300px;
-    margin: 0 auto;
+.menu__li:hover > a{
+    color: #ccc;
 }
 
-section article {
-    transition: box-shadow 0.3s ease ; /* anima todas las prop del elemento si pongo all */
-    background-color: #fff;
-    margin: 1rem 0;
-    border-radius: 0.5rem;
-    padding: 0.25rem 0 ;
+.menu__li i {
+    box-sizing: border-box;
+    margin-right: 5px;
+    text-align: right;
 }
 
-section article:hover {
-    box-shadow: 0 0.5rem 0.9rem rgba(0, 0, 0, 0.3);
+.menu__mobile-button-container{
+    position:absolute;
+    width:100%;
+    font-size: 20px;
+    background-color: 416864;
+    color: #ffffff;
+    top: -32px;
+    z-index: 100;
 }
 
-section article h2, section article p{
-    margin: 1rem;
+.menu__mobile-button{
+    text-align: right;
+    width: 100%;
+    padding: 6px 20px;
 }
 
-
-
-footer{
-    background-color: #222;
-    padding: 3rem;
-    color: white;
-}
-
-footer section{
-    float: right;
-}
-
-footer p {
-    margin: 0;
-}
-
-footer a{
-    transition: color 0.3s ease;
-    color: #fff ;
-    text-decoration: none;
+@media only screen and (max-width: 500px){
+    .menu__ul{
+        display: none;
+    }
     
-}
+    .menu{
+        height: 32px;
+        width: 100%;
+    }
 
-footer a:hover{
-    color: cornflowerblue;
-}
+    .menu__mobile-ul{
+        display: block;
+        position: absolute;
+        width: 100%;
+        margin-top: 32px;   
+    }
+    
+    .menu__li-container{
+        border-top: 1px solid #355552;
+        position: relative;
+        background-color: #416864;
+        top: -1000px;
+        padding-top: 5px;
+        transition: all 1s;
+        z-index: 50;
+        height: calc(100vh - 32px);
+    }
 
+    .menu__mobile-li{
+        width: 100%;
+        padding: 9px 18px;
+    }
 
-aside{
-    transition: all 1s ease;
-    position: absolute;
-    float: left;
-    background-color: black;
-    width: 20px;
-    height: 20px;
-}
+    .menu__mobile-li a{
+        color: #fff;
+        text-decoration: none;
+    }
 
-aside:hover{
-    width: 15rem;
-    height: 30rem;
-    background-color: black;
+    .menu__mobile-li i{
+        box-sizing: border-box;
+        margin-right: 5px;
+        text-align: right;
+        color: #ffffff;
+        /* width: 30px; */
+    }
+
+    .menu__mobile-ul:hover > .menu__li-container{
+        top: 0px;
+    }
 
 }
