@@ -77,7 +77,7 @@
         padding-top: 5px;
         transition: all 1s;
         z-index: 50;
-        height: calc(100vh - 32px);
+        /* height: calc(100vh - 32px); */ /*para toamr tamaño completo de la pantalla */
     }
 
     .menu__mobile-li{
@@ -101,5 +101,4 @@
     .menu__mobile-ul:hover > .menu__li-container{
         top: 0px;
     }
-
 }
