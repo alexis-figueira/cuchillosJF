@@ -21,7 +21,7 @@ body {
 
 .form {
     min-width: 400px; 
-    flex: 1 ;
+    flex: 1 ; /*Es lo mismo que poner flex-grow*/
     text-align: center;
     padding: 30px;
     order: 2;
