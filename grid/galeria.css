@@ -1,0 +1,46 @@
+*{
+    font-family: 'montserrat', sans-serif;
+    font-weight: 100px; 
+}
+
+body {
+    background: radial-gradient(circle,#fff,#bbb);
+    padding: 15px;
+}
+
+.grid-container{
+    display: grid;
+    grid-template-columns: repeat(auto-fill,minmax(250px,1fr));
+    grid-auto-rows: 100px;
+    grid-gap: 10px;
+}
+
+img {
+    width: 100%;
+    height: 100%;
+    object-fit:cover;
+}
+
+img:first-child {
+    grid-column: 1/3;
+}
+
+/* 
+    16 reloj
+    12 chica
+    11 arbol desde abajo
+    4 planetas
+*/
+
+img:nth-child(4){ 
+    grid-row: span 2  ;
+}
+
+img:nth-child(11){ 
+    grid-row: span 2  ;
+}
+
+img:nth-child(16){ 
+    grid-row: span 2  ;
+}
+
