@@ -16,12 +16,17 @@
     margin: 20px;
     position: relative;
     animation-name: desplazarse;
-    animation-duration: 4s;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+    animation-fill-mode: both;
+    animation-delay: 1s;
+    animation-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
+
 }
 
 @keyframes desplazarse {
     0% {
-        background: #025;
+        background: #000;
         left:0;
     }
     30% {
