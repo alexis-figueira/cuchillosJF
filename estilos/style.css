@@ -16,7 +16,7 @@ body{
 }
 
 .menu{
-    background-color: #416864; 
+    background: linear-gradient(to top, #406662, transparent);
 }
 
 .menu__container{
@@ -24,6 +24,7 @@ body{
     padding: 5px;
     padding-left: 20px;
     align-items: center;
+    background: linear-gradient(to bottom, #406662, transparent);
 }
 
 .redes a {
@@ -70,9 +71,6 @@ body{
     text-decoration: none; 
 }
 
-footer__li-titulo:hover{
-    color: #fff;
-}
 
 .menu__li:hover, .footer__li:hover{
     color:#ccc;
@@ -89,13 +87,12 @@ footer__li-titulo:hover{
     color: #fff;
 }
 
-
-
 .menu__mobile-button-container{
+    
     position:absolute;
     width:100%;
     font-size: 20px;
-    background-color: 416864;
+    background-color: #416864;
     color: black;
     top: -32px;
     z-index: 100;
@@ -141,6 +138,7 @@ footer{
 .footer__li{
     margin: 15px 0px;
 }
+
 .footer__li-titulo b{
     margin-top: 10px;
     text-shadow: 1px 0px 3px #888;
@@ -151,16 +149,22 @@ footer{
 
 
 @media only screen and (max-width: 850px){
-    .menu__ul, .redes{
+    
+    /*---menu esc */
+    .menu__ul, .redes, h1{
         display: none;
     }
-
-    h1{display: none;}
 
     .menu__container{
         padding:0px
     }
+
+    .menu{
+        background: #406662;
+    }
     
+    
+
     .menu{
         height: 32px;
         width: 100%;
@@ -178,7 +182,7 @@ footer{
         border-top: 1px solid #355552;
         position: relative;
         background-color: #416864;
-        top: -1000px;
+        left: -1000px;
         padding-top: 5px;
         transition: all 1s;
         z-index: 50;
@@ -186,7 +190,7 @@ footer{
     }
 
     .menu__mobile-li{
-        width: 100%;
+        width: 50%;
         padding: 9px 18px;
     }
 
@@ -203,8 +207,10 @@ footer{
         /* width: 30px; */
     }
 
+   
+
     .menu__mobile-ul:hover > .menu__li-container{
-        top: 0px;
+        left: 0px;
     }
 
     footer{
