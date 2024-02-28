@@ -11,7 +11,7 @@ body{
     min-height: 100vh;
 }
 
-.menu__mobile-ul{
+.menu__mobile{
     display: none;
 }
 
@@ -87,23 +87,6 @@ body{
     color: #fff;
 }
 
-.menu__mobile-button-container{
-    
-    position:absolute;
-    width:100%;
-    font-size: 20px;
-    background-color: #416864;
-    color: black;
-    top: -32px;
-    z-index: 100;
-}
-
-.menu__mobile-button{
-    text-align: right;
-    width: 100%;
-    padding: 6px 20px;
-}
-
 footer{
     background-color: #355552;
     /* height: 300px; */
@@ -160,38 +143,52 @@ footer{
     }
 
     .menu{
-        background: #406662;
+        height: auto;
+        background: transparent;
     }
     
-    
-
-    .menu{
-        height: 32px;
-        width: 100%;
-        position: fixed;
-    }
-
-    .menu__mobile-ul{
+    .menu__mobile{
         display: block;
-        position: absolute;
+        height: auto;
         width: 100%;
-        margin-top: 32px;   
     }
-    
+
+    .menu__mobile-button-container{
+        position: fixed;
+        width: 100%;
+        height: 40px;
+        text-align: right;
+        background: linear-gradient(to bottom, transparent, #406662);
+    }
+
+    .menu__mobile-button{
+        width: 100%;
+        color: black;
+        font-size: 26px;
+        padding: 7px 10px 7px 0px;
+        background: linear-gradient(to top, transparent, #406662);
+    }
+
     .menu__li-container{
-        border-top: 1px solid #355552;
-        position: relative;
-        background-color: #416864;
-        left: -1000px;
-        padding-top: 5px;
-        transition: all 1s;
-        z-index: 50;
-        /* height: calc(100vh - 32px); */ /*para toamr tamaño completo de la pantalla */
+        position: absolute;
+        transform: translate(-100%, 40px);
+        width: 60%;
+        height: 100%;
+        background: radial-gradient(circle, #ddd, #406662);
+        list-style: none;
+        transition: all 0.4s ease; 
+        padding-top: 20px;
+        padding-left: 10px;
+    }
+
+    .menu__mobile:hover > .menu__li-container{
+        transform: translate(0%, 40px);
     }
 
     .menu__mobile-li{
-        width: 50%;
+        width: 100%;
         padding: 9px 18px;
+        font-size: 20px;
     }
 
     .menu__mobile-li a{
@@ -205,12 +202,6 @@ footer{
         text-align: right;
         color: #ffffff;
         /* width: 30px; */
-    }
-
-   
-
-    .menu__mobile-ul:hover > .menu__li-container{
-        left: 0px;
     }
 
     footer{
