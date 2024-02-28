@@ -9,6 +9,7 @@ body{
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    background-color: #ddd;
 }
 
 .menu__mobile{
@@ -87,6 +88,8 @@ body{
     color: #fff;
 }
 
+/*----- footer-----*/
+
 footer{
     background-color: #355552;
     /* height: 300px; */
@@ -128,6 +131,48 @@ footer{
 }
 
 
+/*-----section-----*/
+
+section{
+    display: flex;
+    flex-direction: column;
+    background-color: #ddd;
+}
+
+.destacados-container{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.article-tittle {
+    text-align: center;
+    background-color:orange;
+}
+
+.img-container{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    flex-wrap: wrap;
+    padding: 10px;
+}
+
+.img__card{
+    flex-grow: 1;
+    min-width: 200px;
+    height: 300px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 0.5rem 0.9rem rgba(0, 0, 0, 0.3);
+    margin: 10px;
+    padding: 5px;
+}
+
+.img__card img {
+    height: 200px;
+    width: 250px;
+}
 
 
 
@@ -142,6 +187,8 @@ footer{
         padding:0px
     }
 
+
+    /*-----menu mobile-----*/
     .menu{
         height: auto;
         background: transparent;
@@ -153,20 +200,33 @@ footer{
         width: 100%;
     }
 
+
     .menu__mobile-button-container{
+        display: flex;
         position: fixed;
         width: 100%;
         height: 40px;
-        text-align: right;
+        align-items: center;
         background: linear-gradient(to bottom, transparent, #406662);
     }
 
+    .menu__mobile-titulo{
+        padding: 6px 0 ;
+        height: 100%;
+        width: 80%;
+        text-align: center;
+        font-size: 26px;
+        background: linear-gradient(to top, transparent, #406662);
+        font-weight: bold;
+    }
+
     .menu__mobile-button{
-        width: 100%;
+        width: 20%;
         color: black;
         font-size: 26px;
         padding: 7px 10px 7px 0px;
         background: linear-gradient(to top, transparent, #406662);
+        text-align: right;
     }
 
     .menu__li-container{
@@ -187,7 +247,7 @@ footer{
 
     .menu__mobile-li{
         width: 100%;
-        padding: 9px 18px;
+        padding: 15px 18px;
         font-size: 20px;
     }
 
@@ -198,11 +258,20 @@ footer{
 
     .menu__mobile-li i{
         box-sizing: border-box;
-        margin-right: 5px;
+        margin-right: 10px;
         text-align: right;
         color: #ffffff;
         /* width: 30px; */
     }
+
+
+
+    section{
+        margin-top: 40px;
+    }
+
+
+    /*-----footer mobile-----*/
 
     footer{
         min-width: 300px;
