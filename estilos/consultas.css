@@ -1,54 +1,60 @@
-body {
-    background-color: #000;
+
+.article-msg{
+    display: flex;
+    justify-content: center;
+    margin: 50px auto;
+    height: auto;
+    width: 80%;
+    background: linear-gradient(to bottom, var(--color-pri), transparent);
 }
 
-.flex-container{
+.msg-container{
     display: flex;
-    margin: 50px 50px;
+    width: 100%;
     padding: 20px;
-    background-color: #416864;
+    background: linear-gradient(to top, var(--color-pri), transparent);
+    /* background-color: var(--color-pri); */
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
 }
 
-.form{
+.form-msg{
     min-width: 400px;
     flex-grow: 1;
     text-align: center;
     padding: 20px;
 }
 
-.form-img{
+.form-msg-img{
     flex-grow: 1;
     display: flex;
     min-width: 300px;
     max-width: 400px;
     padding: 10px;
-    border: 3px solid black;
 }
 
-.form-img div{
+.form-msg-img div{
     padding: 10px;
 }
 
-.img-container{
+.msg-img-container{
     margin: auto;
 }
 
-.img-container div {
+.msg-img-container div {
     background-color: #fff;
     border-radius: 50%;
     text-align: center;
     padding: 40px;
 }
 
-.form-img img{
+.form-msg-img img{
     width: 90% ;
     margin: auto;
 }
 
-.form__input{
+.form-msg__input{
     width: 100%;
     padding: 7px 0px;
     margin: 5px 0px;
@@ -56,33 +62,44 @@ body {
     border: none;
     border-bottom: 2px solid #fff;
     color: white;
+    transition-property: box-shadow;
+    transition-duration: 0.2s;
 }
 
-.form__input:focus{ 
-    background: linear-gradient(to bottom, transparent, #2a4240);
+.form-msg__input::placeholder{
+    color: #999;
+}
+
+.form-msg__input:focus{ 
     outline: none;
-    border-bottom: 3px solid #f5a8a8;
+    border-bottom: 2px solid #aaa;
 }
 
-.form textarea{
+.form-msg__input:hover{
+    box-shadow: 0 0.5rem 0.9rem rgba(0, 0, 0, 0.3);
+    border-radius: 5px;
+
+}
+
+.form-msg textarea{
     min-height: 150px;
     resize: none;
 }
 
-.form__input[type="submit"]{
+.form-msg__input[type="submit"]{
     background-color: #000;
     border-bottom: none;
     padding: 10px;
 }
 
-.form input[type="submit"]:hover{
+.form-msg input[type="submit"]:hover{
     background-color: #111;
 }
 
-.form input[type="submit"]:focus{
+.form-msg input[type="submit"]:focus{
     background-color: #222;
 }
 
-.form input[type="submit"]:active{
+.form-msg input[type="submit"]:active{
     background: linear-gradient(to bottom, #222, #000);
 }

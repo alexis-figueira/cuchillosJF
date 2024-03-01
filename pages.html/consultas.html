@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
-    <link rel="icon" href="./img/favicon-32x32.png">
+    <link rel="icon" href="../img/favicon-32x32.png">
     <link rel="stylesheet" href="../estilos/style.css">
     <link rel="stylesheet" href="../estilos/consultas.css">
     <link rel="stylesheet" href="../estilos/normalize.css">
@@ -16,57 +16,98 @@
 </head>
 <body>
     <header>
+<!-- menu escritorio -->
         <nav class="menu">
-            <ul class="menu__ul">
-                <li class="menu__li"><i class="fa-solid fa-house"></i><a href="../index.html">Inicio</a></li>
-                <li class="menu__li"><i class="fa-brands fa-product-hunt"></i> <a href="">Nuestros productos</a></li>
-                <li class="menu__li"><i class="fa-solid fa-message"></i><a href="./consultas.html">Consultas</a></li>
-                <li class="menu__li"><i class="fa-solid fa-user-group"></i><a href="">Sobre nosotros</a></li>
-            </ul>
-            <ul class="menu__mobile-ul">
-                <div class="menu__mobile-button-container">
-                    <div class="menu__mobile-button fa-solid fa-bars"></div>
+            <div class="menu__container">
+                <div class="redes">
+                    <a href="https://www.facebook.com/profile.php?id=100080005162977" target="_blank"><i class="fa-brands fa-square-facebook"></i></a>
+                    <a href="https://www.instagram.com/cuchillosjf/" target="_blank"><i class="fa-brands fa-instagram"></i></a>
                 </div>
-                <div class="menu__li-container">
-                    <li class="menu__mobile-li"><i class="fa-solid fa-house"></i><a href="../index.html">Inicio</a></li>
-                    <li class="menu__mobile-li"><i class="fa-brands fa-product-hunt"></i><a href="">Nuestros productos</a></li>
-                    <li class="menu__mobile-li"><i class="fa-solid fa-message"></i><a href="./consultas.html">Consultas</a></li>
-                    <li class="menu__mobile-li"><i class="fa-solid fa-user-group"></i><a href="">Sobre nosotros</a></li>
-                </div>
-            </ul>
-        </nav>
-    </header>
-    <article>
-        <div class="flex-container">
-            <form class="form">
-                <div class="form__section">
-                    <input type="text" class="form__input" placeholder="Ingrese su nombre">
-                </div>
-                <div class="form__section">
-                    <input type="email" class="form__input" placeholder="Ingrese su mail">
-                </div>
-                <div class="form__section">
-                    <textarea class="form__input" placeholder="Realice su consulta"></textarea>
-                </div>
-                <div class="form__section">
-                    <input type="submit" class="form__input">
-                </div>
-            </form>
-            <div class="form-img">
-                <div class="img-container">
-                    <div>
-                        <img src="https://cdn-icons-png.flaticon.com/512/95/95645.png" alt="">
-                    </div>   
+                <div class="header">
+                    <h1>CUCHILLOS FIGUEIRA</h1>
+                    <ul class="menu__ul">
+                        <li class="menu__li"><i class="fa-solid fa-house"></i><a href="../index.html">Inicio</a></li>
+                        <li class="menu__li"><i class="fa-brands fa-product-hunt"></i><a href="">Productos</a></li>
+                        <li class="menu__li"><i class="fa-solid fa-message"></i><a href="consultas.html">Consultas</a></li>
+                        <li class="menu__li"><i class="fa-solid fa-user-group"></i><a href="">Sobre nosotros</a></li>
+                    </ul>
                 </div>
             </div>
-        </div>
-
-    </article>
+ <!--menu mobile  -->
+            <div class="menu__mobile">
+                <div class="menu__mobile-button-container">
+                    <p class="menu__mobile-titulo">CUCHILLOS FIGUEIRA</p>
+                    <div class="menu__mobile-button"><i class="fa-solid fa-bars"></i></div>
+                </div>
+                <ul class="menu__li-container">
+                    <li class="menu__mobile-li"><i class="fa-solid fa-house"></i><a href="../index.html">Inicio</a></li>
+                    <li class="menu__mobile-li"><i class="fa-brands fa-product-hunt"></i><a href="">Productos</a></li>
+                    <li class="menu__mobile-li"><i class="fa-solid fa-message"></i><a href="consultas.html">Consultas</a></li>
+                    <li class="menu__mobile-li"><i class="fa-solid fa-user-group"></i><a href="">Sobre nosotros</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+        <article class = "article-msg">
+            <div class="msg-container">
+                <form class="form-msg">
+                    <div class="form-msg__section">
+                        <input type="text" class="form-msg__input" placeholder="Ingrese su nombre">
+                    </div>
+                    <div class="form-msg__section">
+                        <input type="email" class="form-msg__input" placeholder="Ingrese su mail">
+                    </div>
+                    <div class="form-msg__section">
+                        <textarea class="form-msg__input" placeholder="Realice su consulta"></textarea>
+                    </div>
+                    <div class="form-msg__section">
+                        <input type="submit" class="form-msg__input">
+                    </div>
+                </form>
+                <div class="form-msg-img">
+                    <div class="msg-img-container">
+                        <div>
+                            <img src="https://cdn-icons-png.flaticon.com/512/95/95645.png" alt="">
+                        </div>   
+                    </div>
+                </div>
+            </div>
+        </article>
+    </section>    
     <aside>
-
     </aside>
     <footer>
-
+        <div class="footer-container">
+            <ul class="footer__item">
+                <li class="footer__li-titulo"><b>Categorias</b></li>
+                <li class="footer__li"><i class="fa-solid fa-house"></i><a href="../index.html">Inicio</a></li>
+                <li class="footer__li"><i class="fa-brands fa-product-hunt"></i><a href="">Productos</a></li>
+                <li class="footer__li"><i class="fa-solid fa-message"></i><a href="consultas.html">Consultas</a></li>
+                <li class="footer__li"><i class="fa-solid fa-user-group"></i><a href="">Sobre nosotros</a></li>
+            </ul>
+            <ul class="footer__item">
+                <li class="footer__li-titulo"><b>Contactanos</b></li>
+                <li class="footer__li"><i class="fa-solid fa-mobile-retro"></i>54 11 9 38519426</a></i></li>
+                <li class="footer__li"><i class="fa-solid fa-phone"></i>011 4765 2004</li>
+                <li class="footer__li"><i class="fa-solid fa-envelope"></i>alexis.figueira@hotmail.com</li>
+                <li class="footer__li"><i class="fa-solid fa-location-dot"></i>San Isidro</li>
+            </ul>
+            <ul class="footer__item">                  
+                <li class="footer__li-titulo"><b>Conexiones</b></li>
+                <li class="footer__li"><a href="https://www.instagram.com/cuchillosjf/" target="_blank"><i class="fa-brands fa-instagram"></i>@cuchillosjf</a> </li>
+                <li class="footer__li"><a href="https://www.facebook.com/profile.php?id=100080005162977" target="_blank"><i class="fa-brands fa-square-facebook"></i>Cuchillos JF</a></li>
+            </ul>
+        </div>
     </footer>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+

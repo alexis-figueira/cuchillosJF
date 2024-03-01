@@ -3,6 +3,9 @@
     font-weight: 100px; 
 }
 
+:root {
+    --color-pri: #406662 ;
+}
 
 body{
     min-width: 300px;
@@ -17,7 +20,7 @@ body{
 }
 
 .menu{
-    background: linear-gradient(to top, #406662, transparent);
+    background: linear-gradient(to top, var(--color-pri), transparent);
 }
 
 .menu__container{
@@ -25,7 +28,7 @@ body{
     padding: 5px;
     padding-left: 20px;
     align-items: center;
-    background: linear-gradient(to bottom, #406662, transparent);
+    background: linear-gradient(to bottom, var(--color-pri), transparent);
 }
 
 .redes a {
@@ -59,7 +62,7 @@ body{
     width: 80%;
     height: 100%;
     text-align: center;    
-    border-top: 1px solid #548883;
+    border-top: 1px solid #ccc;
 }
 
 .menu__li {
@@ -93,7 +96,7 @@ body{
 footer{
     background-color: #355552;
     /* height: 300px; */
-    background: linear-gradient(to bottom, #406662, transparent);  
+    background: linear-gradient(to bottom, var(--color-pri), transparent);  
     margin-top: auto;
 }
 
@@ -108,7 +111,7 @@ footer{
     width: 100%;
     padding-left: 8%;
     margin: 0 auto;
-    background: linear-gradient(to bottom , transparent, #406662);
+    background: linear-gradient(to bottom , transparent, var(--color-pri));
     border-radius: 10%;
 }
 
@@ -237,7 +240,7 @@ section{
         width: 100%;
         height: 40px;
         align-items: center;
-        background: linear-gradient(to bottom, transparent, #406662);
+        background: linear-gradient(to bottom, transparent, var(--color-pri));
     }
 
     .menu__mobile-titulo{
@@ -246,7 +249,7 @@ section{
         width: 80%;
         text-align: center;
         font-size: 26px;
-        background: linear-gradient(to top, transparent, #406662);
+        background: linear-gradient(to top, transparent, var(--color-pri));
         font-weight: bold;
     }
 
@@ -255,7 +258,7 @@ section{
         color: black;
         font-size: 26px;
         padding: 7px 10px 7px 0px;
-        background: linear-gradient(to top, transparent, #406662);
+        background: linear-gradient(to top, transparent, var(--color-pri));
         text-align: right;
     }
 
@@ -264,7 +267,7 @@ section{
         transform: translate(-100%, 40px);
         width: 60%;
         height: 100%;
-        background: radial-gradient(circle, #ddd, #406662);
+        background: radial-gradient(circle, #ddd, var(--color-pri));
         list-style: none;
         transition: all 0.4s ease; 
         padding-top: 20px;
