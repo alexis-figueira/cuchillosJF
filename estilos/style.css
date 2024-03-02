@@ -181,7 +181,8 @@ section{
 
 .img__card{
     height: 300px;
-    flex-basis: 220px;  
+    flex-basis: 220px; 
+    width: 220px;
     background-color: white;
     border-radius: 10px;
     box-shadow: 0 0.5rem 0.9rem rgba(0, 0, 0, 0.3);

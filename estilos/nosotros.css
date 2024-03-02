@@ -1,0 +1,20 @@
+article{
+    display: flex;
+}
+
+.nos__contenedor{
+    display: flex;
+    flex-direction: column;
+    background-color: green;
+    justify-content: center;
+}
+
+.nos__titulo{
+    width: fit-content;
+    background-color: red;
+    margin: 0 auto;
+}
+
+.nos__items-contenedor{
+    background-color: purple;
+}
