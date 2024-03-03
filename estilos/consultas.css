@@ -6,6 +6,7 @@
     height: auto;
     width: 80%;
     background: linear-gradient(to bottom, var(--color-pri), transparent);
+    border-radius: 7px;
 }
 
 .msg-container{
@@ -17,6 +18,7 @@
     flex-wrap: wrap;
     justify-content: center;
     align-items: center;
+    border-radius: 7px;
 }
 
 .form-msg{

@@ -1,0 +1,14 @@
+.main-prod{
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+.cont-prod{
+    background: lightblue;
+    width: 80%;
+}
+
+.list-prod{
+    background: lightcoral;
+    width: 20%;
+}
