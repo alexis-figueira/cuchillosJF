@@ -156,6 +156,8 @@ section{
     text-align: center;
     width: 100%;
     margin-bottom: 15px;
+    animation-name: ani-opacity;
+    animation-duration: 4s;
 }
 
 .dest-tit{
@@ -188,6 +190,41 @@ section{
     box-shadow: 0 0.5rem 0.9rem rgba(0, 0, 0, 0.3);
     margin: 10px 5px;
     padding: 10px;
+    
+}
+
+.img__card:nth-child(1){
+    animation-name: ani-translate-ing;
+    animation-duration: 1s;   
+    animation-timing-function: linear;
+}
+
+.img__card:nth-child(2){
+    animation-name: ani-translate-ing;
+    animation-duration: 1.5s;
+    /* animation-timing-functi3n: linear; */
+}
+
+.img__card:nth-child(3){
+    animation-name: ani-translate-ing;
+    animation-duration: 1.9s;
+    /* animation-timing-functi4n: linear; */
+}
+
+.img__card:nth-child(4){
+    animation-name: ani-translate-ing;
+    animation-duration: 2.2s;
+    /* animation-timing-function: linear; */
+}
+
+.card-nov:nth-child(1){
+    animation-name: ani-translate-ing;
+    animation-duration: 1s;
+}
+
+.card-nov:nth-child(2){
+    animation-name: ani-translate-ing;
+    animation-duration: 2.2s;
 }
 
 .img__card:hover{
@@ -341,3 +378,31 @@ section{
         margin-top: 0px !important;
     } 
 }
+
+
+
+/*-----ANIMACIONES-----*/
+
+@keyframes ani-opacity{
+    0%{
+        opacity: 0;
+        /* transform: translateX(-100%); */
+    }
+
+    100%{
+        opacity: 100%;
+        /* transform: translateX(0px); */
+    }
+}
+
+@keyframes ani-translate-ing
+{
+    0%{
+        transform: translateX(-2000px);
+    }
+
+    100%{
+        transform: translateX(0px);
+    }
+}
+

@@ -7,6 +7,8 @@
     width: 80%;
     background: linear-gradient(to bottom, var(--color-pri), transparent);
     border-radius: 7px;
+    animation-name: ani-opacity;
+    animation-duration: 2s;
 }
 
 .msg-container{
@@ -69,7 +71,8 @@
 }
 
 .form-msg__input::placeholder{
-    color: #999;
+    /* color: #999; */
+    color: #ccc;
 }
 
 .form-msg__input:focus{ 
