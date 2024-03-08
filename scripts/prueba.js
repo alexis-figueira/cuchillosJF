@@ -1,3 +1,5 @@
+/*hay q ue probar todo */
+
 let prodObt = $.ajax({
     url: "../JSON/baseProd.json",
     type: "GET",
@@ -20,5 +22,3 @@ let prodObt = $.ajax({
     }
 
     let obj = JSON.parse(prodObt)
-
-   console.log(obj)

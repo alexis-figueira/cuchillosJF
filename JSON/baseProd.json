@@ -7,19 +7,37 @@
             "img": "./img/cuchillo alfombardo.jpg"
         },
         {
-            "id" :  1 ,
+            "id" :  2 ,
             "nombre" : "Mi primer cuchillo",
             "precio" : 3500,
             "img": "./img/cuchillos.jpg"
         },
         {
-            "id" :  1 ,
+            "id" :  3 ,
             "nombre" : "Mi primer cuchillo",
             "precio" : 3500,
             "img": "./img/juego de picnic.jpg"
         },
         {
-            "id" :  1 ,
+            "id" :  4 ,
+            "nombre" : "Mi primer cuchillo",
+            "precio" : 3500,
+            "img": "./img/cuchNegro.jpg"
+        }
+        {
+            "id" :  5 ,
+            "nombre" : "Mi primer cuchillo",
+            "precio" : 3500,
+            "img": "./img/cuchNegro.jpg"
+        }
+        {
+            "id" :  6 ,
+            "nombre" : "Mi primer cuchillo",
+            "precio" : 3500,
+            "img": "./img/cuchNegro.jpg"
+        }
+        {
+            "id" :  7 ,
             "nombre" : "Mi primer cuchillo",
             "precio" : 3500,
             "img": "./img/cuchNegro.jpg"
