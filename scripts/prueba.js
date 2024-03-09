@@ -1,24 +1,12 @@
-/*hay q ue probar todo */
-
-let prodObt = $.ajax({
+/*hay que probar todo */
+let variable = $.ajax({
     url: "../JSON/baseProd.json",
     type: "GET",
     dataType: "json"
-    }).done(function(resultado){
-        console.log(resultado);
-    })
-    .fail(function(xhr, status, error){
-        console.log(xhr); 
-        console.log(status) ;
-        console.log(error);
-    })
-    
-
-    function Producto(id, nombre, precio, img){
-        this.id = id;
-        this.nombre = nombre;
-        this.precio = precio;
-        this.img = img;
-    }
-
-    let obj = JSON.parse(prodObt)
+}).done(function(resultado){
+    console.log(typeof resultado);
+}).fail(function(xhr, status, error){
+    console.log(xhr); 
+    console.log(status) ;
+    console.log(error);
+})
