@@ -1,44 +1,51 @@
 [
     {
-        "id" :  1 ,
-        "nombre" : "Mi primer cuchillo",
-        "precio" : 3500,
-        "img": "./img/cuchillo alfombardo.jpg"
+        "id" : 1,
+        "nombre" : "Alfombrado",
+        "descripcion" : "medidas 15cm a 30cm",
+        "img": "./img/cuchillo alfombardo.jpg",
+        "precio" : 3500
     },
     {
-        "id" :  2 ,
+        "id" : 2,
         "nombre" : "Mi Segundo cuchillo",
-        "precio" : 2200,
-        "img": "./img/cuchillos.jpg"
+        "descripcion" : "medidas 10cm a 28cm",
+        "img": "./img/cuchillos.jpg",
+        "precio" : 2200
     },
     {
-        "id" :  3 ,
+        "id" : 3,
         "nombre" : "Mi tercero cuchillo",
-        "precio" : 1600,
-        "img": "./img/juego de picnic.jpg"
+        "descripcion" : "medidas 12cm a 22cm",
+        "img": "./img/juego de picnic.jpg",
+        "precio" : 1600
     },
     {
-        "id" :  4 ,
+        "id" : 4,
         "nombre" : "Mi cuarto cuchillo",
-        "precio" : 1900,
-        "img": "./img/cuchNegro.jpg"
+        "descripcion" : "medidas 15cm a 30cm",
+        "img": "./img/cuchNegro.jpg",
+        "precio" : 1900
     },
     {
-        "id" :  5 ,
+        "id" : 5,
         "nombre" : "Mi quinto cuchillo",
-        "precio" : 4500,
-        "img": "./img/cuchNegro.jpg"
+        "descripcion" : "medidas 17cm a 20cm",
+        "img": "./img/cuchillos.jpg",
+        "precio" : 4500
     },
     {
-        "id" :  6 ,
+        "id" : 6,
         "nombre" : "Mi sexto cuchillo",
-        "precio" : 5300,
-        "img": "./img/cuchNegro.jpg"
+        "descripcion" : "medidas 18cm a 25cm",
+        "img": "./img/juego de picnic.jpg",
+        "precio" : 5300
     },
     {
-        "id" :  7 ,
+        "id" : 7,
         "nombre" : "Mi Septimo cuchillo",
-        "precio" : 6000,
-        "img": "./img/cuchNegro.jpg"
+        "descripcion" : "medidas 15cm a 30cm",
+        "img": "./img/cuchNegro.jpg",
+        "precio" : 6000
     } 
 ]

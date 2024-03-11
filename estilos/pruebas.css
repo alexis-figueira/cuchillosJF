@@ -1,9 +1,30 @@
-label i {
-    background: red;
+button i {
     font-size: 50px;
 }
 
+.card-btn-ant{
+    margin: 10px;
+    border: none;
+    background: transparent;
+}
 
+.card-btn-sig{
+    margin: 10px;
+    border: none;
+    background: transparent;
+}
+
+.main-prueba{
+    display: flex;
+    width: 100;
+    justify-content: center;
+}
+
+.container-card{
+    display: flex;
+    justify-content: center;
+    
+}
 
 
 
