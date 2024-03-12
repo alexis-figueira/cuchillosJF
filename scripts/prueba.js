@@ -1,4 +1,4 @@
-/* prueba de botones 
+
 var arrProd = []
 
 $(document).ready(function(){
@@ -69,7 +69,5 @@ $(".card-btn-sig").click(function(){
 
 })
 
-*/
 
-/*prueba botones en index */
 
