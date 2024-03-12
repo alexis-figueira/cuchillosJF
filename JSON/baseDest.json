@@ -1,0 +1,51 @@
+[
+    {
+        "id" : 1,
+        "nombre" : "Alfombrado",
+        "descripcion" : "medidas 15cm a 30cm",
+        "img": "./img/cuchillo alfombardo.jpg",
+        "precio" : 3500
+    },
+    {
+        "id" : 2,
+        "nombre" : "Mi Segundo cuchillo",
+        "descripcion" : "medidas 10cm a 28cm",
+        "img": "./img/cuchillos.jpg",
+        "precio" : 2200
+    },
+    {
+        "id" : 3,
+        "nombre" : "Mi tercero cuchillo",
+        "descripcion" : "medidas 12cm a 22cm",
+        "img": "./img/juego de picnic.jpg",
+        "precio" : 1600
+    },
+    {
+        "id" : 4,
+        "nombre" : "Mi cuarto cuchillo",
+        "descripcion" : "medidas 15cm a 30cm",
+        "img": "./img/cuchNegro.jpg",
+        "precio" : 1900
+    },
+    {
+        "id" : 5,
+        "nombre" : "Mi quinto cuchillo",
+        "descripcion" : "medidas 17cm a 20cm",
+        "img": "./img/cuchillos.jpg",
+        "precio" : 4500
+    },
+    {
+        "id" : 6,
+        "nombre" : "Mi sexto cuchillo",
+        "descripcion" : "medidas 18cm a 25cm",
+        "img": "./img/juego de picnic.jpg",
+        "precio" : 5300
+    },
+    {
+        "id" : 7,
+        "nombre" : "Mi Septimo cuchillo",
+        "descripcion" : "medidas 15cm a 30cm",
+        "img": "./img/cuchNegro.jpg",
+        "precio" : 6000
+    } 
+]
