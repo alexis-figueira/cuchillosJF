@@ -15,7 +15,7 @@
     },
     {
         "id" : 3,
-        "nombre" : "Mi tercero cuchillo",
+        "nombre" : "Mi tercer cuchillo",
         "descripcion" : "medidas 12cm a 22cm",
         "img": "./img/juego de picnic.jpg",
         "precio" : 1600

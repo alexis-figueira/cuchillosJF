@@ -193,28 +193,36 @@ section{
     
 }
 
-.img__card:nth-child(1){
+.img__card:nth-child(2){
     animation-name: ani-translate-ing;
     animation-duration: 1s;   
     animation-timing-function: linear;
 }
 
-.img__card:nth-child(2){
+.img__card:nth-child(3){
     animation-name: ani-translate-ing;
     animation-duration: 1.5s;
     /* animation-timing-functi3n: linear; */
 }
 
-.img__card:nth-child(3){
+.img__card:nth-child(4){
     animation-name: ani-translate-ing;
     animation-duration: 1.9s;
     /* animation-timing-functi4n: linear; */
 }
 
-.img__card:nth-child(4){
+.img__card:nth-child(5){
     animation-name: ani-translate-ing;
     animation-duration: 2.2s;
     /* animation-timing-function: linear; */
+}
+
+button{
+    border: none;
+    background: transparent;
+}
+button i {
+    font-size: 30px;
 }
 
 .card-nov:nth-child(1){
@@ -224,7 +232,7 @@ section{
 
 .card-nov:nth-child(2){
     animation-name: ani-translate-ing;
-    animation-duration: 2.2s;
+    animation-duration: 1.2s;
 }
 
 .img__card:hover{
