@@ -27,11 +27,32 @@ h1 {
     text-align: center;
 }
 
+.hero-principal {
+    padding: 3rem;
+}
 
+.hero-imagen-desarrollador{
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    margin: 20px;
+}
+
+.hero-principal h2 {
+    font-size: 1.5rem;
+    color: #615151;
+}
 /* adaptable responsivo */
 
 @media screen and (max-width: 767px){
     .navbar-brand{
         display: none;
+    }
+}
+
+
+@media screen and (min-width: 600px){
+    .hero-inferior-imagen {
+        max-width: 600px;
     }
 }

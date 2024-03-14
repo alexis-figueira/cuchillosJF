@@ -20,7 +20,7 @@ $(document).ready(function(){
 const cantCard = 4 ; //cant prod mostrados
 
 $(".card-btn-ant.dest").click(function(){
-    let idActive = 0 ;
+    let idIn = 0 ;
     let tit = $("h3.card-nov.tit"); 
     let desc = $("h3.card-nov.desc");
     let lnk = $("h3.card-nov.lnk");
@@ -31,66 +31,55 @@ $(".card-btn-ant.dest").click(function(){
     // tit[0].innerHTML = arrProd[4].nombre
     // console.log(tit[0].innerHTML)
 
-    for(let i=0 ; i< arrProd.length ; i++){ console.log("vuelta ")
+    for(let i=0 ; i< arrProd.length ; i++){ 
+        // console.log("vuelta ")
         if(tit[0].innerHTML == arrProd[i].nombre){
-            idActive = arrProd[i].id;
+            idIn = arrProd[i].id;
             break
         }
     }
+    console.log(idIn)
 
-    if (idActive==0){
-        console.log("No se encontro el archivo")
+    ubProd = idIn -1 ;
+
+    if (idIn==0){
+        // console.log("No se encontro el archivo")
     } else {
-        console.log("encontre algo")
-        for(let i=0 ; i<cantCard ;i++){
-            let nc = -1
-            console.log("entre al for");
-            console.log(idActive+i);
-            // console.log("cant prod "+ arrProd.length)
-            if((idActive + i) <= arrProd.length){
-                console.log("entre al if")
-                tit[i].innerHTML = arrProd[idActive+cantCard+nc].nombre ;
-                nc -= 1;
-            }else {
-                console.log("la cuenta dio mal")
+        // console.log("encontre algo")
+        for(let i=0 ; i<tit.length ;i++){
+            //     tit[i].innerHTML = arrProd[idIn].nombre;
+            console.log("card " + (i + 1))
+            if(ubProd<=arrProd.length){
+                tit[i].innerHTML = arrProd[ubProd+1].nombre;
             }
+            ubProd =+ 1;
         }
-    
-        $(".card-tit").text(arrProd[arrProd.length - 1].nombre)
-        $(".card-desc").text(arrProd[arrProd.length - 1].descripcion)
-        $(".card-lnk").attr("src", "." + arrProd[arrProd.length - 1].img)
-        $(".card-prc").text("$ " + arrProd[arrProd.length - 1].precio)
+
     }
-    // else {
-    //     $(".card-tit").text(arrProd[idActive-2].nombre)
-    //     $(".card-desc").text(arrProd[idActive-2].descripcion)
-    //     $(".card-lnk").attr("src", "." + arrProd[idActive-2].img)
-    //     $(".card-prc").text("$ " + arrProd[idActive-2].precio)
-    // }
 })
 
 $(".card-btn-sig.dest").click(function(){
-    let idActive = 0 ;
+    let idIn = 0 ;
     for(let i=0 ; i< arrProd.length ; i++){
         if($(".card-tit").text() == arrProd[i].nombre){
-            idActive = arrProd[i].id;
+            idIn = arrProd[i].id;
             break
         }
     }
     
-    if (idActive==0){
+    if (idIn==0){
         console.log("No se encontro el archivo")
-    } else if (idActive == arrProd.length){
+    } else if (idIn == arrProd.length){
         $(".card-tit").text(arrProd[0].nombre)
         $(".card-desc").text(arrProd[0].descripcion)
         $(".card-lnk").attr("src", "." + arrProd[0].img)
         $(".card-prc").text("$ " + arrProd[0].precio)
     }else {
-        console.log(arrProd[idActive-1])
-        $(".card-tit").text(arrProd[idActive].nombre)
-        $(".card-desc").text(arrProd[idActive].descripcion)
-        $(".card-lnk").attr("src", "." + arrProd[idActive].img)
-        $(".card-prc").text("$ " + arrProd[idActive].precio)
+        console.log(arrProd[idIn-1])
+        $(".card-tit").text(arrProd[idIn].nombre)
+        $(".card-desc").text(arrProd[idIn].descripcion)
+        $(".card-lnk").attr("src", "." + arrProd[idIn].img)
+        $(".card-prc").text("$ " + arrProd[idIn].precio)
     }
 
 })
