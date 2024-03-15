@@ -4,7 +4,10 @@
 }
 
 :root {
-    --color-pri: #406662 ;
+    
+    --color-pri: #406662 ; /*verde: #406662*/
+    --color-select: #e2e0e0 ; /*background: #f3eded ;*/
+    --color-back: #eee; 
 }
 
 body{
@@ -12,7 +15,7 @@ body{
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    background-color: #eee;
+    background-color: var(--color-back);
 }
 
 .menu__mobile{
@@ -228,7 +231,8 @@ section{
 
 .img__card:hover{
     box-shadow: 0.4rem 0.1rem 1.2rem rgba(0, 0, 0, 0.3);
-    background: #f3eded ;
+    background: var(--color-select) ;
+    /* color: white; */
 }
 
 .img__card img {
