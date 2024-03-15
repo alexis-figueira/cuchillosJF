@@ -1,15 +1,30 @@
-var arrProd = [];
+var arrProdDest = [] ;
+var arrProdNov = [] ;
 
+
+/*Json dest*/ 
 $(document).ready(function(){
     $.ajax({
-        url: "../JSON/baseProd.json",
+        url: "../JSON/baseDest.json",
         type: "GET",
         dataType: "json"
     }).done(function(resultado){
-        // console.log("muestro resultado del AJAX")
-        // console.log(resultado)
-        arrProd = resultado;
-        // console.log("muestro var ARRPROD")
+        arrProdDest = resultado;
+    }).fail(function(xhr, status, error){
+        console.log(xhr); 
+        console.log(status);
+        console.log(error);
+    })
+})
+
+/*Json Nov*/ 
+$(document).ready(function(){
+    $.ajax({
+        url: "../JSON/baseNov.json",
+        type: "GET",
+        dataType: "json"
+    }).done(function(resultado){
+        arrProdNov = resultado;
     }).fail(function(xhr, status, error){
         console.log(xhr); 
         console.log(status) ;
@@ -17,70 +32,148 @@ $(document).ready(function(){
     })
 })
 
-const cantCard = 4 ; //cant prod mostrados
+/* botones destacados */
 
 $(".card-btn-ant.dest").click(function(){
-    let idIn = 0 ;
-    let tit = $("h3.card-nov.tit"); 
-    let desc = $("h3.card-nov.desc");
-    let lnk = $("h3.card-nov.lnk");
-    let prc = $("h3.card-nov.prc");
+    let tit = $("h3.card-dest.tit"); 
+    let desc = $("p.card-dest.desc");
+    let lnk = $("img.card-dest.lnk");
+    let prc = $("p.card-dest.prc");
 
-    // console.log(tit[0].innerHTML)
-    // console.log("hola")
-    // tit[0].innerHTML = arrProd[4].nombre
-    // console.log(tit[0].innerHTML)
-
-    for(let i=0 ; i< arrProd.length ; i++){ 
-        // console.log("vuelta ")
-        if(tit[0].innerHTML == arrProd[i].nombre){
-            idIn = arrProd[i].id;
-            break
-        }
-    }
-    console.log(idIn)
-
-    ubProd = idIn -1 ;
-
-    if (idIn==0){
-        // console.log("No se encontro el archivo")
-    } else {
-        // console.log("encontre algo")
-        for(let i=0 ; i<tit.length ;i++){
-            //     tit[i].innerHTML = arrProd[idIn].nombre;
-            console.log("card " + (i + 1))
-            if(ubProd<=arrProd.length){
-                tit[i].innerHTML = arrProd[ubProd+1].nombre;
-            }
-            ubProd =+ 1;
-        }
+    for(let i=0 ; i<tit.length ;  i++){
+        console.log("card " + (i + 1)) ;
+        let idProd = 0;
+        for(let j=0 ; j<arrProdDest.length ; j++){ 
+            // console.log("vuelta ")
+            if(tit[i].innerHTML == arrProdDest[j].nombre){
+                idProd = arrProdDest[j].id;
+                break ;
+            };
+        };
+        ubProd = idProd - 1;
+        
+        if (idProd == 0){
+            console.log("no se encontro el archivo") ;
+        } else if (idProd == 1){
+            tit[i].innerHTML = arrProdDest[arrProdDest.length-1].nombre ;
+            desc[i].innerHTML = arrProdDest[arrProdDest.length-1].descripcion ;
+            lnk[i].setAttribute("src", "./img/" + arrProdDest[arrProdDest.length-1].img) ;
+            prc[i].innerHTML = arrProdDest[arrProdDest.length-1].precio ;
+        } else {
+            tit[i].innerHTML = arrProdDest[ubProd-1].nombre ;
+            desc[i].innerHTML = arrProdDest[ubProd-1].descripcion ;    
+            lnk[i].setAttribute("src", "./img/" + arrProdDest[ubProd-1].img) ;
+            prc[i].innerHTML = arrProdDest[ubProd-1].precio ;
+        } ;
 
     }
 })
 
 $(".card-btn-sig.dest").click(function(){
-    let idIn = 0 ;
-    for(let i=0 ; i< arrProd.length ; i++){
-        if($(".card-tit").text() == arrProd[i].nombre){
-            idIn = arrProd[i].id;
-            break
-        }
-    }
-    
-    if (idIn==0){
-        console.log("No se encontro el archivo")
-    } else if (idIn == arrProd.length){
-        $(".card-tit").text(arrProd[0].nombre)
-        $(".card-desc").text(arrProd[0].descripcion)
-        $(".card-lnk").attr("src", "." + arrProd[0].img)
-        $(".card-prc").text("$ " + arrProd[0].precio)
-    }else {
-        console.log(arrProd[idIn-1])
-        $(".card-tit").text(arrProd[idIn].nombre)
-        $(".card-desc").text(arrProd[idIn].descripcion)
-        $(".card-lnk").attr("src", "." + arrProd[idIn].img)
-        $(".card-prc").text("$ " + arrProd[idIn].precio)
-    }
+    let tit = $("h3.card-dest.tit"); 
+    let desc = $("p.card-dest.desc");
+    let lnk = $("img.card-dest.lnk");
+    let prc = $("p.card-dest.prc");
 
+    for(let i=0 ; i<tit.length ; i++){
+        console.log("card " + (i + 1)) ;
+        let idProd = 0;
+        for(let j=0 ; j<arrProdDest.length ; j++){ 
+            // console.log("vuelta ")
+            if(tit[i].innerHTML == arrProdDest[j].nombre){
+                idProd = arrProdDest[j].id;
+                break ;
+            };
+        };
+        ubProd = idProd - 1;
+        
+        if (idProd == 0){
+            console.log("no se encontro el archivo") ;
+        } else if (idProd == arrProdDest.length){
+            tit[i].innerHTML = arrProdDest[0].nombre ;
+            desc[i].innerHTML = arrProdDest[0].descripcion ;
+            lnk[i].setAttribute("src", "./img/" + arrProdDest[0].img) ;
+            prc[i].innerHTML = arrProdDest[0].precio ;
+
+        } else {
+            tit[i].innerHTML = arrProdDest[ubProd+1].nombre ;
+            desc[i].innerHTML = arrProdDest[ubProd+1].descripcion ;    
+            lnk[i].setAttribute("src", "./img/" + arrProdDest[ubProd+1].img) ;
+            prc[i].innerHTML = arrProdDest[ubProd+1].precio ;
+        } ;
+    }
 })
+
+/* Bot novedades */
+
+$(".card-btn-ant.nov").click(function(){
+    let tit = $("h3.card-nov.tit"); 
+    let desc = $("p.card-nov.desc");
+    let lnk = $("img.card-nov.lnk");
+    let prc = $("p.card-nov.prc");
+
+    for(let i=0 ; i<tit.length ;  i++){
+        console.log("card " + (i + 1)) ;
+        let idProd = 0;
+        for(let j=0 ; j<arrProdNov.length ; j++){ 
+            if(tit[i].innerHTML == arrProdNov[j].nombre){
+                idProd = arrProdNov[j].id;
+                break ;
+            };
+        };
+        ubProd = idProd - 1;
+        
+        if (idProd == 0){
+            console.log("no se encontro el archivo") ;
+        } else if (idProd == 1){
+            tit[i].innerHTML = arrProdNov[arrProdNov.length-1].nombre ;
+            desc[i].innerHTML = arrProdNov[arrProdNov.length-1].descripcion ;
+            lnk[i].setAttribute("src", "./img/" + arrProdNov[arrProdNov.length-1].img) ;
+            prc[i].innerHTML = arrProdNov[arrProdNov.length-1].precio ;
+        } else {
+            tit[i].innerHTML = arrProdNov[ubProd-1].nombre ;
+            desc[i].innerHTML = arrProdNov[ubProd-1].descripcion ;    
+            lnk[i].setAttribute("src", "./img/" + arrProdNov[ubProd-1].img) ;
+            prc[i].innerHTML = arrProdNov[ubProd-1].precio ;
+        } ;
+
+    }
+})
+
+$(".card-btn-sig.nov").click(function(){
+    let tit = $("h3.card-nov.tit"); 
+    let desc = $("p.card-nov.desc");
+    let lnk = $("img.card-nov.lnk");
+    let prc = $("p.card-nov.prc");
+
+    for(let i=0 ; i<tit.length ; i++){
+        console.log("card " + (i + 1)) ;
+        let idProd = 0;
+        for(let j=0 ; j<arrProdNov.length ; j++){ 
+            // console.log("vuelta ")
+            if(tit[i].innerHTML == arrProdNov[j].nombre){
+                idProd = arrProdNov[j].id;
+                break ;
+            };
+        };
+        ubProd = idProd - 1;
+        
+        if (idProd == 0){
+            console.log("no se encontro el archivo") ;
+        } else if (idProd == arrProdNov.length){
+            tit[i].innerHTML = arrProdNov[0].nombre ;
+            desc[i].innerHTML = arrProdNov[0].descripcion ;
+            lnk[i].setAttribute("src", "./img/" + arrProdNov[0].img) ;
+            prc[i].innerHTML = arrProdNov[0].precio ;
+
+        } else {
+            tit[i].innerHTML = arrProdNov[ubProd+1].nombre ;
+            desc[i].innerHTML = arrProdNov[ubProd+1].descripcion ;    
+            lnk[i].setAttribute("src", "./img/" + arrProdNov[ubProd+1].img) ;
+            prc[i].innerHTML = arrProdNov[ubProd+1].precio ;
+        } ;
+    }
+})
+
+
 
