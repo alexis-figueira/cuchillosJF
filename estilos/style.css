@@ -91,7 +91,7 @@ body{
     color: #fff;
 }
 
-/*----- footer-----*/
+/*-------------------------- footer--------------------------------*/
 
 footer{
     background-color: #355552;
@@ -134,7 +134,7 @@ footer{
 }
 
 
-/*-----section-----*/
+/*-----------------------------section--------------------------*/
 
 section{
     display: flex;
@@ -165,7 +165,7 @@ section{
 
 }
 
-.img-container{
+.img-container-dest{
     display: flex;
     flex-direction: row;
     width: 100%;
@@ -190,7 +190,6 @@ section{
     box-shadow: 0 0.5rem 0.9rem rgba(0, 0, 0, 0.3);
     margin: 10px 5px;
     padding: 10px;
-    
 }
 
 .img__card:nth-child(2){
@@ -217,26 +216,19 @@ section{
     /* animation-timing-function: linear; */
 }
 
-button{
-    border: none;
-    background: transparent;
-}
-button i {
-    font-size: 30px;
+.card-nov:nth-child(2){ 
+    animation-name: ani-translate-ing ;
+    animation-duration: 1.8s ;
 }
 
-.card-nov:nth-child(1){
+.card-nov:nth-child(3){
     animation-name: ani-translate-ing;
-    animation-duration: 1s;
-}
-
-.card-nov:nth-child(2){
-    animation-name: ani-translate-ing;
-    animation-duration: 1.2s;
+    animation-duration: 2s;
 }
 
 .img__card:hover{
     box-shadow: 0.4rem 0.1rem 1.2rem rgba(0, 0, 0, 0.3);
+    background: #f3eded ;
 }
 
 .img__card img {
@@ -247,6 +239,18 @@ button i {
 .card__item{
     margin-bottom: 5px;
 }
+
+.card-btn{
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    margin: 10px;
+}
+.card-btn i {
+    font-size: 30px;
+}
+
+
 
 @media only screen and (max-width: 835px){
     .footer__item:first-child{
@@ -406,7 +410,7 @@ button i {
 @keyframes ani-translate-ing
 {
     0%{
-        transform: translateX(-2000px);
+        transform: translateX(-1800px);
     }
 
     100%{

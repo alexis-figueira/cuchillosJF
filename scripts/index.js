@@ -34,11 +34,11 @@ $(document).ready(function(){
 
 /* botones destacados */
 
-$(".card-btn-ant.dest").click(function(){
-    let tit = $("h3.card-dest.tit"); 
-    let desc = $("p.card-dest.desc");
-    let lnk = $("img.card-dest.lnk");
-    let prc = $("p.card-dest.prc");
+$(".card-btn.ant-dest").click(function(){
+    let tit = $("h3.card__dest-tit"); 
+    let desc = $("p.card__dest-desc");
+    let lnk = $("img.card__dest-lnk");
+    let prc = $("p.card__dest-prc");
 
     for(let i=0 ; i<tit.length ;  i++){
         console.log("card " + (i + 1)) ;
@@ -69,11 +69,11 @@ $(".card-btn-ant.dest").click(function(){
     }
 })
 
-$(".card-btn-sig.dest").click(function(){
-    let tit = $("h3.card-dest.tit"); 
-    let desc = $("p.card-dest.desc");
-    let lnk = $("img.card-dest.lnk");
-    let prc = $("p.card-dest.prc");
+$(".card-btn.sig-dest").click(function(){
+    let tit = $("h3.card__dest-tit"); 
+    let desc = $("p.card__dest-desc");
+    let lnk = $("img.card__dest-lnk");
+    let prc = $("p.card__dest-prc");
 
     for(let i=0 ; i<tit.length ; i++){
         console.log("card " + (i + 1)) ;
@@ -106,11 +106,11 @@ $(".card-btn-sig.dest").click(function(){
 
 /* Bot novedades */
 
-$(".card-btn-ant.nov").click(function(){
-    let tit = $("h3.card-nov.tit"); 
-    let desc = $("p.card-nov.desc");
-    let lnk = $("img.card-nov.lnk");
-    let prc = $("p.card-nov.prc");
+$(".card-btn.ant-nov").click(function(){
+    let tit = $("h3.card__nov-tit"); 
+    let desc = $("p.card__nov-desc");
+    let lnk = $("img.card__nov-lnk");
+    let prc = $("p.card__nov-prc");
 
     for(let i=0 ; i<tit.length ;  i++){
         console.log("card " + (i + 1)) ;
@@ -140,11 +140,11 @@ $(".card-btn-ant.nov").click(function(){
     }
 })
 
-$(".card-btn-sig.nov").click(function(){
-    let tit = $("h3.card-nov.tit"); 
-    let desc = $("p.card-nov.desc");
-    let lnk = $("img.card-nov.lnk");
-    let prc = $("p.card-nov.prc");
+$(".card-btn.sig-nov").click(function(){
+    let tit = $("h3.card__nov-tit"); 
+    let desc = $("p.card__nov-desc");
+    let lnk = $("img.card__nov-lnk");
+    let prc = $("p.card__nov-prc");
 
     for(let i=0 ; i<tit.length ; i++){
         console.log("card " + (i + 1)) ;
