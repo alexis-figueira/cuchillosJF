@@ -1,0 +1,122 @@
+{
+    "cuchillos":[
+        {
+            "id" : 1,
+            "nombre" : "Cuchillo 1",
+            "descripcion" : "medidas 15cm a 30cm",
+            "img": "cuchillo alfombardo.jpg",
+            "precio" : 4500
+        },
+        {
+            "id" : 2,
+            "nombre" : "Cuchillo 2",
+            "descripcion" : "5cm",
+            "img": "cuchillos.jpg",
+            "precio" : 1700
+        },
+        {
+            "id" : 3,
+            "nombre" : "Cuchillo 3",
+            "descripcion" : "medidas 15cm a 30cm",
+            "img": "cuchillo alfombardo.jpg",
+            "precio" : 4500
+        },
+        {
+            "id" : 4,
+            "nombre" : "Cuchillo 4",
+            "descripcion" : "5cm",
+            "img": "cuchillos.jpg",
+            "precio" : 1700
+        }
+    ],
+    "mates":[
+        {
+            "id" : 1,
+            "nombre" : "Mate 1",
+            "descripcion" : "medidas 15cm a 30cm",
+            "img": "cuchillo alfombardo.jpg",
+            "precio" : 4500
+        },
+        {
+            "id" : 2,
+            "nombre" : "Mate 2",
+            "descripcion" : "5cm",
+            "img": "cuchillos.jpg",
+            "precio" : 1700
+        },
+        {
+            "id" : 1,
+            "nombre" : "Mate 3",
+            "descripcion" : "medidas 15cm a 30cm",
+            "img": "cuchillo alfombardo.jpg",
+            "precio" : 4500
+        },
+        {
+            "id" : 2,
+            "nombre" : "Mate 4",
+            "descripcion" : "5cm",
+            "img": "cuchillos.jpg",
+            "precio" : 1700
+        }
+    ],
+    "bombillas":[
+        {
+            "id" : 1,
+            "nombre" : "Bombilla 1",
+            "descripcion" : "medidas 15cm a 30cm",
+            "img": "cuchillo alfombardo.jpg",
+            "precio" : 4500
+        },
+        {
+            "id" : 2,
+            "nombre" : "Bombilla 2",
+            "descripcion" : "5cm",
+            "img": "cuchillos.jpg",
+            "precio" : 1700
+        },
+        {
+            "id" : 1,
+            "nombre" : "Bombilla 3",
+            "descripcion" : "medidas 15cm a 30cm",
+            "img": "cuchillo alfombardo.jpg",
+            "precio" : 4500
+        },
+        {
+            "id" : 2,
+            "nombre" : "Bombilla 4",
+            "descripcion" : "5cm",
+            "img": "cuchillos.jpg",
+            "precio" : 1700
+        }
+    ],
+    "boleadoras":[
+        {
+            "id" : 1,
+            "nombre" : "Boleadora 1",
+            "descripcion" : "medidas 15cm a 30cm",
+            "img": "cuchillo alfombardo.jpg",
+            "precio" : 4500
+        },
+        {
+            "id" : 2,
+            "nombre" : "Boleadora 2",
+            "descripcion" : "5cm",
+            "img": "cuchillos.jpg",
+            "precio" : 1700
+        },
+        {
+            "id" : 1,
+            "nombre" : "Boleadora 3",
+            "descripcion" : "medidas 15cm a 30cm",
+            "img": "cuchillo alfombardo.jpg",
+            "precio" : 4500
+        },
+        {
+            "id" : 2,
+            "nombre" : "Boleadora 4",
+            "descripcion" : "5cm",
+            "img": "cuchillos.jpg",
+            "precio" : 1700
+        }
+    ]
+}

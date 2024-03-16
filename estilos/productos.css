@@ -1,14 +1,18 @@
-.main-prod{
+.cont-gral{
+    padding: 0 !important ;
     display: flex;
-    flex-direction: row-reverse;
+    flex-direction: row;
+    flex-wrap: nowrap;
+}
+
+.cont-list{
+    border: 1px solid black;
+    flex-grow: 0;
+    width: 280px;
+    min-height: 70vh;
 }
 
 .cont-prod{
-    background: lightblue;
-    width: 80%;
-}
-
-.list-prod{
-    background: lightcoral;
-    width: 20%;
+    border: 1px solid red;
+    flex-grow: 1;
 }
