@@ -34,6 +34,20 @@ $("#buscar").click(function(){
 })
 
 
+{/* <div class="img__card">
+    <h3 class="card__item card__dest-tit">Daga esterillada</h3>
+    <p class="card__item card__dest-desc">medidas 15cm a 30cm</p>
+    <img class="card__item card__dest-lnk" src="./img/cuchillo alfombardo.jpg" alt="">
+    <p class="card__item card__dest-prc">$3500</p>
+</div>  */}
+
+function createCard (tit, desc, img, prc){
+    
+
+
+}
+
+
 
 
 
