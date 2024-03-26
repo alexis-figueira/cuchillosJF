@@ -35,10 +35,10 @@ $(document).ready(function(){
 /* Botones destacados */
 
 $(".card-btn.ant-dest").click(function(){
-    let tit = $("h3.card__dest-tit"); 
-    let desc = $("p.card__dest-desc");
-    let lnk = $("img.card__dest-lnk");
-    let prc = $("p.card__dest-prc");
+    let tit = $("h3.card__tit"); 
+    let desc = $("p.card__desc");
+    let lnk = $("img.card__lnk");
+    let prc = $("p.card__prc");
 
     for(let i=0 ; i<tit.length ;  i++){
         let idProd = 0;
@@ -68,10 +68,10 @@ $(".card-btn.ant-dest").click(function(){
 })
 
 $(".card-btn.sig-dest").click(function(){
-    let tit = $("h3.card__dest-tit"); 
-    let desc = $("p.card__dest-desc");
-    let lnk = $("img.card__dest-lnk");
-    let prc = $("p.card__dest-prc");
+    let tit = $("h3.card__tit"); 
+    let desc = $("p.card__desc");
+    let lnk = $("img.card__lnk");
+    let prc = $("p.card__prc");
 
     for(let i=0 ; i<tit.length ; i++){
         let idProd = 0;
@@ -101,10 +101,10 @@ $(".card-btn.sig-dest").click(function(){
 /* Botones novedades */
 
 $(".card-btn.ant-nov").click(function(){
-    let tit = $("h3.card__nov-tit"); 
-    let desc = $("p.card__nov-desc");
-    let lnk = $("img.card__nov-lnk");
-    let prc = $("p.card__nov-prc");
+    let tit = $("h3.card__tit"); 
+    let desc = $("p.card__desc");
+    let lnk = $("img.card__lnk");
+    let prc = $("p.card__prc");
 
     for(let i=0 ; i<tit.length ;  i++){
         let idProd = 0;
@@ -133,10 +133,10 @@ $(".card-btn.ant-nov").click(function(){
 })
 
 $(".card-btn.sig-nov").click(function(){
-    let tit = $("h3.card__nov-tit"); 
-    let desc = $("p.card__nov-desc");
-    let lnk = $("img.card__nov-lnk");
-    let prc = $("p.card__nov-prc");
+    let tit = $("h3.card__tit"); 
+    let desc = $("p.card__desc");
+    let lnk = $("img.card__lnk");
+    let prc = $("p.card__prc");
 
     for(let i=0 ; i<tit.length ; i++){
         let idProd = 0;
