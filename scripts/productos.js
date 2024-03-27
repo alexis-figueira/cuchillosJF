@@ -1,16 +1,5 @@
-/* Formato card
-<div class="img__card">
-    <h3 class="card__item card__tit">Daga esterillada</h3>
-    <p class="card__item card__desc">medidas 15cm a 30cm</p>
-    <img class="card__item card__lnk" src="./img/cuchillo alfombardo.jpg" alt="">
-    <p class="card__item card__prc">$3500</p>
-</div> */
-
-
+/* //Json productos 
 var arrProductos = [] ;
-
-/* json productos */
-
 $(document).ready(function(){
     $.ajax({
         url: "../JSON/productos.json",
@@ -29,18 +18,9 @@ $(document).ready(function(){
         console.log(error);
     })
 })
+*/
 
-$("#buscar").click(function(){
-    console.log(arrProductos.cuchillos)
-    let prodIngresado = $("#prodBuscado").val()
-    
-    if(prodIngresado == "cuchillos" || prodIngresado == "cuchillo" ){
-        console.log("Indicaste " + prodIngresado)
-    }else{
-        console.log("indicaste otra cosa")
-    }
-})
-
+/* //Card
 function setCard (titulo, descripcion, imagen, precio, contenedor){
     console.log("hola");
 
@@ -72,6 +52,18 @@ function setCard (titulo, descripcion, imagen, precio, contenedor){
     card_prc.setAttribute("class", "card__item card__prc");
     $(card).append(card_prc);
 }
+*/
+
+$("#buscar").click(function(){
+    console.log(arrProductos.cuchillos)
+    let prodIngresado = $("#prodBuscado").val()
+    
+    if(prodIngresado == "cuchillos" || prodIngresado == "cuchillo" ){
+        console.log("Indicaste " + prodIngresado)
+    }else{
+        console.log("indicaste otra cosa")
+    }
+})
 
 $(".item-cuch").click(function(){
     $(".img__card").remove();

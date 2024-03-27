@@ -1,48 +1,10 @@
-var arrProdDest = [] ;
-var arrProdNov = [] ;
-
-/*Json dest*/ 
-$(document).ready(function(){
-    $.ajax({
-        url: "../JSON/baseDest.json",
-        type: "GET",
-        dataType: "json"
-    }).done(function(resultado){
-        arrProdDest = resultado;
-    }).fail(function(xhr, status, error){
-        console.log(xhr); 
-        console.log(status);
-        console.log(error);
-    })
-})
-
-/*Json Nov*/ 
-$(document).ready(function(){
-    $.ajax({
-        url: "../JSON/baseNov.json",
-        type: "GET",
-        dataType: "json"
-    }).done(function(resultado){
-        arrProdNov = resultado;
-    }).fail(function(xhr, status, error){
-        console.log(xhr); 
-        console.log(status) ;
-        console.log(error);
-    })
-})
-
 /* Botones destacados */
-
 $(".card-btn.ant-dest").click(function(){
-    let tit = $("h3.card__tit"); 
-    let desc = $("p.card__desc");
-    let lnk = $("img.card__lnk");
-    let prc = $("p.card__prc");
-
+    let tit = $(".cont-card-dest h3.card__tit"); 
+    $(".cont-card-dest .img__card").remove();
     for(let i=0 ; i<tit.length ;  i++){
         let idProd = 0;
         for(let j=0 ; j<arrProdDest.length ; j++){ 
-            // console.log("vuelta ")
             if(tit[i].innerHTML == arrProdDest[j].nombre){
                 idProd = arrProdDest[j].id;
                 break ;
@@ -52,25 +14,23 @@ $(".card-btn.ant-dest").click(function(){
         if (idProd == 0){
             console.log("no se encontro el archivo") ;
         } else if (idProd == 1){
-            tit[i].innerHTML = arrProdDest[arrProdDest.length-1].nombre ;
-            desc[i].innerHTML = arrProdDest[arrProdDest.length-1].descripcion ;
-            lnk[i].setAttribute("src", "./img/" + arrProdDest[arrProdDest.length-1].img) ;
-            prc[i].innerHTML = arrProdDest[arrProdDest.length-1].precio ;
+            setCard(arrProdDest[arrProdDest.length-1].nombre, arrProdDest[arrProdDest.length-1].descripcion, "./img/" + arrProdDest[arrProdDest.length-1].img, arrProdDest[arrProdDest.length-1].precio ,"cont-card-dest");
+            // $(".cont-card-dest .img__card").css("animation-name", "ani-translate-ing")
+            // $(".cont-card-dest .img__card").css("animation-duration", "1.5s");
         } else {
-            tit[i].innerHTML = arrProdDest[ubProd-1].nombre ;
-            desc[i].innerHTML = arrProdDest[ubProd-1].descripcion ;    
-            lnk[i].setAttribute("src", "./img/" + arrProdDest[ubProd-1].img) ;
-            prc[i].innerHTML = arrProdDest[ubProd-1].precio ;
+            console.log("id prod distinto de 0")
+            setCard(arrProdDest[ubProd-1].nombre, arrProdDest[ubProd-1].descripcion, "./img/" + arrProdDest[ubProd-1].img, arrProdDest[ubProd-1].precio,"cont-card-dest");
+            // $(".cont-card-dest .img__card").css("animation-name", "ani-translate-ing")
+            // $(".cont-card-dest .img__card").css("animation-duration", "1.5s");
         } ;
     }
+    $(".cont-card-dest .img__card").css("animation-name", "ani-translate-ing")
+    $(".cont-card-dest .img__card").css("animation-duration", "1.5s")
 })
 
 $(".card-btn.sig-dest").click(function(){
-    let tit = $("h3.card__tit"); 
-    let desc = $("p.card__desc");
-    let lnk = $("img.card__lnk");
-    let prc = $("p.card__prc");
-
+    let tit = $(".cont-card-dest h3.card__tit");
+    $(".cont-card-dest .img__card").remove();
     for(let i=0 ; i<tit.length ; i++){
         let idProd = 0;
         for(let j=0 ; j<arrProdDest.length ; j++){ 
@@ -83,28 +43,49 @@ $(".card-btn.sig-dest").click(function(){
         if (idProd == 0){
             console.log("no se encontro el archivo") ;
         } else if (idProd == arrProdDest.length){
-            tit[i].innerHTML = arrProdDest[0].nombre ;
-            desc[i].innerHTML = arrProdDest[0].descripcion ;
-            lnk[i].setAttribute("src", "./img/" + arrProdDest[0].img) ;
-            prc[i].innerHTML = arrProdDest[0].precio ;
+            console.log("ultimo");
+            setCard(arrProdDest[0].nombre, arrProdDest[0].descripcion, "./img/" + arrProdDest[0].img, arrProdDest[0].precio, "cont-card-dest");
         } else {
-            tit[i].innerHTML = arrProdDest[ubProd+1].nombre ;
-            desc[i].innerHTML = arrProdDest[ubProd+1].descripcion ;    
-            lnk[i].setAttribute("src", "./img/" + arrProdDest[ubProd+1].img) ;
-            prc[i].innerHTML = arrProdDest[ubProd+1].precio ;
+            console.log("encontro y no es el ultimo")
+            setCard(arrProdDest[ubProd+1].nombre, arrProdDest[ubProd+1].descripcion, "./img/" + arrProdDest[ubProd+1].img, arrProdDest[ubProd+1].precio, "cont-card-dest");
+            
         } ;
     }
+    $(".cont-card-dest .img__card").css("animation-name", "ani-translate-sal")
+    $(".cont-card-dest .img__card").css("animation-duration", "1.5s");
 })
 
 /* Botones novedades */
-
 $(".card-btn.ant-nov").click(function(){
-    let tit = $("h3.card__tit"); 
-    let desc = $("p.card__desc");
-    let lnk = $("img.card__lnk");
-    let prc = $("p.card__prc");
-
+    let tit = $(".cont-card-nov h3.card__tit"); 
+    $(".cont-card-nov .img__card").remove();
     for(let i=0 ; i<tit.length ;  i++){
+        let idProd = 0;
+        for(let j=0 ; j<arrProdNov.length ; j++){ 
+            if(tit[i].innerHTML == arrProdNov[j].nombre){
+                idProd = arrProdNov[j].id;
+                break ;
+            };
+        };
+        ubProd = idProd - 1;      
+        if (idProd == 0){
+            console.log("no se encontro el archivo") ;
+        } else if (idProd == 1){
+            setCard(arrProdNov[arrProdNov.length-1].nombre, arrProdNov[arrProdNov.length-1].descripcion, "./img/" + arrProdNov[arrProdNov.length-1].img, arrProdNov[arrProdNov.length-1].precio ,"cont-card-nov");
+        } else {
+            console.log("id prod distinto de 0")
+            setCard(arrProdNov[ubProd-1].nombre, arrProdNov[ubProd-1].descripcion, "./img/" + arrProdNov[ubProd-1].img, arrProdNov[ubProd-1].precio,"cont-card-nov");
+        } ;
+    }
+    $(".cont-card-nov .img__card").css("animation-name", "ani-translate-ing")
+    $(".cont-card-nov .img__card").css("animation-duration", "1.5s")
+})
+
+$(".card-btn.sig-nov").click(function(){
+    let tit = $(".cont-card-nov h3.card__tit");
+    $(".cont-card-nov .img__card").remove();
+    
+    for(let i=0 ; i<tit.length ; i++){
         let idProd = 0;
         for(let j=0 ; j<arrProdNov.length ; j++){ 
             if(tit[i].innerHTML == arrProdNov[j].nombre){
@@ -115,50 +96,16 @@ $(".card-btn.ant-nov").click(function(){
         ubProd = idProd - 1;     
         if (idProd == 0){
             console.log("no se encontro el archivo") ;
-        } else if (idProd == 1){
-            tit[i].innerHTML = arrProdNov[arrProdNov.length-1].nombre ;
-            desc[i].innerHTML = arrProdNov[arrProdNov.length-1].descripcion ;
-            lnk[i].setAttribute("src", "./img/" + arrProdNov[arrProdNov.length-1].img) ;
-            prc[i].innerHTML = arrProdNov[arrProdNov.length-1].precio ;
-        } else {
-            tit[i].innerHTML = arrProdNov[ubProd-1].nombre ;
-            desc[i].innerHTML = arrProdNov[ubProd-1].descripcion ;    
-            lnk[i].setAttribute("src", "./img/" + arrProdNov[ubProd-1].img) ;
-            prc[i].innerHTML = arrProdNov[ubProd-1].precio ;
-        } ;
-
-    }
-})
-
-$(".card-btn.sig-nov").click(function(){
-    let tit = $("h3.card__tit"); 
-    let desc = $("p.card__desc");
-    let lnk = $("img.card__lnk");
-    let prc = $("p.card__prc");
-
-    for(let i=0 ; i<tit.length ; i++){
-        let idProd = 0;
-        for(let j=0 ; j<arrProdNov.length ; j++){ 
-            if(tit[i].innerHTML == arrProdNov[j].nombre){
-                idProd = arrProdNov[j].id;
-                break ;
-            };
-        };
-        ubProd = idProd - 1;    
-        if (idProd == 0){
-            console.log("no se encontro el archivo") ;
         } else if (idProd == arrProdNov.length){
-            tit[i].innerHTML = arrProdNov[0].nombre ;
-            desc[i].innerHTML = arrProdNov[0].descripcion ;
-            lnk[i].setAttribute("src", "./img/" + arrProdNov[0].img) ;
-            prc[i].innerHTML = arrProdNov[0].precio ;
+            console.log("ultimo");
+            setCard(arrProdNov[0].nombre, arrProdNov[0].descripcion, "./img/" + arrProdNov[0].img, arrProdNov[0].precio, "cont-card-nov");
         } else {
-            tit[i].innerHTML = arrProdNov[ubProd+1].nombre ;
-            desc[i].innerHTML = arrProdNov[ubProd+1].descripcion ;    
-            lnk[i].setAttribute("src", "./img/" + arrProdNov[ubProd+1].img) ;
-            prc[i].innerHTML = arrProdNov[ubProd+1].precio ;
+            console.log("encontro y no es el ultimo")
+            setCard(arrProdNov[ubProd+1].nombre, arrProdNov[ubProd+1].descripcion, "./img/" + arrProdNov[ubProd+1].img, arrProdNov[ubProd+1].precio, "cont-card-nov");
         } ;
     }
+    $(".cont-card-nov .img__card").css("animation-name", "ani-translate-sal")
+    $(".cont-card-nov .img__card").css("animation-duration", "1.5s");
 })
 
 
