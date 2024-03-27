@@ -44,6 +44,7 @@ function setCard (titulo, descripcion, imagen, precio, contenedor){
 
     let card = document.createElement ("div");
     card.setAttribute("class", "img__card");
+    $(".img__card").css("animation-duration", "0s");
     $("."+contenedor).append(card);
 
     let card_tit = document.createElement("h3");
