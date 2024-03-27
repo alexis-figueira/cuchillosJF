@@ -33,30 +33,23 @@
         {
             "id" : 1,
             "nombre" : "Mate 1",
-            "descripcion" : "medidas 15cm a 30cm",
+            "descripcion" : "calabaza 20cm",
             "img": "cuchillo alfombardo.jpg",
             "precio" : 4500
         },
         {
             "id" : 2,
             "nombre" : "Mate 2",
-            "descripcion" : "5cm",
+            "descripcion" : "calabaza 2",
             "img": "cuchillos.jpg",
             "precio" : 1700
         },
         {
-            "id" : 1,
+            "id" : 3,
             "nombre" : "Mate 3",
-            "descripcion" : "medidas 15cm a 30cm",
+            "descripcion" : "calabaza 3",
             "img": "cuchillo alfombardo.jpg",
             "precio" : 4500
-        },
-        {
-            "id" : 2,
-            "nombre" : "Mate 4",
-            "descripcion" : "5cm",
-            "img": "cuchillos.jpg",
-            "precio" : 1700
         }
     ],
     "bombillas":[
@@ -75,15 +68,29 @@
             "precio" : 1700
         },
         {
-            "id" : 1,
+            "id" : 3,
             "nombre" : "Bombilla 3",
             "descripcion" : "medidas 15cm a 30cm",
             "img": "cuchillo alfombardo.jpg",
             "precio" : 4500
         },
         {
-            "id" : 2,
+            "id" : 4,
             "nombre" : "Bombilla 4",
+            "descripcion" : "5cm",
+            "img": "cuchillos.jpg",
+            "precio" : 1700
+        },
+        {
+            "id" : 5,
+            "nombre" : "Bombilla 5",
+            "descripcion" : "5cm",
+            "img": "cuchillos.jpg",
+            "precio" : 1700
+        },
+        {
+            "id" : 6,
+            "nombre" : "Bombilla 6",
             "descripcion" : "5cm",
             "img": "cuchillos.jpg",
             "precio" : 1700
@@ -105,15 +112,22 @@
             "precio" : 1700
         },
         {
-            "id" : 1,
+            "id" : 3,
             "nombre" : "Boleadora 3",
             "descripcion" : "medidas 15cm a 30cm",
             "img": "cuchillo alfombardo.jpg",
             "precio" : 4500
         },
         {
-            "id" : 2,
+            "id" : 4,
             "nombre" : "Boleadora 4",
+            "descripcion" : "5cm",
+            "img": "cuchillos.jpg",
+            "precio" : 1700
+        },
+        {
+            "id" : 5,
+            "nombre" : "Boleadora 5",
             "descripcion" : "5cm",
             "img": "cuchillos.jpg",
             "precio" : 1700
