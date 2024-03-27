@@ -78,7 +78,6 @@ body{
     text-decoration: none; 
 }
 
-
 .menu__li:hover, .footer__li:hover{
     color:#ccc;
 }
@@ -136,7 +135,6 @@ footer{
     text-shadow: 1px 0px 3px #888;
 }
 
-
 /*-----------------------------section--------------------------*/
 
 section{
@@ -193,6 +191,13 @@ section{
     box-shadow: 0 0.5rem 0.9rem rgba(0, 0, 0, 0.3);
     margin: 10px 5px;
     padding: 10px;
+}
+
+.img__card:nth-child(1){
+    animation-name: ani-translate-ing;
+    animation-duration: 1s;   
+    animation-timing-function: linear;
+    background-color: green;
 }
 
 .img__card:nth-child(2){

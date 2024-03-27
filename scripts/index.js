@@ -1,7 +1,6 @@
 var arrProdDest = [] ;
 var arrProdNov = [] ;
 
-
 /*Json dest*/ 
 $(document).ready(function(){
     $.ajax({
@@ -63,7 +62,6 @@ $(".card-btn.ant-dest").click(function(){
             lnk[i].setAttribute("src", "./img/" + arrProdDest[ubProd-1].img) ;
             prc[i].innerHTML = arrProdDest[ubProd-1].precio ;
         } ;
-
     }
 })
 

@@ -9,6 +9,8 @@
 
 var arrProductos = [] ;
 
+/* json productos */
+
 $(document).ready(function(){
     $.ajax({
         url: "../JSON/productos.json",
@@ -58,7 +60,7 @@ function setCard (titulo, descripcion, imagen, precio, contenedor){
     card_desc.appendChild(text_desc);
     card_desc.setAttribute("class", "card__item card__desc");   
     $(card).append(card_desc);
-       
+    
     let card_img = document.createElement("img");
     card_img.setAttribute("src", imagen);
     card_img.setAttribute("class", "card__item card__lnk");
