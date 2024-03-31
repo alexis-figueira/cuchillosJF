@@ -10,25 +10,28 @@ button i {
 }
 
 .cont-list{
-    /* border: 3px solid black; */
-    flex-grow: 0;
+    /* border-right: 3px solid black; */
     width: 280px;
     min-width: 250px;
     display: flex;
     flex-direction: column;
-    height: 60vh;
+    z-index: 100;
+    background-color: var(--color-back);
+
 }
 
 .list-tit{
     margin: 5px;
-    padding: 5px;
-    border: 1px solid orange;
-    flex-grow: 0;
+    padding: 15px;
+    font-size: 1.3rem;
+    /* flex-grow: 0; */
+    /* border: 1px solid orange; */
 }
 
 .list-ul{
-    flex-grow: 1;
-    border: 1px solid green;
+    /* flex-grow: 1; */
+    /* border: 1px solid green; */
+    height: 250px;
     margin: 5px;
     padding: 5px;
 }
@@ -44,11 +47,12 @@ button i {
 }
 
 .fil-bus{
-    flex-grow: 0;
-    flex-wrap: nowrap;
-    border: 1px solid yellow;
     margin: 5px;
-    padding: 5px;
+    padding-left: 15px;
+    flex-wrap: nowrap;
+    /* flex-grow: 1; */
+    /* border: 1px solid yellow; */
+    font-size: 0.9rem;
 }
 
 #prodBuscado{
@@ -63,7 +67,7 @@ button i {
 .cont-prod{
     /* border: 1px solid red; */
     flex-grow: 1;
-    border-left: 3px solid #aaa;
+    border-left: 1px solid #aaa;
     padding: 10px;
 }
 

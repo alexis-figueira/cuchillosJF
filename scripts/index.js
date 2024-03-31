@@ -15,13 +15,9 @@ $(".card-btn.ant-dest").click(function(){
             console.log("no se encontro el archivo") ;
         } else if (idProd == 1){
             setCard(arrProdDest[arrProdDest.length-1].nombre, arrProdDest[arrProdDest.length-1].descripcion, "./img/" + arrProdDest[arrProdDest.length-1].img, arrProdDest[arrProdDest.length-1].precio ,"cont-card-dest");
-            // $(".cont-card-dest .img__card").css("animation-name", "ani-translate-ing")
-            // $(".cont-card-dest .img__card").css("animation-duration", "1.5s");
         } else {
             console.log("id prod distinto de 0")
             setCard(arrProdDest[ubProd-1].nombre, arrProdDest[ubProd-1].descripcion, "./img/" + arrProdDest[ubProd-1].img, arrProdDest[ubProd-1].precio,"cont-card-dest");
-            // $(".cont-card-dest .img__card").css("animation-name", "ani-translate-ing")
-            // $(".cont-card-dest .img__card").css("animation-duration", "1.5s");
         } ;
     }
     $(".cont-card-dest .img__card").css("animation-name", "ani-translate-ing")

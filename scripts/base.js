@@ -24,7 +24,6 @@ $(document).ready(function(){
     })
 })
 
-
 /*Json dest*/ 
 $(document).ready(function(){
     $.ajax({
@@ -63,13 +62,9 @@ $(document).ready(function(){
 
 /*Card*/
 function setCard (titulo, descripcion, imagen, precio, contenedor){
-    console.log("setCard");
-
     let card = document.createElement ("div");
     card.setAttribute("class", "img__card");
     $("."+contenedor).append(card);
-    // $("."+contenedor + " .img__card").css("animation-name", "ani-translate-ing")
-    // $("."+contenedor + " .img__card").css("animation-duration", "4s");
     
     let card_tit = document.createElement("h3");
     let text_tit = document.createTextNode(titulo);
