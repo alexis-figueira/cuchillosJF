@@ -117,18 +117,8 @@ function fbp (){
                 setCard(arrProductos.boleadoras[i].nombre, arrProductos.boleadoras[i].descripcion, "../img/"+arrProductos.boleadoras[i].img, arrProductos.boleadoras[i].precio,"article-prod");
             }
         };
-
-
-
-
-
         $(".article-prod .img__card").css("animation-name", "ani-translate-ing");
         $(".article-prod .img__card").css("animation-duration", "1.5s");
-        
-        
-
-
-
     }
     if(encontro == false){
         Swal.fire({
@@ -136,11 +126,11 @@ function fbp (){
             text: "Intente de nuevo",
             icon: "warning"
           });
-        $("#prodBuscado").val("");
         for (let i=0 ; i<arrProductos.cuchillos.length ; i++){
             setCard(arrProductos.cuchillos[i].nombre, arrProductos.cuchillos[i].descripcion, "../img/"+arrProductos.cuchillos[i].img, arrProductos.cuchillos[i].precio,"article-prod");
         };
         $(".article-prod .img__card").css("animation-name", "ani-translate-ing")
         $(".article-prod .img__card").css("animation-duration", "1.5s");
     }
+    $("#prodBuscado").val("");
 };
