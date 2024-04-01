@@ -1,11 +1,14 @@
 setCard ("Bombilla 2", "Descripcion", "../img/cuchillo alfombardo.jpg", "2500", "miContenedor");
+setCard ("Mate 2", "Descripcion", "../img/cuchillo alfombardo.jpg", "2500", "miContenedor");
+
+
 
 $(".img__card").click(function(evento){
     console.log(evento.currentTarget);
     let miCarta = evento.currentTarget;
     let miProd = miCarta.firstChild.innerHTML ;
     console.log("miprod es " + miProd);
-    
+    $(".miModal .img__card").remove();
     $(".miModal").css("display", "block");
 
     let encontro = false;

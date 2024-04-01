@@ -103,6 +103,3 @@ $(".card-btn.sig-nov").click(function(){
     $(".cont-card-nov .img__card").css("animation-name", "ani-translate-sal")
     $(".cont-card-nov .img__card").css("animation-duration", "1.5s");
 })
-
-
-
