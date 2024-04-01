@@ -87,7 +87,7 @@ function fbp (){
         };
         $(".article-prod .img__card").css("animation-name", "ani-translate-ing");
         $(".article-prod .img__card").css("animation-duration", "1.5s");
-    }else {
+    }else { ///No se ingreso un tipo
         $(".img__card").remove();
         for (let i=0 ; i<arrProductos.cuchillos.length ; i++){
             if (arrProductos.cuchillos[i].nombre.toUpperCase().includes(prodIngresado.toUpperCase())){
