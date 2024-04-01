@@ -17,6 +17,8 @@ $(document).ready(function(){
         for (let i=0 ; i<arrProductos.cuchillos.length ; i++){
             setCard(arrProductos.cuchillos[i].nombre, arrProductos.cuchillos[i].descripcion, "../img/"+arrProductos.cuchillos[i].img, arrProductos.cuchillos[i].precio,"article-prod");
         };
+        $(".article-prod .img__card").css("animation-name", "ani-translate-ing")
+        $(".article-prod .img__card").css("animation-duration", "1.5s");
     }).fail(function(xhr, status, error){
         console.log(xhr); 
         console.log(status);
@@ -84,7 +86,7 @@ function setCard (titulo, descripcion, imagen, precio, contenedor){
     $(card).append(card_img);
 
     let card_prc = document.createElement("p");
-    let text_prc = document.createTextNode (precio);
+    let text_prc = document.createTextNode ("$" + precio);
     card_prc.appendChild(text_prc);
     card_prc.setAttribute("class", "card__item card__prc");
     $(card).append(card_prc);
