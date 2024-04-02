@@ -2,6 +2,10 @@ var arrProductos = [] ;
 var arrProdDest = [] ;
 var arrProdNov = [] ;
 
+/*cant de card mostradas*/ 
+var longDest = 4 ;
+var longNov = 3 ;
+
 /* json productos */
 $(document).ready(function(){
     $.ajax({

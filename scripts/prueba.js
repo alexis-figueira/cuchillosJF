@@ -1,5 +1,5 @@
-// setCard ("Bombilla 2", "Descripcion", "../img/cuchillo alfombardo.jpg", "2500", "miContenedor");
-// setCard ("Mate 2", "Descripcion", "../img/cuchillo alfombardo.jpg", "2500", "miContenedor");
+setCard ("Bombilla 2", "Descripcion", "../img/cuchillo alfombardo.jpg", "2500", "miContenedor");
+setCard ("Mate 2", "Descripcion", "../img/cuchillo alfombardo.jpg", "2500", "miContenedor");
 
 $(".img__card").click(openCard);
 
