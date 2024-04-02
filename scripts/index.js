@@ -1,3 +1,8 @@
+/*cant de card mostradas*/ 
+var longDest = 4 ;
+var longNov = 3 ;
+
+
 /* Botones destacados */
 $(".card-btn.ant-dest").click(function(){
     let tit = $(".cont-card-dest h3.card__tit"); 
@@ -103,3 +108,7 @@ $(".card-btn.sig-nov").click(function(){
     $(".cont-card-nov .img__card").css("animation-name", "ani-translate-sal")
     $(".cont-card-nov .img__card").css("animation-duration", "1.5s");
 })
+
+
+
+
