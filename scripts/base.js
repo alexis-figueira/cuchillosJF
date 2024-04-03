@@ -3,8 +3,8 @@ var arrProdDest = [] ;
 var arrProdNov = [] ;
 
 /*cant de card mostradas*/ 
-var longDest = 4 ;
-var longNov = 3 ;
+var longDest = 3 ;
+var longNov = 2 ;
 
 /* json productos */
 $(document).ready(function(){
