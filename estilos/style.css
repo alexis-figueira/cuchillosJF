@@ -179,6 +179,8 @@ section{
     width: 100%;
     flex-wrap: wrap;
     justify-content: space-between;
+    overflow: hidden;
+    padding: 10px;
 }
 
 .img-container-nov{
@@ -195,6 +197,9 @@ section{
     width: 100%;
     flex-wrap: wrap;
     justify-content: space-evenly;
+    overflow: hidden;
+    padding: 10px;
+
 }
 
 
