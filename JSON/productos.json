@@ -9,7 +9,7 @@
         },
         {
             "id" : 2,
-            "nombre" : "Cuchillo 2",
+            "nombre" : "Daga esterillada",
             "descripcion" : "5cm",
             "img": "cuchillos.jpg",
             "precio" : 1700
@@ -27,107 +27,184 @@
             "descripcion" : "5cm",
             "img": "cuchillos.jpg",
             "precio" : 1700
+        },
+        {
+            "id" : 5,
+            "nombre" : "Daga esterillada",
+            "descripcion" : "medidas 15cm a 30cm",
+            "img": "cuchillo alfombardo.jpg",
+            "precio" : 3500
+        },
+        {
+            "id" : 6,
+            "nombre" : "dos",
+            "descripcion" : "medidas 10cm a 28cm",
+            "img": "cuchillos.jpg",
+            "precio" : 2200
+        },
+        {
+            "id" : 7,
+            "nombre" : "Alpaca",
+            "descripcion" : "medidas 12cm a 22cm",
+            "img": "juego de picnic.jpg",
+            "precio" : 1600
+        },
+        {
+            "id" : 8,
+            "nombre" : "Cuchi largos",
+            "descripcion" : "medidas 15cm a 30cm",
+            "img": "cuchNegro.jpg",
+            "precio" : 1900
+        },
+        {
+            "id" : 9,
+            "nombre" : "cinco",
+            "descripcion" : "medidas del 5",
+            "img": "cuchillo alfombardo.jpg",
+            "precio" : 4500
+        },
+        {
+            "id" : 10,
+            "nombre" : "seis",
+            "descripcion" : "medidas 18cm a 25cm",
+            "img": "cuchillos.jpg",
+            "precio" : 5300
+        },
+        {
+            "id" : 11,
+            "nombre" : "siete",
+            "descripcion" : "medidas 15cm a 30cm",
+            "img": "juego de picnic.jpg",
+            "precio" : 6000
+        },
+        {
+            "id" : 12,
+            "nombre" : "Ya nose",
+            "descripcion" : "medidas 15cm a 30cm",
+            "img": "cuchNegro.jpg",
+            "precio" : 1900
         }
     ],
     "mates":[
         {
-            "id" : 1,
+            "id" : 1000,
             "nombre" : "Mate 1",
             "descripcion" : "calabaza 20cm",
             "img": "cuchillo alfombardo.jpg",
             "precio" : 4500
         },
         {
-            "id" : 2,
+            "id" : 1001,
             "nombre" : "Mate 2",
             "descripcion" : "calabaza 2",
             "img": "cuchillos.jpg",
             "precio" : 1700
         },
         {
-            "id" : 3,
+            "id" : 1002,
             "nombre" : "Mate 3",
             "descripcion" : "calabaza 3",
+            "img": "cuchillo alfombardo.jpg",
+            "precio" : 4500
+        },
+        {
+            "id" : 1003,
+            "nombre" : "Mate imperial",
+            "descripcion" : "medidas 15cm a 30cm",
             "img": "cuchillo alfombardo.jpg",
             "precio" : 4500
         }
     ],
     "bombillas":[
         {
-            "id" : 1,
+            "id" : 2003,
             "nombre" : "Bombilla 1",
             "descripcion" : "medidas 15cm a 30cm",
             "img": "cuchillo alfombardo.jpg",
             "precio" : 4500
         },
         {
-            "id" : 2,
+            "id" : 2004,
             "nombre" : "Bombilla 2",
             "descripcion" : "5cm",
             "img": "cuchillos.jpg",
             "precio" : 1700
         },
         {
-            "id" : 3,
+            "id" : 2005,
             "nombre" : "Bombilla 3",
             "descripcion" : "medidas 15cm a 30cm",
             "img": "cuchillo alfombardo.jpg",
             "precio" : 4500
         },
         {
-            "id" : 4,
+            "id" : 2006,
             "nombre" : "Bombilla 4",
             "descripcion" : "5cm",
             "img": "cuchillos.jpg",
             "precio" : 1700
         },
         {
-            "id" : 5,
+            "id" : 2007,
             "nombre" : "Bombilla 5",
             "descripcion" : "5cm",
             "img": "cuchillos.jpg",
             "precio" : 1700
         },
         {
-            "id" : 6,
+            "id" : 2008,
             "nombre" : "Bombilla 6",
             "descripcion" : "5cm",
             "img": "cuchillos.jpg",
             "precio" : 1700
+        },
+        {
+            "id" : 2009,
+            "nombre" : "Bombilla prix",
+            "descripcion" : "medidas 12cm a 22cm",
+            "img": "juego de picnic.jpg",
+            "precio" : 1600
         }
     ],
     "boleadoras":[
         {
-            "id" : 1,
+            "id" : 3000,
             "nombre" : "Boleadora 1",
             "descripcion" : "medidas 15cm a 30cm",
             "img": "cuchillo alfombardo.jpg",
             "precio" : 4500
         },
         {
-            "id" : 2,
+            "id" : 3001,
             "nombre" : "Boleadora 2",
             "descripcion" : "5cm",
             "img": "cuchillos.jpg",
             "precio" : 1700
         },
         {
-            "id" : 3,
+            "id" : 3002,
             "nombre" : "Boleadora 3",
             "descripcion" : "medidas 15cm a 30cm",
             "img": "cuchillo alfombardo.jpg",
             "precio" : 4500
         },
         {
-            "id" : 4,
+            "id" : 3003,
             "nombre" : "Boleadora 4",
             "descripcion" : "5cm",
             "img": "cuchillos.jpg",
             "precio" : 1700
         },
         {
-            "id" : 5,
+            "id" : 3004,
             "nombre" : "Boleadora 5",
+            "descripcion" : "5cm",
+            "img": "cuchillos.jpg",
+            "precio" : 1700
+        },
+        {
+            "id" : 3005,
+            "nombre" : "Boleadora real",
             "descripcion" : "5cm",
             "img": "cuchillos.jpg",
             "precio" : 1700

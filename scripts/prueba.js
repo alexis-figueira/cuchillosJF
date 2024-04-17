@@ -1,7 +1,7 @@
 setCard ("Bombilla 2", "Descripcion", "../img/cuchillo alfombardo.jpg", "2500", "miContenedor");
 setCard ("Mate 2", "Descripcion", "../img/cuchillo alfombardo.jpg", "2500", "miContenedor");
 
-$(".img__card").click(openCard);
+//$(".img__card").click(openCard);
 
 // $(".img__card").click(function(evento){
 //     console.log(evento.currentTarget);

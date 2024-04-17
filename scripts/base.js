@@ -55,11 +55,14 @@ $(document).ready(function(){
         console.log(status) ;
         console.log(error);
     })
+    
 })
 
 function setCard (titulo, descripcion, imagen, precio, contenedor){
     let card = document.createElement ("div");
     card.setAttribute("class", "img__card");
+    card.setAttribute("id", titulo); /// ID y poner a la funcion y al base 
+    
     $("."+contenedor).append(card);
     
     let card_tit = document.createElement("h3");
@@ -67,18 +70,18 @@ function setCard (titulo, descripcion, imagen, precio, contenedor){
     card_tit.appendChild(text_tit);
     card_tit.setAttribute("class", "card__item card__tit");
     $(card).append(card_tit);
-
+    
     let card_desc = document.createElement("p");
     let text_desc = document.createTextNode(descripcion);
     card_desc.appendChild(text_desc);
-    card_desc.setAttribute("class", "card__item card__desc");   
+    card_desc.setAttribute("class", "card__item card__desc");  
     $(card).append(card_desc);
     
     let card_img = document.createElement("img");
     card_img.setAttribute("src", imagen);
     card_img.setAttribute("class", "card__item card__lnk");
     $(card).append(card_img);
-
+    
     let card_prc = document.createElement("p");
     let text_prc = document.createTextNode ("$" + precio);
     card_prc.appendChild(text_prc);
@@ -86,40 +89,53 @@ function setCard (titulo, descripcion, imagen, precio, contenedor){
     $(card).append(card_prc);
 }
 
-function openCard(evento){
-    console.log("opencard")
-    console.log(evento.currentTarget);
-    let miCarta = evento.currentTarget;
-    let miProd = miCarta.firstChild.innerHTML ;
-    console.log("miprod es " + miProd);
+///$(document).on('click', '.img__card', function(){console.log($(this).children('h3').text());});
+// $(document).on('click', '.img__card', function(){console.log(this.id + "soy this.id");});
+
+$(document).on('click', '.img__card', function(){openCard(this.id)});
+
+// $(".closeModal").click(function(){openCard(this.is)
+// }
+
+// $(".img__card").click(function())
+
+function openCard(lala){
+    //console.log(evento.currentTarget);
+    //let miCarta = evento.currentTarget;
+    //let miProd = miCarta.firstChild.innerHTML ;
+    //console.log("miprod es " + miProd);
+    
+    console.log(lala)
+
     $(".miModal .img__card").remove();
     $(".miModal").css("display", "block");
 
     let encontro = false;
 
     for (let i=0 ; i<arrProductos.cuchillos.length ; i++){
-        if (arrProductos.cuchillos[i].nombre == miProd){
+        console.log(arrProductos.cuchillos[i].nombre)
+        if (arrProductos.cuchillos[i].nombre == lala){
             encontro = true;
             setCard(arrProductos.cuchillos[i].nombre, arrProductos.cuchillos[i].descripcion, "../img/"+arrProductos.cuchillos[i].img, arrProductos.cuchillos[i].precio,"miModal");
             return;
         }
     };
     for (let i=0 ; i<arrProductos.mates.length ; i++){
-        if (arrProductos.mates[i].nombre == miProd){
+        if (arrProductos.mates[i].nombre == lala){
             encontro = true;
             setCard(arrProductos.mates[i].nombre, arrProductos.mates[i].descripcion, "../img/"+arrProductos.mates[i].img, arrProductos.mates[i].precio,"miModal");
             return;
         }
     };
     for (let i=0 ; i<arrProductos.bombillas.length ; i++){
-        if (arrProductos.bombillas[i].nombre == miProd){
+        if (arrProductos.bombillas[i].nombre == lala){
             encontro = true;
             setCard(arrProductos.bombillas[i].nombre, arrProductos.bombillas[i].descripcion, "../img/"+arrProductos.bombillas[i].img, arrProductos.bombillas[i].precio,"miModal");
             return;
         }
     };
     for (let i=0 ; i<arrProductos.boleadoras.length ; i++){
-        if (arrProductos.boleadoras[i].nombre == miProd){
+        if (arrProductos.boleadoras[i].nombre == lala){
             encontro = true;
             setCard(arrProductos.boleadoras[i].nombre, arrProductos.boleadoras[i].descripcion, "../img/"+arrProductos.boleadoras[i].img, arrProductos.boleadoras[i].precio,"miModal");
             return;
@@ -127,7 +143,7 @@ function openCard(evento){
     };
 
     if (encontro==false){
-        alert ("No encontre el producto")
+        alert ("Error al encontrar el producto")
     }
 }
 
