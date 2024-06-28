@@ -1,6 +1,5 @@
 <?php
 function v_agente ($agente, $agRegistrados){ 
-    
     $err = 0 ;
     foreach($agente as $nombre){
         $esta = 0;
@@ -16,6 +15,7 @@ function v_agente ($agente, $agRegistrados){
     };
     return $err ; // 0 hay un agente incorrecto, 1 ok
 };
+
 function v_ticket ($ticket){
     foreach($ticket as $num){
         if(is_string($num)){
@@ -24,16 +24,30 @@ function v_ticket ($ticket){
     };
     return 1; // 0 hay dato incorrecto, 1 ok
 };
-function v_evTicket ($evaluacion){
-    foreach($evaluacion as $ev){
-        if($ev != "BIEN CARGADO" && $ev != "DATOS INCORRECTOS" && $ev != "DUPLICADO" && $ev != "FALTA INFORMACION" && $ev != "INFORMACION INCORRECTA" && $ev != "MAL CARGADO" && $ev != "MAL ENVIADO"){
+
+function v_evTicket ($eval){
+    $arrEval = array('BIEN CARGADO' => '0','DATOS INCORRECTOS' => '0','DUPLICADO' => '0','FALTA INFORMACION' => '0','INFORMACION INCORRECTA' => '0','MAL CARGADO' => '0','MAL ENVIADO' => '0');
+    foreach($eval as $ev){
+        if(array_key_exists($ev, $arrEval)){
             return 0;
         }
     }
     return 1 ; // 0 hay dato incorrecto, 1 ok
 }
 
+function li_ev($eval){
+    $arrEval2 = array('BIEN CARGADO' => '0','DATOS INCORRECTOS' => '0','DUPLICADO' => '0','FALTA INFORMACION' => '0','INFORMACION INCORRECTA' => '0','MAL CARGADO' => '0','MAL ENVIADO' => '0');
+    foreach($eval as $ev){
+        if(array_key_exists($ev, $arrEval2)){
+            $arrEval2[$ev]++;
+        }
+    }
 
+    echo '<pre>';
+        print_r($arrEval2);
+    echo '</pre>';die;
+    
+};
 
 
 
