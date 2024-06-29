@@ -26,9 +26,9 @@ function v_ticket ($ticket){
 };
 
 function v_evTicket ($eval){
-    $arrEval = array('BIEN CARGADO' => '0','DATOS INCORRECTOS' => '0','DUPLICADO' => '0','FALTA INFORMACION' => '0','INFORMACION INCORRECTA' => '0','MAL CARGADO' => '0','MAL ENVIADO' => '0');
+    $contEval = array('BIEN CARGADO' => '0','DATOS INCORRECTOS' => '0','DUPLICADO' => '0','FALTA INFORMACION' => '0','INFORMACION INCORRECTA' => '0','MAL CARGADO' => '0','MAL ENVIADO' => '0');
     foreach($eval as $ev){
-        if(array_key_exists($ev, $arrEval)){
+        if(array_key_exists($ev, $contEval)){
             return 0;
         }
     }
@@ -36,15 +36,15 @@ function v_evTicket ($eval){
 }
 
 function li_ev($eval){
-    $arrEval2 = array('BIEN CARGADO' => '0','DATOS INCORRECTOS' => '0','DUPLICADO' => '0','FALTA INFORMACION' => '0','INFORMACION INCORRECTA' => '0','MAL CARGADO' => '0','MAL ENVIADO' => '0');
+    $contEval2 = array('BIEN CARGADO' => '0','DATOS INCORRECTOS' => '0','DUPLICADO' => '0','FALTA INFORMACION' => '0','INFORMACION INCORRECTA' => '0','MAL CARGADO' => '0','MAL ENVIADO' => '0');
     foreach($eval as $ev){
-        if(array_key_exists($ev, $arrEval2)){
-            $arrEval2[$ev]++;
+        if(array_key_exists($ev, $contEval2)){
+            $contEval2[$ev]++;
         }
     }
 
     echo '<pre>';
-        print_r($arrEval2);
+        print_r($contEval2);
     echo '</pre>';die;
     
 };
