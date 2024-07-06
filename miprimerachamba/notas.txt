@@ -1,0 +1,55 @@
+Al instalar composer, si me sale un error en mi php es porque tengo comentado en php.ini --> le sentencia extensio = zip
+
+Tengo que ir a xampp/php/php.ini y buscar la sentencia ;extension=zip y sacarle el ';' inicial para descomentarlo. 
+
+
+
+
+//write errores x agente
+$rows=1;
+
+$hojaActiva->setCellValue('A'.$rows, 'Agente');
+$hojaActiva->setCellValue('B'.$rows, 'Errores');
+$rows++;
+$hojaActiva->setCellValue('A'.$rows, $arrErr["ags"][0]);
+$hojaActiva->setCellValue('B'.$rows, $arrErr["err"][0]);
+$rows++;
+$hojaActiva->setCellValue('A'.$rows, $arrErr["ags"][1]);
+$hojaActiva->setCellValue('B'.$rows, $arrErr["err"][1]);
+
+// $row = 2;
+// for($i=0 ; $i<count($arrErr["ags"]);$i++){
+//     $hojaActiva->setCellValue('A'.$row, $arrErr["ags"][$i]);
+//     $hojaActiva->setCellValue('B'.$row, $arrErr["err"][$i]);
+//     $row++;
+// }
+
+
+// $writer = new Xlsx ($spreadsheet); 
+// $writer->save("Mi excel.xlsx"); //Estas lineas son para crear y guardar el archivo--> utilizando el factory de mas abajo es para descargarlo desde el navegador (y aparece en descargas del nav)
+#1) Este codigo lo buscamos en la doc de phpspreadsheet --> buscamos header/ http headers
+
+ob_start();
+
+header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+header('Content-Disposition: attachment;filename="Errores CIP.xlsx"');
+header('Cache-Control: max-age=0');
+
+$writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+$writer->save('php://output');
+#1
+ob_end_clean();
+
+// El archivo se descarga pero al abrir el excel en mi computadora, me sale un error que dice "Excel no puede abrir el archivo "Errores CIP.xlsx porque el formato o la extension de este no son validos. Compruebe que el archivo no se ha dañadi y que la extension del mimo coincide con el formato del archivo
+
+session_start();
+// Obtener el array de la sesión
+$arrErr = $_SESSION['errs'];
+// Usar el array como necesites
+
+echo "voy a mostrar el array en descarga<br><br>";
+print_r($arrErr);
+
+
+$hojaActiva->getColumnDimension('A')->setWidth(20); //ancho de columna
+$hojaActiva->getColumnDimension('B')->setWidth(20); //ancho de columna

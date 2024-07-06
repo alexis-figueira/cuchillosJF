@@ -1,0 +1,154 @@
+include("funciones.php"); 
+require 'vendor/autoload.php';
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+echo "ingreso a archivoexc";
+if(!file_exists("archivos")){ //si no existe..
+    if(!mkdir("archivos",0777)){ /// si no lo crea
+        echo "error al crear el directorio";
+        exit();
+    }
+}
+chmod("archivos",0777); //permisos del fichero
+//movemos el archivo de un lugar a otro
+if(move_uploaded_file($_FILES['fichero']['tmp_name'],"archivos/".$_FILES['fichero']['name'])){
+    echo "se guardo bien en archivos";
+
+}else{
+    echo "error al guardar el archivo";
+};
+
+
+// Verificar si el archivo ha sido subido correctamente
+
+if(file_exists("archivos/".$_FILES['fichero']['name'])){
+    echo "encontre el archivo recien guardado";
+    $file = "archivos/".$_FILES['fichero']['name'];
+    
+    // Cargar el archivo Excel
+    $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+    $reader->setReadDataOnly(true);
+    $spreadsheet = $reader->load($file);
+    //$spreadsheet = IOFactory::load($file);
+    $sheet = $spreadsheet->getActiveSheet();
+
+    // Inicializar arrays para las columnas C, D , E y F
+    $arc = array('fec'=>[],"tic"=>[],"ev"=>[],"ag"=>[],"emp"=>[],"evar"=>[]);
+    
+    // Recorrer las filas 6 a 30
+    for ($row = 7; $row <= 46; $row++) {
+        $arc["fec"][] = $sheet->getCell('C' . $row)->getValue();
+        $arc["tic"][] = $sheet->getCell('D' . $row)->getValue();
+        $arc["ev"][] = $sheet->getCell('E' . $row)->getValue();
+        $arc["ag"][] = $sheet->getCell('F' . $row)->getValue();        
+    }
+
+    for ($row = 8; $row <= 27; $row++) {
+        $arc["emp"][] = $sheet->getCell('N' . $row)->getValue();
+        if($row<=14){
+            $arc["evar"][] = $sheet->getCell('P' . $row)->getValue(); 
+        }
+    }
+
+    $excelTimestamp = $arc["fec"][0]; //valor recogido de la celda del archivo excel
+    $objetoDateTime = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($excelTimestamp);
+
+    echo $objetoDateTime->format('Y-m-d');
+    echo "<br>";
+
+    #Imprimir los arrays para verificar
+    // echo 'Columna C: ';
+    // print_r($arc["fec"]);
+    // echo '<br><br>Columna D: ' ;
+    // print_r($arc["tic"]);
+    // echo '<br><br>Columna E: ' ;
+    // print_r($arc["ev"]);
+    // echo '<br><br>Columna F: ';
+    // print_r($arc["ag"]);
+    // echo "<br><br>Agentes del área: " ;
+    // print_r($arc["emp"]);
+    // echo "<br><br>Evaluaciones del área: " ;
+    // print_r($arc["evar"]);
+
+    // echo "<br><br><br>Voy a hacer las validaciones:<br>";
+    if (v_registro($arc["ag"], $arc["emp"])){
+        echo "Agentes validos<br>";
+        if(v_ticket($arc["tic"])){
+            echo "Tickes validos<br>";
+            if(v_registro($arc["ev"], $arc["evar"])){
+                echo "Evaluaciones validas<br>";
+                $arrErr = err_ag($arc);
+            };
+        };
+    };
+
+    // Devolucion de excel
+
+}else {
+    echo "no encontre el archivo guardado" ;
+};
+
+$fecha = "mayo";
+
+$spreadsheet2 = new Spreadsheet();
+$spreadsheet2->getProperties()->setCreator("movi-das")->setTitle("Listado errores".$fecha);
+
+$spreadsheet2->setActiveSheetIndex(0);
+$hojaActiva = $spreadsheet2->getActiveSheet();
+
+$hojaActiva->setCellValue('A1','Agente');
+$hojaActiva->setCellValue('B1','Errores');
+$hojaActiva->getColumnDimension('A')->setWidth(20); //ancho de columna
+$hojaActiva->getColumnDimension('B')->setWidth(20); //ancho de columna
+
+//write errores x agente
+$row = 2;
+for($i=0 ; $i<count($arrErr["ags"]);$i++){
+    $hojaActiva->setCellValue('A'.$row, $arrErr["ags"][$i]);
+    $hojaActiva->setCellValue('B'.$row, $arrErr["err"][$i]);
+    $row++;
+}
+
+
+// Asegurarse de que no haya salidas previas
+ob_start();
+
+// Guardar el archivo temporalmente en el servidor para verificar si se genera correctamente
+$temp_file = 'archivos/Errores_CIP_temp.xlsx';
+$writer = IOFactory::createWriter($spreadsheet2, 'Xlsx');
+$writer->save($temp_file);
+
+// Verificar si el archivo se ha creado correctamente
+if(file_exists($temp_file)){
+    echo "El archivo se ha creado correctamente en el servidor: $temp_file<br>";
+    // Leer el archivo temporal y enviarlo al navegador
+    header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    header('Content-Disposition: attachment;filename="Errores CIP.xlsx"');
+    header('Cache-Control: max-age=0');
+    readfile($temp_file);
+    // Eliminar el archivo temporal
+    unlink($temp_file);
+} else {
+    echo "Error al crear el archivo Excel en el servidor.";
+}
+
+// Limpiar el buffer de salida
+ob_end_clean();
+
+
+// // $writer = new Xlsx ($spreadsheet2); 
+// // $writer->save("Mi excel.xlsx"); //Estas lineas son para crear y guardar el archivo--> utilizando el factory de mas abajo es para descargarlo desde el navegador (y aparece en descargas del nav)
+// #1) Este codigo lo buscamos en la doc de phpspreadsheet --> buscamos header/ http headers
+
+// ob_start();
+
+// header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+// header('Content-Disposition: attachment;filename="Errores CIP.xlsx"');
+// header('Cache-Control: max-age=0');
+
+// $writer = IOFactory::createWriter($spreadsheet2, 'Xlsx');
+// $writer->save('php://output');
+// #1
+// ob_end_clean();
+
+// // El archivo se descarga pero al abrir el excel en mi computadora, me sale un error que dice "Excel no puede abrir el archivo "Errores CIP.xlsx porque el formato o la extension de este no son validos. Compruebe que el archivo no se ha dañadi y que la extension del mimo coincide con el formato del archivo

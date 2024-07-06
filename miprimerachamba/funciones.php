@@ -1,8 +1,8 @@
 <?php
-require 'vendor/autoload.php';
-use PhpOffice\PhpSpreadsheet\IOFactory;
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+// require 'vendor/autoload.php';
+// use PhpOffice\PhpSpreadsheet\IOFactory;
+// use PhpOffice\PhpSpreadsheet\Spreadsheet;
+// use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 
 function v_registro ($regArch, $regArea){ 
@@ -54,12 +54,12 @@ function err_ag($archivo){ //$agReg, $agArea, $eval, $tick
 
     echo "<br><br><br>";
 
-    for ($i=0; $i<count($archivo["emp"]) ; $i++){
+    for ($i=0; $i<count($arr["ags"]) ; $i++){
         echo "el agente ".$arr["ags"][$i]." tuvo ".$arr["err"][$i]." error/es.<br>" ;
     }
-    echo "Total de errores: ".$totErr;
+    echo "<br>Total de errores del área: ".$totErr;
     return $arr;
-} // cuenta errores x agente
+} // devuelve array de agente y errores
 
 ?>
 <!-- 	$CURRENT = array_unique($CURRENT);
