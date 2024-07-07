@@ -8,7 +8,9 @@ session_start();
 // Obtener el array de la sesión
 // $arrErr = $_SESSION['errs'];
 $arrErr = isset($_SESSION['errs']) ? $_SESSION['errs'] : null;
-if ($arrErr === null) {
+$evals = isset($_SESSION['evs']) ? $_SESSION['evs'] : null;
+
+if ($arrErr === null || $evals === null) {
     echo "No hay datos para procesar.";
     exit();
 }
@@ -23,21 +25,34 @@ $spreadsheet->getProperties()->setCreator("movi-das")->setTitle("Listado errores
 $spreadsheet->setActiveSheetIndex(0);
 $hojaActiva = $spreadsheet->getActiveSheet();
 
+//Encabezado
 $hojaActiva->setCellValue('A1', 'Agente');
 $hojaActiva->setCellValue('B1', 'Errores');
+$hojaActiva->setCellValue('D1', 'Evaluaciones');
+$hojaActiva->setCellValue('E1', 'Cantidad');
+$hojaActiva->getColumnDimension('A')->setWidth(26); //ancho de columna
+$hojaActiva->getColumnDimension('B')->setWidth(9); //ancho de columna
+$hojaActiva->getColumnDimension('D')->setWidth(26); 
+$hojaActiva->getColumnDimension('E')->setWidth(9); 
 
 $row = 2;
 for($i=0; $i<count($arrErr["ags"]);$i++){
     $hojaActiva->setCellValue('A'.$row, $arrErr["ags"][$i]);
     $hojaActiva->setCellValue('B'.$row, $arrErr["err"][$i]);
     $row++;
-}
+};
+$hojaActiva->setCellValue('A'.$row, 'TOTAL');
+$hojaActiva->setCellValue('B'.$row, $arrErr['tot']);
 
-$hojaActiva->getColumnDimension('A')->setWidth(30); //ancho de columna
-$hojaActiva->getColumnDimension('B')->setWidth(10); //ancho de columna
+$row = 2;
+foreach($evals as $clave => $valor){
+    $hojaActiva->setCellValue('D'.$row, $clave);
+    $hojaActiva->setCellValue('E'.$row, $valor);
+    $row++;
+};
 
 header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-header('Content-Disposition: attachment;filename="Mi Excel.xlsx"');
+header('Content-Disposition: attachment;filename="ListadoErrores.xlsx"');
 header('Cache-Control: max-age=0');
 
 $writer = IOFactory::createWriter($spreadsheet, 'Xlsx');

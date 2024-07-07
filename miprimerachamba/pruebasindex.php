@@ -1,13 +1,17 @@
 <?php
- session_start();
+$dev = array('BIEN CARGADO' => '0','DATOS INCORRECTOS' => '0','DUPLICADO' => '0','FALTA INFORMACION' => '0','INFORMACION INCORRECTA' => '0','MAL CARGADO' => '0','MAL ENVIADO' => '0');
 
- // Definir el array en index.php
- $miArray = array('af', 'datoasd2', 'datosadsa3');
- 
- // Guardar el array en la sesión
- $_SESSION['miArray'] = $miArray;
- 
- // Redirigir a direccion.php
- header("Location: pruebas.php");
- exit;
+$evRegistro = ["DUPLICADO", "MAL CARGADO", "DUPLICADO", "DUPLICADO", "MAL ENVIADO", "FALTA INFORMACION", "MAL ENVIADO", "MAL CARGADO", "DUPLICADO", "MAL CARGADO", "MAL ENVIADO", "DUPLICADO", "MAL CARGADO", "DUPLICADO", "DUPLICADO", "FALTA INFORMACION", "MAL ENVIADO", "DUPLICADO", "MAL ENVIADO", "DUPLICADO", "MAL ENVIADO", "MAL ENVIADO", "MAL CARGADO", "DUPLICADO", "DUPLICADO", "MAL CARGADO", "MAL ENVIADO", "MAL ENVIADO", "DUPLICADO", "DUPLICADO", "MAL ENVIADO", "FALTA INFORMACION", "MAL ENVIADO", "DUPLICADO", "DUPLICADO"];
+
+$evArea = ["BIEN CARGADO", "DATOS INCORRECTOS", "DUPLICADO", "FALTA INFORMACION", "INFORMACION INCORRECTA", "MAL CARGADO", "MAL ENVIADO"];
+
+
+foreach($evArea as $val){
+    foreach($evRegistro as $valor){
+        if($val == $valor){
+            $dev[$val]++;
+        }
+    }
+}
+print_r($dev);
 ?>
