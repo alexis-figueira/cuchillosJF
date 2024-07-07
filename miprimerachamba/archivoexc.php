@@ -3,7 +3,7 @@ include("funciones.php");
 require 'vendor/autoload.php';
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
-echo "ingreso a archivoexc";
+
 
 session_start();
 
@@ -19,6 +19,7 @@ if(move_uploaded_file($_FILES['fichero']['tmp_name'],"archivos/".$_FILES['ficher
     echo "se guardo bien en archivos";
 }else{
     echo "error al guardar el archivo";
+    exit();
 };
 
 // Verificar si el archivo ha sido subido correctamente
