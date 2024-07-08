@@ -25,7 +25,7 @@ if ($arrErr === null || $evals === null) {
 
 $spreadsheet = new Spreadsheet();
 $spreadsheet->getProperties()->setCreator("movi-das")->setTitle("Listado errores")->setDescription('Proceso de errores - CIP');
-$nombreArchivo = "ListadoErrores.xlsx";
+$nombreArchivo = "ListadoErroresCIP.xlsx";
 
 $spreadsheet->setActiveSheetIndex(0);
 $hojaActiva = $spreadsheet->getActiveSheet();
