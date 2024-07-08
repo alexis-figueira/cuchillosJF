@@ -29,23 +29,26 @@ function v_ticket ($ticket){
     return true; 
 };//valida los ticket cargados --> false error, true validado
 
-function err_ag($archivo){ //$agReg, $agArea, $eval, $tick
+function err_ag($archivo, $fIni, $fFin){ //$agReg, $agArea, $eval, $tick
     $arr = array('ags'=>[],"err"=>[], "tot" => 0);
-    for ($i=0; $i<count($archivo["emp"]) ; $i++){
-        $cont = 0;
-        for($j=0 ; $j<count($archivo["ag"]) ; $j++){
-            if($archivo["ag"][$j] == $archivo["emp"][$i] && $archivo["ev"][$j] != "BIEN CARGADO"){
-                $cont++;
-                $arr["tot"]++;
-                // echo "ERROR: ".$archivo["tic"][$j]." / ".$archivo["ev"][$j]." / ".$archivo["ag"][$j]."<br>";
-            };
+        for ($i=0; $i<count($archivo["emp"]) ; $i++){
+            $cont = 0;
+                for($j=0 ; $j<count($archivo["ag"]) ; $j++){
+                    if (eval_fecha($archivo["fec"][$j], $fIni, $fFin)){
+                        if($archivo["ag"][$j] == $archivo["emp"][$i] && $archivo["ev"][$j] != "BIEN CARGADO"){
+                            $cont++;
+                            $arr["tot"]++;
+                            // echo "ERROR: ".$archivo["tic"][$j]." / ".$archivo["ev"][$j]." / ".$archivo["ag"][$j]."<br>";
+                        };
+                    };
+                };
+            $arr["ags"][] = $archivo["emp"][$i];
+            $arr["err"][] = $cont;
         };
-        $arr["ags"][] = $archivo["emp"][$i];
-        $arr["err"][] = $cont;
-    };
-    for ($i=0; $i<count($arr["ags"]) ; $i++){
+    
+    // for ($i=0; $i<count($arr["ags"]) ; $i++){
         // echo "el agente ".$arr["ags"][$i]." tuvo ".$arr["err"][$i]." error/es.<br>" ;
-    }
+    // }
     // echo "<br>Total de errores del área: ".$totErr;
     return $arr;
 };// devuelve array de agente y errores
@@ -62,6 +65,10 @@ function eval_arch($evRegistro, $evArea){
     }
     return $dev;
 }
+
+function eval_fecha($fReg, $fIn, $fFn){
+    
+}//True dentro de la fecha esperada, false fuera de fecha
 
 ?>
 <!-- 	$CURRENT = array_unique($CURRENT);

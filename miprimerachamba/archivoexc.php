@@ -3,7 +3,10 @@ include("funciones.php");
 require 'vendor/autoload.php';
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Shared\Date;
 
+$fIni = explode ("-", $_POST['fIni'], 3); //año mes dia
+$fFin = explode ("-", $_POST['fFin'], 3); //año mes dia
 
 session_start();
 
@@ -16,7 +19,7 @@ if(!file_exists("archivos")){ //si no existe..
 chmod("archivos",0777); //permisos del fichero
 //movemos el archivo de un lugar a otro
 if(move_uploaded_file($_FILES['fichero']['tmp_name'],"archivos/".$_FILES['fichero']['name'])){
-    echo "se guardo bien en archivos";
+    // echo "se guardo bien en archivos";
 }else{
     echo "error al guardar el archivo";
     exit();
@@ -25,7 +28,7 @@ if(move_uploaded_file($_FILES['fichero']['tmp_name'],"archivos/".$_FILES['ficher
 // Verificar si el archivo ha sido subido correctamente
 
 if(file_exists("archivos/".$_FILES['fichero']['name'])){
-    echo "encontre el archivo recien guardado";
+    // echo "encontre el archivo recien guardado";
     $file = "archivos/".$_FILES['fichero']['name'];
     
     // Cargar el archivo Excel
@@ -40,11 +43,13 @@ if(file_exists("archivos/".$_FILES['fichero']['name'])){
     
     // Recorrer las filas 6 a 30
     for ($row = 7; $row <= 46; $row++) {
-        $arc["fec"][] = $sheet->getCell('C' . $row)->getValue();
         $arc["tic"][] = $sheet->getCell('D' . $row)->getValue();
         $arc["ev"][] = $sheet->getCell('E' . $row)->getValue();
         $arc["ag"][] = $sheet->getCell('F' . $row)->getValue();
-        
+        $excelTimestamp = $sheet->getCell('C' . $row)->getValue(); 
+        $objetoDateTime = Date::excelToDateTimeObject($excelTimestamp);
+        $arc["fec"][] = explode ("-", $objetoDateTime->format('Y-m-d'), 3);;
+
         if($row>=8 && $row<=27){
             $arc["emp"][] = $sheet->getCell('N' . $row)->getValue();
             if($row<=14){
@@ -52,7 +57,16 @@ if(file_exists("archivos/".$_FILES['fichero']['name'])){
             };
         };
     };
-  
+    // echo "fecha archivo:<br>";
+    // print_r($arc["fec"]);
+    // echo "<br>";
+    // echo "fecha form inicial:<br>";
+    // print_r($fIni);
+    // echo "<br>";
+    // echo "fecha form final:<br>";
+    // print_r($fFin);
+
+
     // $excelTimestamp = $arc["fec"][0]; //valor recogido de la celda del archivo excel
     // $objetoDateTime = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($excelTimestamp);
     // echo $objetoDateTime->format('Y-m-d');
@@ -64,12 +78,11 @@ if(file_exists("archivos/".$_FILES['fichero']['name'])){
             echo "Tickes validos<br>";
             if(v_registro($arc["ev"], $arc["evar"])){
                 echo "Evaluaciones validas<br>";
-                $arrErr = err_ag($arc);
+                $arrErr = err_ag($arc, $fIni, $fFin);
                 $evals = eval_arch($arc["ev"],$arc["evar"]);
             };
         };
     };
-
     // Guardar el array en la sesión
     $_SESSION['errs'] = $arrErr;
     $_SESSION['evs'] = $evals;

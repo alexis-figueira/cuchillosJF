@@ -7,7 +7,6 @@ use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Color;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 
-
 session_start();
 // Obtener el array de la sesión
 // $arrErr = $_SESSION['errs'];
@@ -17,7 +16,7 @@ $evals = isset($_SESSION['evs']) ? $_SESSION['evs'] : null;
 if ($arrErr === null || $evals === null) {
     echo "No hay datos para procesar.";
     exit();
-}
+};
 
 // Usar el array como necesites
 // echo "voy a mostrar el array en descarga <br><br>";
@@ -25,7 +24,7 @@ if ($arrErr === null || $evals === null) {
 
 $spreadsheet = new Spreadsheet();
 $spreadsheet->getProperties()->setCreator("movi-das")->setTitle("Listado errores")->setDescription('Proceso de errores - CIP');
-$nombreArchivo = "ListadoErroresCIP.xlsx";
+$nombreArchivo = "ListadoErrores.xlsx";
 
 $spreadsheet->setActiveSheetIndex(0);
 $hojaActiva = $spreadsheet->getActiveSheet();

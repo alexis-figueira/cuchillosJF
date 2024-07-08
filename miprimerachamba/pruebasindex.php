@@ -1,17 +1,24 @@
-<?php
-$dev = array('BIEN CARGADO' => '0','DATOS INCORRECTOS' => '0','DUPLICADO' => '0','FALTA INFORMACION' => '0','INFORMACION INCORRECTA' => '0','MAL CARGADO' => '0','MAL ENVIADO' => '0');
-
-$evRegistro = ["DUPLICADO", "MAL CARGADO", "DUPLICADO", "DUPLICADO", "MAL ENVIADO", "FALTA INFORMACION", "MAL ENVIADO", "MAL CARGADO", "DUPLICADO", "MAL CARGADO", "MAL ENVIADO", "DUPLICADO", "MAL CARGADO", "DUPLICADO", "DUPLICADO", "FALTA INFORMACION", "MAL ENVIADO", "DUPLICADO", "MAL ENVIADO", "DUPLICADO", "MAL ENVIADO", "MAL ENVIADO", "MAL CARGADO", "DUPLICADO", "DUPLICADO", "MAL CARGADO", "MAL ENVIADO", "MAL ENVIADO", "DUPLICADO", "DUPLICADO", "MAL ENVIADO", "FALTA INFORMACION", "MAL ENVIADO", "DUPLICADO", "DUPLICADO"];
-
-$evArea = ["BIEN CARGADO", "DATOS INCORRECTOS", "DUPLICADO", "FALTA INFORMACION", "INFORMACION INCORRECTA", "MAL CARGADO", "MAL ENVIADO"];
-
-
-foreach($evArea as $val){
-    foreach($evRegistro as $valor){
-        if($val == $valor){
-            $dev[$val]++;
-        }
-    }
-}
-print_r($dev);
-?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Excel</title>
+</head>
+<body>
+    <h1>Carga de excel</h1>
+    <form action="pruebas.php" method="POST" enctype = "multipart/form-data">
+        <input type="file" name="fichero" accept=".xlsx">
+        <br>
+        <p>Ingrese el período a buscar</p>
+        <label for="fIni">Fecha inicial: </label>
+        <input type="date" id="fIni" name="fIni"  min="2024-03-01" max="2026-03-01">
+        <label for="fFin">Fecha final: </label>
+        <input type="date" id="fFin" name="fFin"  min="2024-03-01" max="2026-03-01">
+        <br><br>
+        
+        
+        <button type="submit">Enviar</button>
+    </form>
+</body>
+</html>
