@@ -5,9 +5,9 @@
     use PhpOffice\PhpSpreadsheet\Spreadsheet;
     use PhpOffice\PhpSpreadsheet\Shared\Date;
     
-    $fIni = explode ("-", $_POST['fIni'], 3); //año mes dia
-    $fFin = explode ("-", $_POST['fFin'], 3); //año mes dia
-    
+    $fIni = $_POST['fIni']; //año mes dia
+    $fFin = $_POST['fFin']; //año mes dia
+
     echo "fecha inicial form: ";
     print_r($fIni);
     echo "<br>";
@@ -44,9 +44,11 @@ if(file_exists("archivos/".$_FILES['fichero']['name'])){
     // Inicializar arrays para las columnas C, D , E y F
     $arc = array('fec'=>[],"tic"=>[],"ev"=>[],"ag"=>[],"emp"=>[],"evar"=>[]);
     
-    // Recorrer las filas 6 a 30
+    // Guardo valores de las celdas
     for ($row = 7; $row <= 46; $row++) {
-        $arc["fec"][] = $sheet->getCell('C' . $row)->getValue();
+        $excelTimestamp = $sheet->getCell('C' . $row)->getValue();
+        $objetoDateTime = Date::excelToDateTimeObject($excelTimestamp);
+        $arc["fec"][] = $objetoDateTime->format('Y-m-d');
         $arc["tic"][] = $sheet->getCell('D' . $row)->getValue();
         $arc["ev"][] = $sheet->getCell('E' . $row)->getValue();
         $arc["ag"][] = $sheet->getCell('F' . $row)->getValue();
@@ -58,28 +60,6 @@ if(file_exists("archivos/".$_FILES['fichero']['name'])){
             };
         };
     };
-    echo "fecha excel antes de converir:<br>";
-    print_r($arc["fec"]);
-
-    $fecha = [];
-    foreach ($arc["fec"] as $fec){
-        $excelTimestamp = $fec; //valor recogido de la celda del archivo excel
-        $objetoDateTime = Date::excelToDateTimeObject($excelTimestamp);
-        $fecha[] = explode ("-", $objetoDateTime->format('Y-m-d'), 3);;
-    };
-    echo "<br>Fecha excel dsps de converir:<br>";
-     //año mes dia
-
-    print_r($fecha);
-    // foreach ($fecha as $f){
-    //     echo "año: ".$f[0]." mes: ".$f[1]." dia: ".$f[2]."<br>";
-    // }
-
-
-    // $excelTimestamp = $arc["fec"][0]; //valor recogido de la celda del archivo excel
-    // $objetoDateTime = Date::excelToDateTimeObject($excelTimestamp);
-    // echo $objetoDateTime->format('Y-m-d');
-    // echo "<br>";
 
 }else {
     echo "no encontre el archivo guardado" ;
@@ -90,37 +70,36 @@ if(file_exists("archivos/".$_FILES['fichero']['name'])){
 /// ya pase a arrays pero esta funcion lo hace con strings. (tengo que vovler atras la conversion del array para enviarlo como strings cada fecha)
 
 // Función para convertir array a string de fecha
-function arrayToDateString($dateArray) {
-    return sprintf('%04d-%02d-%02d', $dateArray[0], $dateArray[1], $dateArray[2]);
-}
+// function arrayToDateString($dateArray) {
+//     return sprintf('%04d-%02d-%02d', $dateArray[0], $dateArray[1], $dateArray[2]);
+// }
+// // Función personalizada para validar la fecha
+// function isDateInRange($fReg, $fIn, $fFn) {
+//     // Convertir arrays a strings de fecha
+//     $dateReg = arrayToDateString($fReg);
+//     $dateIn = arrayToDateString($fIn);
+//     $dateFn = arrayToDateString($fFn);
 
-// Función personalizada para validar la fecha
-function isDateInRange($fReg, $fIn, $fFn) {
-    // Convertir arrays a strings de fecha
-    $dateReg = arrayToDateString($fReg);
-    $dateIn = arrayToDateString($fIn);
-    $dateFn = arrayToDateString($fFn);
+//     // Convertir strings a objetos DateTime
+//     $dateReg = new DateTime($dateReg);
+//     $dateIn = new DateTime($dateIn);
+//     $dateFn = new DateTime($dateFn);
 
-    // Convertir strings a objetos DateTime
-    $dateReg = new DateTime($dateReg);
-    $dateIn = new DateTime($dateIn);
-    $dateFn = new DateTime($dateFn);
+//     // Comparar fechas
+//     return $dateReg >= $dateIn && $dateReg <= $dateFn;
+// }
 
-    // Comparar fechas
-    return $dateReg >= $dateIn && $dateReg <= $dateFn;
-}
+// // Fechas de ejemplo
+// $fReg = [2023, 7, 15]; // Fecha a validar
+// $fIn = [2023, 7, 1];   // Fecha inicial permitida
+// $fFn = [2023, 7, 31];  // Fecha final permitida
 
-// Fechas de ejemplo
-$fReg = [2023, 7, 15]; // Fecha a validar
-$fIn = [2023, 7, 1];   // Fecha inicial permitida
-$fFn = [2023, 7, 31];  // Fecha final permitida
-
-// Verificar si la fecha está en el rango
-if (isDateInRange($fReg, $fIn, $fFn)) {
-    echo "La fecha está dentro del rango.";
-} else {
-    echo "La fecha no está dentro del rango.";
-}
+// // Verificar si la fecha está en el rango
+// if (isDateInRange($fReg, $fIn, $fFn)) {
+//     echo "La fecha está dentro del rango.";
+// } else {
+//     echo "La fecha no está dentro del rango.";
+// }
 
 // Explicación del código:
 // arrayToDateString: Esta función convierte un array con año, mes y día en una cadena de texto en formato YYYY-MM-DD.
@@ -130,18 +109,6 @@ if (isDateInRange($fReg, $fIn, $fFn)) {
 // Uso de la función: Se definen tres arrays que representan las fechas, y se llama a la función isDateInRange para verificar si la fecha de registro está en el rango especificado. Finalmente, se imprime un mensaje indicando si la fecha está dentro del rango o no.
 
 // Si necesitas más ayuda o tienes alguna otra pregunta, no dudes en decírmelo.
-
-
-
-
-
-
-
-
-
-
-
-
 
     // $excelTimestamp = $arc["fec"][0]; //valor recogido de la celda del archivo excel
     // $objetoDateTime = \PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($excelTimestamp);

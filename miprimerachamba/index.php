@@ -16,8 +16,6 @@
         <label for="fFin">Fecha final: </label>
         <input type="date" id="fFin" name="fFin"  min="2024-03-01" max="2026-03-01">
         <br><br>
-        
-        
         <button type="submit">Enviar</button>
     </form>
 </body>

@@ -29,47 +29,51 @@ function v_ticket ($ticket){
     return true; 
 };//valida los ticket cargados --> false error, true validado
 
-function err_ag($archivo, $fIni, $fFin){ //$agReg, $agArea, $eval, $tick
-    $arr = array('ags'=>[],"err"=>[], "tot" => 0);
-        for ($i=0; $i<count($archivo["emp"]) ; $i++){
-            $cont = 0;
-                for($j=0 ; $j<count($archivo["ag"]) ; $j++){
-                    if (eval_fecha($archivo["fec"][$j], $fIni, $fFin)){
-                        if($archivo["ag"][$j] == $archivo["emp"][$i] && $archivo["ev"][$j] != "BIEN CARGADO"){
-                            $cont++;
-                            $arr["tot"]++;
-                            // echo "ERROR: ".$archivo["tic"][$j]." / ".$archivo["ev"][$j]." / ".$archivo["ag"][$j]."<br>";
-                        };
+function err_ag($archivo, $fIni, $fFin){ 
+    $dev = array('ags'=>[],"err"=>[], "tot" => 0);    
+    
+
+    for ($i=0; $i<count($archivo["emp"]) ; $i++){
+        $cont = 0;
+            for($j=0 ; $j<count($archivo["ag"]) ; $j++){
+                if (val_fecha($archivo["fec"][$j], $fIni, $fFin)){
+                    if($archivo["ag"][$j] == $archivo["emp"][$i] && $archivo["ev"][$j] != "BIEN CARGADO"){
+                        $cont++;
+                        $dev["tot"]++;
+                        // echo "ERROR: ".$archivo["tic"][$j]." / ".$archivo["ev"][$j]." / ".$archivo["ag"][$j]."<br>";
                     };
                 };
-            $arr["ags"][] = $archivo["emp"][$i];
-            $arr["err"][] = $cont;
-        };
-    
-    // for ($i=0; $i<count($arr["ags"]) ; $i++){
-        // echo "el agente ".$arr["ags"][$i]." tuvo ".$arr["err"][$i]." error/es.<br>" ;
+            };
+        $dev["ags"][] = $archivo["emp"][$i];
+        $dev["err"][] = $cont;
+    };
+    // for ($i=0; $i<count($dev["ags"]) ; $i++){
+        // echo "el agente ".$dev["ags"][$i]." tuvo ".$dev["err"][$i]." error/es.<br>" ;
     // }
     // echo "<br>Total de errores del área: ".$totErr;
-    return $arr;
+    return $dev;
 };// devuelve array de agente y errores
 
-function eval_arch($evRegistro, $evArea){
+function eval_arch($archivo, $fIn, $fFn){
     $dev = array('BIEN CARGADO' => 0,'DATOS INCORRECTOS' => 0,'DUPLICADO' => 0,'FALTA INFORMACION' => 0,'INFORMACION INCORRECTA' => 0,'MAL CARGADO' => 0,'MAL ENVIADO' => 0, 'TOTAL' => 0);
-    foreach($evArea as $val){
-        foreach($evRegistro as $valor){
-            if($val == $valor){
-                $dev[$val]++;
-                $dev['TOTAL']++;
-            }
-        }
-    }
+    for($i=0; $i<count($archivo["ev"]);$i++){
+        if (val_fecha($archivo["fec"][$i], $fIn, $fFn)){
+            if(array_key_exists($archivo["ev"][$i],$dev)){
+                $dev[$archivo["ev"][$i]]++;
+                $dev["TOTAL"]++;
+            };
+        };
+        //echo "Fecha: ".$archivo["fec"][$i]." / evaluacion: ".$archivo["ev"][$i]." / total: ".$dev["TOTAL"]."<br>";
+    }; 
     return $dev;
-}
+} // devuelve array clave => valor contador de evaluaciones
 
-function eval_fecha($fReg, $fIn, $fFn){
-    
-}//True dentro de la fecha esperada, false fuera de fecha
-
+function val_fecha($fReg, $fIn, $fFn){
+    $fReg = new DateTime($fReg);
+    $fIn = new DateTime($fIn);
+    $fFn = new DateTime($fFn);
+    return $fReg>= $fIn && $fReg <= $fFn;
+}; //true esta dentro del rango, false no esta dentro del rango
 ?>
 <!-- 	$CURRENT = array_unique($CURRENT);
 	$ALTAS = array_diff($CURRENT &&  $DB);
