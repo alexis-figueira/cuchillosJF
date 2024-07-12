@@ -46,4 +46,21 @@ function echo_fecha_busqueda($fIni, $fFin){
     echo "Fecha final: ".$fFin."<br>";
 }
 
+
+// if(!in_array($VALUE[4],$empleado)){$regMalCargado[]=$VALUE[1]; unset($registros[$KEY]); continue;};
+// if(!in_array($VALUE[3],$errores)){$regMalCargado[]=$VALUE[1]; unset($registros[$KEY]);continue;};
+
+
+// $array = array('manzana', 'banana', 'naranja', 'pera');
+// $valor_a_buscar = 'naranja';
+
+// $indice = array_search($valor_a_buscar, $array);
+
+// if ($indice !== false) {
+//     echo "El valor '$valor_a_buscar' se encuentra en el índice $indice.";
+// } else {
+//     echo "El valor '$valor_a_buscar' no se encuentra en el array.";
+// }
+
+
 ?>

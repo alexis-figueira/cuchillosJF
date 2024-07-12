@@ -22,16 +22,15 @@ function v_registro ($regArch, $regArea){
 
 function v_ticket ($ticket){
     foreach($ticket as $num){
-        if(is_string($num)){
-            return false;
+        if(is_numeric($num)){
+            return true;
         }
     };
-    return true; 
+    return false; 
 };//valida los ticket cargados --> false error, true validado
 
 function err_ag($archivo, $fIni, $fFin){ 
     $dev = array('ags'=>[],"err"=>[], "tot" => 0);    
-    
 
     for ($i=0; $i<count($archivo["emp"]) ; $i++){
         $cont = 0;

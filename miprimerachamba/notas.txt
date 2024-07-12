@@ -53,3 +53,63 @@ print_r($arrErr);
 
 $hojaActiva->getColumnDimension('A')->setWidth(20); //ancho de columna
 $hojaActiva->getColumnDimension('B')->setWidth(20); //ancho de columna
+
+
+
+
+recepcion de archivo for y do-while
+
+$arc = array('fec'=>[],"tic"=>[],"ev"=>[],"ag"=>[],"emp"=>[],"evar"=>[]);
+    $vacio = 0;
+    $row = 4;
+
+
+do{
+        $excelTimestamp = $sheet->getCell('B'. $row)->getValue();
+        $objetoDateTime = Date::excelToDateTimeObject($excelTimestamp);
+        $arc["fec"][] = $objetoDateTime->format('Y-m-d');
+        $arc["tic"][] = $sheet->getCell('C' . $row)->getValue(); //obtengo y guardo el valor de la celda
+        $arc["ev"][] = $sheet->getCell('D' . $row)->getValue();
+        $arc["ag"][] = $sheet->getCell('E' . $row)->getValue();
+        
+        if($row>=8 && $row<=27){
+            $arc["emp"][] = $sheet->getCell('M' . $row)->getValue();
+            if($row<=14){
+                $arc["evar"][] = $sheet->getCell('O' . $row)->getValue(); 
+            };
+        };
+        $lastIndex = count($arc["tic"]) - 1;
+        if($arc["tic"][$lastIndex]==NULL){
+            $vacio++;
+            echo "registro vacio<br>";
+        }else{
+            $vacio=0;
+        }
+        $row++;
+
+        echo "Vuelta del do while: ".count($arc["tic"])."<br>";
+    }while($vacio<2&& count($arc["fec"]) < 600);
+    
+    echo_registros($arc,0,0);
+
+
+    // for ($row = 4; $row <= 46; $row++) {
+    //     $excelTimestamp = $sheet->getCell('B'. $row)->getValue();
+    //     $objetoDateTime = Date::excelToDateTimeObject($excelTimestamp);
+    //     $arc["fec"][] = $objetoDateTime->format('Y-m-d');
+    //     $arc["tic"][] = $sheet->getCell('C' . $row)->getValue(); 
+    //     $arc["ev"][] = $sheet->getCell('E' . $row)->getValue();
+    //     $arc["ag"][] = $sheet->getCell('E' . $row)->getValue();
+        
+    //     if($row>=8 && $row<=27){
+    //         $arc["emp"][] = $sheet->getCell('M' . $row)->getValue();
+    //         if($row<=14){
+    //             $arc["evar"][] = $sheet->getCell('O' . $row)->getValue(); 
+    //         };
+    //     };
+    // };
+    // echo_registros($arc,$fIni,$fFin);
+    // echo_area($arc);
+
+
+

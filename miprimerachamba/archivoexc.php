@@ -31,85 +31,60 @@ if(file_exists("archivos/".$_FILES['fichero']['name'])){
     $spreadsheet = $reader->load($file); 
     //$spreadsheet = IOFactory::load($file);
 	$sheetReg = $spreadsheet->getSheet($spreadsheet->getFirstSheetIndex());
-    $index = $spreadsheet->getSheetCount() - 2;
-    $sheetEmpleados = $spreadsheet->getSheet($index);
+    $registros = $sheetReg->toArray();
     $index = $spreadsheet->getSheetCount() - 1;
     $sheetArea = $spreadsheet->getSheet($index);
+    $area= $sheetArea->toArray();
 
-    $dataEmpleados = $sheetEmpleados->toArray();
-    $dataReg = $sheetReg->toArray();
-    $dataArea= $sheetArea->toArray();
-
-    echo "<pre>" ;
-    print_r($dataReg);
-    echo "</pre>" ;
-    echo "<pre>" ;
-    print_r($dataEmpleados);
-    echo "</pre>" ;
-    echo "<pre>" ;
-    print_r($dataArea);
-    echo "</pre>" ;
-
-
-    $arc = array('fec'=>[],"tic"=>[],"ev"=>[],"ag"=>[],"emp"=>[],"evar"=>[]);
-    $vacio = 0;
-    $row = 4;
-    die ;
-    do{
-        $excelTimestamp = $sheet->getCell('B'. $row)->getValue();
-        $objetoDateTime = Date::excelToDateTimeObject($excelTimestamp);
-        $arc["fec"][] = $objetoDateTime->format('Y-m-d');
-        $arc["tic"][] = $sheet->getCell('C' . $row)->getValue(); //obtengo y guardo el valor de la celda
-        $arc["ev"][] = $sheet->getCell('D' . $row)->getValue();
-        $arc["ag"][] = $sheet->getCell('E' . $row)->getValue();
-        
-        if($row>=8 && $row<=27){
-            $arc["emp"][] = $sheet->getCell('M' . $row)->getValue();
-            if($row<=14){
-                $arc["evar"][] = $sheet->getCell('O' . $row)->getValue(); 
-            };
-        };
-        $lastIndex = count($arc["tic"]) - 1;
-        if($arc["tic"][$lastIndex]==NULL){
-            $vacio++;
-            echo "registro vacio<br>";
-        }else{
-            $vacio=0;
-        }
-        $row++;
-
-        echo "Vuelta del do while: ".count($arc["tic"])."<br>";
-    }while($vacio<2&& count($arc["fec"]) < 600);
+    $empleados = array();
+    $errores = array();
+    foreach($area as $valor){
+        $empleados[] = $valor[0] ;
+        if($valor[1]==null){continue;};
+        $errores[] = $valor[1];
+    };
     
-    echo_registros($arc,0,0);
+    $array = array('manzana', 'banana', 'naranja', 'pera');
+    $valor_a_buscar = 'MIEDAN EVELYN';
+
+    $indice = array_search($valor_a_buscar, $empleados);
+
+    if ($indice !== false) {
+        echo "El valor '$valor_a_buscar' se encuentra en el índice $indice.";
+    } else {
+        echo "El valor '$valor_a_buscar' no se encuentra en el array.";
+    }
+
+    die;
 
 
-    // for ($row = 4; $row <= 46; $row++) {
-    //     $excelTimestamp = $sheet->getCell('B'. $row)->getValue();
-    //     $objetoDateTime = Date::excelToDateTimeObject($excelTimestamp);
-    //     $arc["fec"][] = $objetoDateTime->format('Y-m-d');
-    //     $arc["tic"][] = $sheet->getCell('C' . $row)->getValue(); 
-    //     $arc["ev"][] = $sheet->getCell('E' . $row)->getValue();
-    //     $arc["ag"][] = $sheet->getCell('E' . $row)->getValue();
+
+    $regMalCargado = array();
+    foreach(array_slice($registros,2) as $KEY => $VALUE){
+        $objetoDateTime = Date::excelToDateTimeObject($VALUE[1]);
+        $registros[$KEY][1] = $objetoDateTime->format('Y-m-d');
+        if(new DateTime($registros[$KEY][1]) <= new DateTime($fIni)){unset($registros[$KEY]);continue;}
+        if(new DateTime($registros[$KEY][1]) >= new DateTime($fFin)){unset($registros[$KEY]);continue;}
+        if(!in_array($VALUE[4],$empleado)){$regMalCargado[]=$VALUE[1]; unset($registros[$KEY]); continue;};
+        if(!in_array($VALUE[3],$errores)){$regMalCargado[]=$VALUE[1]; unset($registros[$KEY]);continue;};
+
         
-    //     if($row>=8 && $row<=27){
-    //         $arc["emp"][] = $sheet->getCell('M' . $row)->getValue();
-    //         if($row<=14){
-    //             $arc["evar"][] = $sheet->getCell('O' . $row)->getValue(); 
-    //         };
-    //     };
-    // };
-    // echo_registros($arc,$fIni,$fFin);
-    // echo_area($arc);
 
-    if (v_registro($arc["ag"], $arc["emp"])){
-        if(v_ticket($arc["tic"])){
-            if(v_registro($arc["ev"], $arc["evar"])){
-                $arrErr = err_ag($arc, $fIni, $fFin);
-                $evals = eval_arch($arc, $fIni, $fFin);
+        if (v_registro($arc["ag"], $arc["emp"])){
+            if(v_ticket($arc["tic"])){
+                if(v_registro($arc["ev"], $arc["evar"])){
+                    $arrErr = err_ag($arc, $fIni, $fFin);
+                    $evals = eval_arch($arc, $fIni, $fFin);
+                };
             };
         };
     };
+
+    
+
+
+    die ;
+
 
     // echo_erroresXag($arrErr);
     // echo_evaluaciones($evals);
