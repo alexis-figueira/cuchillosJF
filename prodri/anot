@@ -23,3 +23,22 @@ organigrama
 					-> padre
 					-> estado
 	
+	org__tareas		-> id_tarea
+					-> id_sector
+					-> id_agente ( 0 -> tarea para el sector )
+					-> nombre_tarea
+					-> descripcion_tarea
+					-> fecha_solicitud
+					-> fecha_programada
+					
+	objetivos		-> id_objetivo
+					-> id_sector
+					-> id_agente ( 0 -> objetivo para el sector )
+					-> descripcion
+					-> fecha_solicitud
+					-> fecha_programada
+					
+	agentes 		-> id_agente
+					-> nombre
+					-> id_sector
+					-> cargo ( o -> empleado / 1 -> cargo en el sector )

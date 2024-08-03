@@ -1,0 +1,22 @@
+BDT
+	ortopedia
+			productos			-> id_producto
+								-> nombre
+								-> tipo
+								-> precio
+								-> stock
+								-> stock_total
+			
+			orden_transaccion	-> id_transaccion
+								-> precio_transaccion
+								-> dni_cliente
+								-> nombre_cliente
+								-> fecha
+								-> tipo (0 -> alquiler / 1 -> venta )
+								-> estado (0 -> cancelada / 1 -> finalizada / 2 -> activa / ¿ 3 -> renovada ?
+			
+			detalle_transaccion	-> id_detalle
+								-> id_transaccion
+								-> id_producto
+								-> cantidad
+								-> precio_detalle
