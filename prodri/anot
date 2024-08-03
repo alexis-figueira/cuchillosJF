@@ -1,0 +1,25 @@
+sector					tareas							objetivos				agentes
+
+id_sector				id_tarea						id_objetivo				id_agente
+nombre					id_sector						id_sector				nombre
+jerarquia				id_agente ->0=sector			descripcion				cargo --> 0 empleado 1-->cargo en sector
+padre					nombre_tarea					fecha_solicitud			
+hijo					descripcion_tarea
+						fecha_limite
+
+        
+<label for="notas">Ingrese nota</label>
+<input type="text" id="notas" name="notas"><br><br>
+
+<label for="objetivos">Ingrese objetivo</label>
+<input type="text" id="objetivo" name="objetivo"><br><br>
+
+
+BDT
+organigrama
+	org__sectores	-> id_sector = key 
+					-> nombre	
+					-> jerarquia
+					-> padre
+					-> estado
+	

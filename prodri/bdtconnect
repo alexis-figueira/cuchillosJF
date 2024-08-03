@@ -1,0 +1,63 @@
+<?php
+/* //conect mysql
+try{
+	$conexion = mysqli_connect($servidor, $usuario, $contraseña, $baseDeDatos);
+	echo 'conexion exitosa';
+}
+catch(Exception $e){
+	echo 'error al conectar --> '.$e;
+}	
+*/	
+$servidor = "localhost";
+$usuario = "root";
+$contraseña = '';
+$baseDeDatos = "organigrama";
+
+//conect PDO
+/*try{$con = new PDO('mysql:host='.$servidor.'; dbname='.$baseDeDatos, $usuario, $contraseña);
+}
+catch(Exception $e){
+	echo "error al conectar a la base de datos ---> ".$e ; 
+}
+*/
+//SELECT
+/*$Que = $con->query('SELECT * FROM `org__sectores` WHERE 1');
+$row = $Que->fetch();
+
+$Que = querySelect('SELECT * FROM `org__sectores` WHERE 1');
+*/
+
+function querySelect($QUERY){
+	try{$con = new PDO('mysql:host='.$GLOBALS['servidor'].'; dbname='.$GLOBALS['baseDeDatos'], $GLOBALS['usuario'], $GLOBALS['contraseña']);
+	}
+	catch(Exception $e){
+	echo "error al conectar a la base de datos ---> ".$e ; 
+	}
+	$Que = $con->query($QUERY);	
+	
+	RETURN $Que;
+	
+	
+	/*
+$resultado = $Que->fetchAll(PDO::FETCH_ASSOC);
+
+echo '<pre>';
+print_r($resultado);
+echo '</pre>';
+*/
+	
+	
+}
+
+
+
+/* //INSERT
+$Que = $con->query("INSERT INTO `org__sectores`(`nombre`, `jerarquia`, `padre`, `estado`) VALUES ('".$input['nombre']."','".$input['nivel']."','".$input['padre']."', '1')");
+*/
+/* //UPDATE
+$Que = $con->query("UPDATE `org__sectores` SET `estado`= 1 WHERE `id_sector` = 2");
+*/
+
+
+
+?>
