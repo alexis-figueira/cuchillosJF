@@ -1,0 +1,97 @@
+<?php
+if($ROUTE_OPC == 'Listado_Procesos'){
+	$RETURN['COUNT'] = 0;
+	$RETURN['TOTAL'] = 0;
+	$RETURN['PAGINAS'] = 1;
+	$RETURN['ROWS'] = [];
+	if($PP['C'] != 1){EJE($RETURN);}
+	/*
+	$ARRAY_ORDER = array(1 => '`nombre` {METHOD}', 2 => '`detalle` {METHOD}', 3 => '`localidad` {METHOD}', 4 => '`provincia` {METHOD}', 5 => '`observacion` {METHOD}', 6 => '`disponible` {METHOD}');
+	$FORM = LISTADO_QUERY($ARRAY_ORDER);
+	if($FORM['SEARCH'] != NULL){ $SEARCH = "WHERE `nombre` LIKE '%".$FORM['SEARCH']."%' OR `localidad` = '".$FORM['SEARCH']."' OR `provincia` = '".$FORM['SEARCH']."'";}else{$SEARCH = "";}
+	$Que = QuerySelect("SELECT `id`, `nombre`, `detalle`, `localidad`, `provincia`, `observacion`, `disponible` FROM ".$DBT_WEBDAS['CARTILLA_FARMACIAS'].$SEARCH." ORDER BY ".$FORM['ORDENAR']." LIMIT ".$FORM['LIMIT']." ,".$FORM['ROWS'], "QWE_WEBDAS");
+	while($Row = QueryFetch($Que)){
+		$RETURN['COUNT']++;
+		$TMP = [];
+		$TMP['ID'] 						= $Row['id'];
+		$TMP['DATA']['NOMBRE'] 			= $Row['nombre'];
+		$TMP['DATA']['DETALLE'] 		= $Row['detalle'];
+		$TMP['DATA']['LOCALIDAD'] 		= $Row['localidad'];
+		$TMP['DATA']['PROVINCIA'] 		= $Row['provincia'];
+		$TMP['DATA']['OBSERVACION'] 	= $Row['observacion'];
+		if($Row['disponible'] == 1){$TMP['DATA']['DISPONIBLE'] = '<i class="fa-solid fa-circle-check link-success" title="DISPONIBLE"></i>';}
+		if($Row['disponible'] == 0){$TMP['DATA']['DISPONIBLE'] = '<i class="fa-solid fa-circle-xmark link-danger" title="BLOQUEADO"></i>';}		
+		array_push($RETURN['ROWS'], $TMP);
+		unset($TMP);
+	}
+	$Que = QuerySelect("SELECT COUNT(*) AS 'total' FROM ".$DBT_WEBDAS['CARTILLA_FARMACIAS'].$SEARCH, "QWE_WEBDAS");
+	while($Row = QueryFetch($Que)){	
+		$RETURN['TOTAL'] = $Row['total'];
+		$RETURN['PAGINAS'] = ceil($RETURN['TOTAL']/$FORM['ROWS']);
+	}
+	*/
+	EJE($RETURN);
+}
+elseif($ROUTE_OPC == 'Procesar_Farmacia'){
+	if($PP['A'] == 0 && $PP['M'] == 0){RJRE();}
+	if(CIJE('CEI_ID_FARMACIA') === TRUE){RJRE();};
+	if(CIJE('CTS_FARMACIA') === TRUE){RJRE();};
+	if(CIJE('CTS_DETALLE') === TRUE){RJRE();};	
+	if(CIJE('CTS_LOCALIDAD') === TRUE){RJRE();};
+	if(CIJE('CTS_PROVINCIA') === TRUE){RJRE();};
+	if(CIJE('CTS_OBSERVACION') === TRUE){RJRE();};
+	if($sJ['CEI_ID_FARMACIA'] == 0 && $PP['A'] != 1){RJRE("PERMISOS INSUFICIENTES");}
+	if($sJ['CEI_ID_FARMACIA'] != 0 && $PP['M'] != 1){RJRE("PERMISOS INSUFICIENTES");}
+
+	if($sJ['CEI_ID_FARMACIA'] == 0){
+		$Que = QueryInsert("INSERT INTO ".$DBT_WEBDAS['CARTILLA_FARMACIAS']."(`nombre`, `detalle`, `localidad`, `provincia`, `observacion`, `reg_usuario`, `reg_fecha`) VALUES ('".$sJ['CTS_FARMACIA']."', '".$sJ['CTS_DETALLE']."', '".$sJ['CTS_LOCALIDAD']."', '".$sJ['CTS_PROVINCIA']."', '".$sJ['CTS_OBSERVACION']."', '".$C_USER['ID']."', NOW())", "QWE_WEBDAS");
+	}else{
+		$Que = QuerySelect("SELECT `id`, `nombre`, `detalle`, `localidad`, `provincia`, `observacion` FROM ".$DBT_WEBDAS['CARTILLA_FARMACIAS']." WHERE `id` = '".$sJ['CEI_ID_FARMACIA']."'", "QWE_WEBDAS");
+		if(QueryNumRows($Que) < 1){RJRE();}
+		while($Row = QueryFetch($Que)){
+			if($Row['nombre'] != $sJ['CTS_FARMACIA']){QueryUpdate("UPDATE ".$DBT_WEBDAS['CARTILLA_FARMACIAS']." SET `nombre` = '".$sJ['CTS_FARMACIA']."', `reg_fecha` = NOW(), `reg_usuario` = '".$C_USER['ID']."' WHERE `id` = '".$sJ['CEI_ID_FARMACIA']."'", "QWE_WEBDAS");}
+			if($Row['detalle'] != $sJ['CTS_DETALLE']){QueryUpdate("UPDATE ".$DBT_WEBDAS['CARTILLA_FARMACIAS']." SET `detalle` = '".$sJ['CTS_DETALLE']."', `reg_fecha` = NOW(), `reg_usuario` = '".$C_USER['ID']."' WHERE `id` = '".$sJ['CEI_ID_FARMACIA']."'", "QWE_WEBDAS");}
+			if($Row['localidad'] != $sJ['CTS_LOCALIDAD']){QueryUpdate("UPDATE ".$DBT_WEBDAS['CARTILLA_FARMACIAS']." SET `localidad` = '".$sJ['CTS_LOCALIDAD']."', `reg_fecha` = NOW(), `reg_usuario` = '".$C_USER['ID']."' WHERE `id` = '".$sJ['CEI_ID_FARMACIA']."'", "QWE_WEBDAS");}
+			if($Row['provincia'] != $sJ['CTS_PROVINCIA']){QueryUpdate("UPDATE ".$DBT_WEBDAS['CARTILLA_FARMACIAS']." SET `provincia` = '".$sJ['CTS_PROVINCIA']."', `reg_fecha` = NOW(), `reg_usuario` = '".$C_USER['ID']."' WHERE `id` = '".$sJ['CEI_ID_FARMACIA']."'", "QWE_WEBDAS");}
+			if($Row['observacion'] != $sJ['CTS_OBSERVACION']){QueryUpdate("UPDATE ".$DBT_WEBDAS['CARTILLA_FARMACIAS']." SET `observacion` = '".$sJ['CTS_OBSERVACION']."', `reg_fecha` = NOW(), `reg_usuario` = '".$C_USER['ID']."' WHERE `id` = '".$sJ['CEI_ID_FARMACIA']."'", "QWE_WEBDAS");}
+			
+		}
+	}
+	RJRO();
+}
+elseif($ROUTE_OPC == 'Procesar_Farmacia_Status'){
+	if($PP['B'] == 0){RJRE(1);}
+	if(CIJE('CEI_ID') === TRUE){RJRE(2);};
+	
+	$Que = QuerySelect("SELECT `id`, `disponible` FROM ".$DBT_WEBDAS['CARTILLA_FARMACIAS']." WHERE `id` = '".$sJ['CEI_ID']."'", "QWE_WEBDAS");
+	if(QueryNumRows($Que) < 1){RJRE(3);}
+	while($Row = QueryFetch($Que)){
+		if($Row['disponible'] == 1){
+			$Que = QueryUpdate("UPDATE ".$DBT_WEBDAS['CARTILLA_FARMACIAS']." SET `disponible` = '0', `reg_fecha` = NOW(), `reg_usuario` = '".$C_USER['ID']."' WHERE `id` = '".$sJ['CEI_ID']."'", "QWE_WEBDAS");
+		}
+		if($Row['disponible'] == 0){
+			$Que = QueryUpdate("UPDATE ".$DBT_WEBDAS['CARTILLA_FARMACIAS']." SET `disponible` = '1', `reg_fecha` = NOW(), `reg_usuario` = '".$C_USER['ID']."' WHERE `id` = '".$sJ['CEI_ID']."'", "QWE_WEBDAS");
+		}
+	}
+	RJRO();
+}
+elseif($ROUTE_OPC == 'Ver_Farmacia'){
+	$RETURN['ID'] = 0;
+	if($PP['C'] != 1){EJE($RETURN);}
+	if(CIJE('CEI_ID') === TRUE){$sJ['CEI_ID'] = 0;};
+	$Que = QuerySelect("SELECT `id`, `nombre`, `detalle`, `localidad`, `provincia`, `observacion`, `disponible` FROM ".$DBT_WEBDAS['CARTILLA_FARMACIAS']." WHERE `id` = '".$sJ['CEI_ID']."'", "QWE_WEBDAS");	
+	while($Row = QueryFetch($Que)){
+		$RETURN['ID'] 			= $Row['id'];
+		$RETURN['NOMBRE'] 		= $Row['nombre'];
+		$RETURN['DETALLE'] 		= $Row['detalle'];
+		$RETURN['LOCALIDAD'] 	= $Row['localidad'];
+		$RETURN['PROVINCIA'] 	= $Row['provincia'];
+		$RETURN['OBSERVACION'] 	= $Row['observacion'];
+		$RETURN['DISPONIBLE'] 	= $Row['disponible'];
+	}
+	EJE($RETURN);
+}
+else{
+	EE("NO_SE_PUEDE_PROCESAR_LA_SOLICITUD");
+}
+?>

@@ -1,0 +1,237 @@
+<?php
+$TABS['A'] =  array('ICON' => '<i class="fa-solid fa-users"></i>', 'TITLE' => 'Activos');
+$TABS['B'] =  array('ICON' => '<i class="fa-solid fa-users-slash"></i>', 'TITLE' => 'Bajas');
+
+$TABLE['A']['COLUMNAS']			= array(
+	array('COLUMNA' => 'Afiliado'),
+	array('COLUMNA' => 'Nombre y Apelllido',),
+	array('COLUMNA' => 'DNI'),
+	array('COLUMNA' => 'CUIL'),
+	array('COLUMNA' => 'Sexo'),
+	array('COLUMNA' => 'F.Nacimiento',)
+);
+$TABLE['A']['AJAX_URL'] 		= $LINK_BACK.'/Listado_Activos';
+$TABLE['A']['HERRAMIENTAS'] 	= array('ALTA' => 'A', 'QUICK_SEARCH' => 'C', 'REFRESH' => 'C');
+$TABLE['A']['SETTING'] 			= array('ORDENAR' => "TRUE", 'ORDENAR_COL' => 1,'ORDENAR_METHOD' => 'ASC', 'DOBLE_CLICK' => 'Display_A_Principal');
+$TABLE['A']['QUICK_SEARCH']		= "Buscar Afiliado o DNI o CUIL";
+
+
+$MAIN = CreateMain($TABS, $TABLE);
+
+
+if(in_array('Display_A_Principal', $TABLE_FUNCTION)){
+	unset($TMP);
+	$TMP['MODAL']['ID']			= 'A_PRINCIPAL';
+	$TMP['MODAL']['TITLE']		= 'Afiliado';
+	$TMP['MODAL']['SIZE']		= 'XL';
+	
+	$TMP['FOOTER']['SUBMIT'] 	= array('ID' => 'Guardar');
+	$TMP['FOOTER']['CLOSE']		= array('ID' => 'Cerrar');
+	
+	
+	$TMP['BODY'] = '<div class="card border-dark mx-auto mt-4 mb-0" style="width: 98%">';
+		$TMP['BODY'] .= '<div class="card-header card-main  gradient_card rounded-2 text-light" id="subcard-main" style="--bs-bg-opacity: .95;">';
+			$TMP['BODY'] .= '<div class="d-grid gap-2 d-flex justify-content-center">';
+				$TMP['BODY'] .= '<ul class="nav nav-pills subtabs-buttons">';
+					$TMP['BODY'] .= '<li class="nav-item">';
+						$TMP['BODY'] .= '<button class="nav-link text-light mx-1" type="button" role="tab" aria-controls="A_PRINCIPAL_Persona" aria-selected="false">';
+							$TMP['BODY'] .= '<div class="d-inline-block"><span class="text-center subcardcard_header_btn">Persona</span></div>';									
+						$TMP['BODY'] .= '</button>';
+					$TMP['BODY'] .= '</li>';
+					$TMP['BODY'] .= '<li class="nav-item">';
+						$TMP['BODY'] .= '<button class="nav-link text-light mx-1" type="button" role="tab" aria-controls="A_PRINCIPAL_Afiliacion" aria-selected="false">';
+							$TMP['BODY'] .= '<div class="d-inline-block"><span class="text-center subcardcard_header_btn">Afiliacion</span></div>';									
+						$TMP['BODY'] .= '</button>';
+					$TMP['BODY'] .= '</li>';
+					$TMP['BODY'] .= '<li class="nav-item">';
+						$TMP['BODY'] .= '<button class="nav-link text-light mx-1" type="button" role="tab" aria-controls="A_PRINCIPAL_Contacto" aria-selected="false">';
+							$TMP['BODY'] .= '<div class="d-inline-block"><span class="text-center subcardcard_header_btn">Contacto</span></div>';									
+						$TMP['BODY'] .= '</button>';
+					$TMP['BODY'] .= '</li>';
+					$TMP['BODY'] .= '<li class="nav-item">';
+						$TMP['BODY'] .= '<button class="nav-link text-light mx-1" type="button" role="tab" aria-controls="A_PRINCIPAL_Otros" aria-selected="false">';
+							$TMP['BODY'] .= '<div class="d-inline-block"><span class="text-center subcardcard_header_btn">Otros</span></div>';									
+						$TMP['BODY'] .= '</button>';
+					$TMP['BODY'] .= '</li>';
+					$TMP['BODY'] .= '<li class="nav-item">';
+						$TMP['BODY'] .= '<button class="nav-link text-light mx-1" type="button" role="tab" aria-controls="A_PRINCIPAL_Observacion" aria-selected="false">';
+							$TMP['BODY'] .= '<div class="d-inline-block"><span class="text-center subcardcard_header_btn">Observacion</span></div>';									
+						$TMP['BODY'] .= '</button>';
+					$TMP['BODY'] .= '</li>';
+				$TMP['BODY'] .= '</ul>';
+			$TMP['BODY'] .= '</div>';
+		$TMP['BODY'] .= '</div>';
+		$TMP['BODY'] .= '<form id="'.$TMP['MODAL']['ID'].'_FORM" autocomplete="off">';
+			$TMP['BODY'] .= '<div class="card text-center border border-0">';
+				$TMP['BODY'] .= '<div class="card-body px-4 py-2" id="subcardcard-body-main"> ';
+					$TMP['BODY'] .= '<div class="tab-content subtabs-body">';
+						$TMP['BODY'] .= '<div class="tab-pane fade" role="tabpanel" aria-labelledby="A_PRINCIPAL_Persona" tabindex="0">';
+							$TMP['BODY'] .= '<div class="row"><div class="col-12 col-md-6">';
+								$TMP['BODY'] .= CreateFormInput(array('ID' => 'afiliado', 'TIPO' => 'number', 'VALIDATE' => 'CES', 'REQUIRED' => TRUE));
+							$TMP['BODY'] .= '</div><div class="col-12 col-md-6">';
+								$TMP['BODY'] .= CreateFormInput(array('ID' => 'barra', 'TIPO' => 'number', 'VALIDATE' => 'CES', 'REQUIRED' => TRUE));								
+							$TMP['BODY'] .= '</div></div>';
+							$TMP['BODY'] .= '<div class="row"><div class="col-12 col-md-6">';
+								$TMP['BODY'] .= CreateFormInput(array('ID' => 'nombre', 'TIPO' => 'text', 'VALIDATE' => 'CTS', 'REQUIRED' => TRUE));
+							$TMP['BODY'] .= '</div><div class="col-12 col-md-6">';
+								$TMP['BODY'] .= CreateFormInput(array('ID' => 'apellido', 'TIPO' => 'text', 'VALIDATE' => 'CTS', 'REQUIRED' => TRUE));								
+							$TMP['BODY'] .= '</div></div>';
+							$TMP['BODY'] .= '<div class="row"><div class="col-12 col-md-6">';
+								$TMP['BODY'] .= CreateFormInput(array('ID' => 'dni', 'TIPO' => 'number', 'VALIDATE' => 'CTS', 'REQUIRED' => TRUE));
+							$TMP['BODY'] .= '</div><div class="col-12 col-md-6">';
+								$TMP['BODY'] .= CreateFormInput(array('ID' => 'cuil', 'TIPO' => 'number', 'VALIDATE' => 'CTS', 'REQUIRED' => TRUE));								
+							$TMP['BODY'] .= '</div></div>';
+							$TMP['BODY'] .= '<div class="row"><div class="col-12 col-md-6">';
+								$TMP['BODY'] .= CreateFormInput(array('ID' => 'sexo', 'TIPO' => 'text', 'VALIDATE' => 'CTS', 'REQUIRED' => TRUE));
+							$TMP['BODY'] .= '</div><div class="col-12 col-md-6">';
+								$TMP['BODY'] .= CreateFormInput(array('ID' => 'nacimiento', 'TIPO' => 'date', 'VALIDATE' => 'CDA', 'REQUIRED' => TRUE, 'LABEL' => 'Fecha de Nacimiento'));								
+							$TMP['BODY'] .= '</div></div>';
+							$TMP['BODY'] .= '<div class="row"><div class="col-12 col-md-6">';
+								$TMP['BODY'] .= CreateFormInput(array('ID' => 'nacionalidad', 'TIPO' => 'text', 'VALIDATE' => 'CTS', 'REQUIRED' => TRUE));
+							$TMP['BODY'] .= '</div><div class="col-12 col-md-6">';
+								$TMP['BODY'] .= CreateFormInput(array('ID' => 'estado_civil', 'TIPO' => 'text', 'VALIDATE' => 'CDA', 'REQUIRED' => TRUE, 'LABEL' => 'Estado Civil'));								
+							$TMP['BODY'] .= '</div></div>';
+						$TMP['BODY'] .= '</div>';
+						$TMP['BODY'] .= '<div class="tab-pane fade" role="tabpanel" aria-labelledby="A_PRINCIPAL_Afiliacion" tabindex="0">';							
+							$TMP['BODY'] .= '<div class="row"><div class="col-12 col-md-6">';
+								$TMP['BODY'] .= CreateFormInput(array('ID' => 'fecha_alta', 'TIPO' => 'date', 'VALIDATE' => 'CDA', 'REQUIRED' => TRUE, 'LABEL' => 'Fecha de Alta'));
+							$TMP['BODY'] .= '</div><div class="col-12 col-md-6">';
+								$TMP['BODY'] .= CreateFormInput(array('ID' => 'fecha_vencimiento', 'TIPO' => 'date', 'VALIDATE' => 'CDA', 'REQUIRED' => TRUE, 'LABEL' => 'Fecha de Vencimiento'));								
+							$TMP['BODY'] .= '</div></div>';							
+							$TMP['BODY'] .= '<div class="row"><div class="col-12 col-md-6">';
+								$TMP['BODY'] .= CreateFormInput(array('ID' => 'dependencia', 'TIPO' => 'text', 'VALIDATE' => 'CDA', 'REQUIRED' => TRUE));
+							$TMP['BODY'] .= '</div><div class="col-12 col-md-6">';
+								$TMP['BODY'] .= CreateFormInput(array('ID' => 'revista', 'TIPO' => 'text', 'VALIDATE' => 'CDA', 'REQUIRED' => TRUE));								
+							$TMP['BODY'] .= '</div></div>';						
+							$TMP['BODY'] .= '<div class="row"><div class="col-12 col-md-6">';
+								$TMP['BODY'] .= CreateFormInput(array('ID' => 'legajo', 'TIPO' => 'text', 'VALIDATE' => 'CDA', 'REQUIRED' => TRUE));
+							$TMP['BODY'] .= '</div><div class="col-12 col-md-6">';
+								$TMP['BODY'] .= CreateFormInput(array('ID' => 'caja', 'TIPO' => 'text', 'VALIDATE' => 'CDA', 'REQUIRED' => TRUE));								
+							$TMP['BODY'] .= '</div></div>';					
+							$TMP['BODY'] .= '<div class="row"><div class="col-12 col-md-6">';
+								$TMP['BODY'] .= CreateFormInput(array('ID' => 'resolucion', 'TIPO' => 'text', 'VALIDATE' => 'CDA', 'REQUIRED' => TRUE));
+							$TMP['BODY'] .= '</div><div class="col-12 col-md-6">';
+								$TMP['BODY'] .= CreateFormInput(array('ID' => 'coparticipante', 'TIPO' => 'text', 'VALIDATE' => 'CDA', 'REQUIRED' => TRUE));								
+							$TMP['BODY'] .= '</div></div>';
+							$TMP['BODY'] .= CreateFormInput(array('ID' => 'omint', 'TIPO' => 'text', 'VALIDATE' => 'CDA', 'REQUIRED' => TRUE, 'LABEL' => 'Numero Omint'));
+						$TMP['BODY'] .= '</div>';
+						$TMP['BODY'] .= '<div class="tab-pane fade" role="tabpanel" aria-labelledby="A_PRINCIPAL_Contacto" tabindex="0">';
+							$TMP['BODY'] .= '<div class="row"><div class="col-12 col-md-6">';
+								$TMP['BODY'] .= CreateFormInput(array('ID' => 'correo', 'TIPO' => 'text', 'VALIDATE' => 'CDA', 'REQUIRED' => TRUE));
+							$TMP['BODY'] .= '</div><div class="col-12 col-md-6">';
+								$TMP['BODY'] .= CreateFormInput(array('ID' => 'telefono', 'TIPO' => 'text', 'VALIDATE' => 'CDA', 'REQUIRED' => TRUE));								
+							$TMP['BODY'] .= '</div></div>';								
+							$TMP['BODY'] .= CreateFormInput(array('ID' => 'calle', 'TIPO' => 'text', 'VALIDATE' => 'CDA', 'REQUIRED' => TRUE));							
+							$TMP['BODY'] .= '<div class="row"><div class="col-12 col-md-6">';
+								$TMP['BODY'] .= CreateFormInput(array('ID' => 'numero', 'TIPO' => 'text', 'VALIDATE' => 'CDA', 'REQUIRED' => TRUE));
+							$TMP['BODY'] .= '</div><div class="col-12 col-md-6">';
+								$TMP['BODY'] .= CreateFormInput(array('ID' => 'piso', 'TIPO' => 'text', 'VALIDATE' => 'CDA', 'REQUIRED' => TRUE));
+								$TMP['BODY'] .= '</div></div>';	
+							$TMP['BODY'] .= '<div class="row"><div class="col-12 col-md-6">';
+								$TMP['BODY'] .= CreateFormInput(array('ID' => 'departamento', 'TIPO' => 'text', 'VALIDATE' => 'CDA', 'REQUIRED' => TRUE));	
+							$TMP['BODY'] .= '</div><div class="col-12 col-md-6">';
+								$TMP['BODY'] .= CreateFormInput(array('ID' => 'Codigo Postal', 'TIPO' => 'text', 'VALIDATE' => 'CDA', 'REQUIRED' => TRUE));							
+							$TMP['BODY'] .= '</div></div>';
+							$TMP['BODY'] .= '<div class="row"><div class="col-12 col-md-6">';
+								$TMP['BODY'] .= CreateFormInput(array('ID' => 'provincia', 'TIPO' => 'text', 'VALIDATE' => 'CDA', 'REQUIRED' => TRUE));
+							$TMP['BODY'] .= '</div><div class="col-12 col-md-6">';
+								$TMP['BODY'] .= CreateFormInput(array('ID' => 'localidad', 'TIPO' => 'text', 'VALIDATE' => 'CDA', 'REQUIRED' => TRUE));								
+							$TMP['BODY'] .= '</div></div>';
+						$TMP['BODY'] .= '</div>';
+						$TMP['BODY'] .= '<div class="tab-pane fade" role="tabpanel" aria-labelledby="A_PRINCIPAL_Otros" tabindex="0">';
+							$TMP['BODY'] .= CreateFormInput(array('ID' => 'otros', 'TIPO' => 'text', 'VALIDATE' => 'CTS', 'REQUIRED' => TRUE));
+						$TMP['BODY'] .= '</div>';
+						$TMP['BODY'] .= '<div class="tab-pane fade" role="tabpanel" aria-labelledby="A_PRINCIPAL_Observacion" tabindex="0">';
+							$TMP['BODY'] .= CreateFormInput(array('ID' => 'observacion', 'TIPO' => 'text', 'VALIDATE' => 'CTS', 'REQUIRED' => TRUE));	
+						$TMP['BODY'] .= '</div>';						
+					$TMP['BODY'] .= '</div>';
+				$TMP['BODY'] .= '</div>';
+			$TMP['BODY'] .= '</div>';
+		$TMP['BODY'] .= '</form>';
+	$TMP['BODY'] .= '</div>';	
+	
+	
+	
+	
+	
+	
+	
+	
+	/*
+	$TMP['BODY'] = '<input type="hidden" id="AUTOFOCUS">';
+	$TMP['BODY'] .= '<form id="'.$TMP['MODAL']['ID'].'_FORM" autocomplete="off">';
+		$TMP['BODY'] .= '<div class="alert alert-danger text-center fw-bold" role="alert">A partir del 1 de junio las viandas se descontarán sean o no retiradas</div>';
+		$TMP['BODY'] .= CreateFormInput(array('ID' => 'fecha', 'TIPO' => 'date', 'VALIDATE' => 'CFA', 'REQUIRED' => TRUE, 'MIN' => Fecha_Agregar(date("Y-m-d"),2,'dias','Y-m-d')));
+		$TMP['BODY'] .= CreateFormInput(array('ID' => 'confirmar', 'TIPO' => 'hidden', 'VALIDATE' => 'CIB', 'VALUE' => 0));		
+		$TMP['BODY'] .= '<div id="Menu"></div>';
+	$TMP['BODY'] .= '</form>';
+	*/
+	array_push($MODALS,CreateModal($TMP['MODAL'], $TMP['BODY'], $TMP['FOOTER']));
+	array_push($VARS,"const MODAL_".$TMP['MODAL']['ID']."_INSTANCE = bootstrap.Modal.getOrCreateInstance('#MODAL_".$TMP['MODAL']['ID']."');");
+	array_push($VARS,"const MODAL_".$TMP['MODAL']['ID']." = document.getElementById('MODAL_".$TMP['MODAL']['ID']."');");	
+	unset($JS_TMP);
+	
+	$JS_TMP = 'function Display_A_Principal(){';
+		$JS_TMP .= 'FormErrorReset("A_PRINCIPAL_FORM");';
+		$JS_TMP .= 'FormReset("A_PRINCIPAL_FORM");';
+		$JS_TMP .= '$("#A_PRINCIPAL_FORM #Menu").empty();';
+		$JS_TMP .= '$("#A_PRINCIPAL_FORM #DLlist_AGENTE").empty();';
+		$JS_TMP .= '$("#MODAL_A_PRINCIPAL #AUTOFOCUS").val("AGENTE");';
+		$JS_TMP .= 'MODAL_A_PRINCIPAL_INSTANCE.show();';		
+	$JS_TMP .= '}';	
+
+	$JS_TMP .= 'function MODAL_A_PRINCIPAL_Procesar(){';
+		$JS_TMP .= 'if($("#A_PRINCIPAL_FORM")[0].reportValidity()==false){return;}';
+		$JS_TMP .= 'FormErrorReset("A_PRINCIPAL_FORM");';
+		$JS_TMP .= '$.ajax({url: "'.$LINK_BACK.'/Procesar_Pedido/",data: JSON.stringify(FormDataPicker("A_PRINCIPAL_FORM"))}).done(function (response){';
+			$JS_TMP .= 'if(response.RESULTADO == "OK"){';
+				$JS_TMP .= 'TableLoad("A");';
+				$JS_TMP .= 'MODAL_A_PRINCIPAL_INSTANCE.hide();';
+				$JS_TMP .= SF('OK');
+			$JS_TMP .= '}else{';
+				$JS_TMP .= 'if(response.RESULTADO == "DUP"){';
+					$JS_TMP .= 'MODAL_A_PRINCIPAL_INSTANCE.hide();';
+					$JS_TMP .= 'Swal.fire({';
+						$JS_TMP .= 'icon: "warning",';
+						$JS_TMP .= 'text: "Ya tenemos registrado el pedido " + response.MESSAGE + " ¿Desea reemplazarlo?",';
+						$JS_TMP .= 'showCancelButton: true,';
+						$JS_TMP .= 'confirmButtonText: "Confirmar",';
+						$JS_TMP .= 'cancelButtonText: "Cancelar"';
+					$JS_TMP .= '}).then((result) => {';
+						$JS_TMP .= 'if (result.isConfirmed) {';
+							$JS_TMP .= '$("#A_PRINCIPAL_FORM #CONFIRMAR").val(1);';
+							$JS_TMP .= 'MODAL_A_PRINCIPAL_Procesar();';
+						$JS_TMP .= '}';
+					$JS_TMP .= '})';
+				$JS_TMP .= '}';
+				$JS_TMP .= 'else if(response.MESSAGE != ""){'.SF('MSG', 'response.MESSAGE').'}';
+				$JS_TMP .= 'else{'.SF('ERROR').'}';
+			$JS_TMP .= '}';
+		$JS_TMP .= '});';
+	$JS_TMP .= '}';	
+
+	$JS_TMP .= '$("#A_PRINCIPAL_FORM #FECHA").change(function(){';
+		$JS_TMP .= '$.ajax({url: "'.$LINK_BACK.'/DL_Menu/",data: JSON.stringify({"CFA_FECHA":$("#A_PRINCIPAL_FORM #FECHA").val()})}).done(function (response){';
+			$JS_TMP .= '$("#A_PRINCIPAL_FORM #Menu").empty();';
+			$JS_TMP .= '$.each(response, function(key, value){';
+				$JS_TMP .= '$("#A_PRINCIPAL_FORM #Menu").append(value.VALUE);';
+			$JS_TMP .= '});';
+			$JS_TMP .= 'if(response.length == 0){$("#A_PRINCIPAL_FORM #Menu").append(\'<label class="btn btn-outline-secondary text-wrap w-100 mb-2" for="Menu_Empty">No hay menu disponible para este dia</label>\')}';
+		$JS_TMP .= '});';
+	$JS_TMP .= '});';
+
+	array_push($FUNCTIONS,$JS_TMP);
+}
+
+if(in_array('Display_A_Lock', $TABLE_FUNCTION)){
+	unset($JS_TMP);
+	$JS_TMP['SEND'] 				= 'CEI_ID';
+	$JS_TMP['RESPONSE_ID']			= 'ID_PEDIDO';
+	$JS_TMP['RESPONSE_STATUS']		= '';
+	$JS_TMP['RESPONSE_MESSAGE']		= "cancelar el pedido ' + response.MENU";
+	$JS_TMP['TARGET_CHECK']			= $LINK_BACK.'/Ver_Pedido/';
+	$JS_TMP['TARGET_SUBMIT']		= "'".$LINK_BACK."/Procesar_Pedido_Status'";
+	$JS_TMP['TARGET_SUBMIT_DATA']	= '{"CEI_ID": response.ID_PEDIDO}';
+	array_push($FUNCTIONS,SF_Lock('A',$JS_TMP));
+}
+?>

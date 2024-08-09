@@ -1,0 +1,61 @@
+<?php
+$TABS['A'] =  array('ICON' => '<i class="fa-solid fa-book-medical"></i>', 'TITLE' => 'Alfabeta');
+
+$TABLE['A']['COLUMNAS']			= array(
+	array('COLUMNA' => 'Troquel'),
+	array('COLUMNA' => 'Laboratorio'),
+	array('COLUMNA' => 'Medicamento'),
+	array('COLUMNA' => 'Precio'),
+	array('COLUMNA' => 'Estado'),
+);
+$TABLE['A']['AJAX_URL'] 		= $LINK_BACK.'/Listado_Medicamentos';
+$TABLE['A']['HERRAMIENTAS'] 	= array('INFO' => 'C','QUICK_SEARCH' => 'C', 'REFRESH' => 'C');
+$TABLE['A']['SETTING'] 			= array('ORDENAR' => "TRUE", 'ORDENAR_COL' => 2,'ORDENAR_METHOD' => 'DESC', 'DOBLE_CLICK' => 'Display_A_Info');
+$TABLE['A']['QUICK_SEARCH']		= "Buscar Troquel o Laboratorio o Medicamento";
+
+$TABLE['I']['COLUMNAS']			= array(
+	array('COLUMNA' => 'Fecha'),
+	array('COLUMNA' => 'Precio')
+);
+$TABLE['I']['AJAX_URL'] 		= $LINK_BACK.'/Listado_Precios';
+$TABLE['I']['HERRAMIENTAS'] 	= array('QUICK_SEARCH' => 'C');
+$TABLE['I']['SETTING'] 			= array('ORDENAR' => TRUE, 'ORDENAR_COL' => 1,'ORDENAR_METHOD' => 'DESC');
+$TABLE['I']['QUICK_SEARCH']		= "Buscar Fecha";
+
+$MAIN = CreateMain($TABS, $TABLE);
+
+if(in_array('Display_A_Info', $TABLE_FUNCTION)){
+	unset($TMP);
+	$TMP['MODAL']['ID']					= 'INFO';
+	$TMP['MODAL']['TITLE']				= 'Listado Precios';
+	$TMP['MODAL']['SIZE']				= 'LG';
+	
+	$TMP['FOOTER']['CLOSE']	= array('ID' => 'Cerrar');
+	
+	$TMP['FOOTER_TOOLS'] = CreateTableTools('INFO', $TABLE['I'], FALSE);
+	$TMP['BODY'] = CreateTable('INFO', $TABLE['I']);
+	$TMP['FOOTER'] = '<div class="row align-items-center w-100">';
+		$TMP['FOOTER'] .= '<div class="col-lg-3 text-start  d-none d-lg-block	text-white" id="Table_'.$TMP['MODAL']['ID'].'_Pagination"></div>';						
+		$TMP['FOOTER'] .= '<div class="col-lg-6 col-12 text-center text-white" id="Table_'.$TMP['MODAL']['ID'].'_Tools">';
+			$TMP['FOOTER'] .= $TMP['FOOTER_TOOLS'];
+		$TMP['FOOTER'] .= '</div>';
+		$TMP['FOOTER'] .= '<div class="col-lg-3 text-end d-none d-lg-block" id="Table_'.$TMP['MODAL']['ID'].'_Resultados"></div>';
+	$TMP['FOOTER'] .= '</div>';
+	array_push($MODALS,CreateModal($TMP['MODAL'], $TMP['BODY'], $TMP['FOOTER']));
+	array_push($VARS,"const MODAL_".$TMP['MODAL']['ID']."_INSTANCE = bootstrap.Modal.getOrCreateInstance('#MODAL_".$TMP['MODAL']['ID']."');");
+	array_push($VARS,"const MODAL_".$TMP['MODAL']['ID']." = document.getElementById('MODAL_".$TMP['MODAL']['ID']."');");
+	
+	$JS_TMP = 'function Display_A_Info(){';
+		$JS_TMP .= 'if($("#Table_A_row").val() >= 1){';
+			$JS_TMP .= '$("#MODAL_INFO #TITLE_INFO").html("Listado Movimientos: "+$("#Row_A_" + $("#Table_A_row").val()).find("td").eq(0).html());';
+			$JS_TMP .= '$("#Table_INFO_advanced").val($("#Table_A_row").val());';
+			$JS_TMP .= 'TableLoad("INFO");';
+			$JS_TMP .= 'MODAL_INFO_INSTANCE.show();';			
+		$JS_TMP .= '}else{';
+			$JS_TMP .= SF('ERROR');
+		$JS_TMP .= '}';
+	$JS_TMP .= '}';
+	array_push($FUNCTIONS,$JS_TMP);
+	unset($JS_TMP);
+}
+?>

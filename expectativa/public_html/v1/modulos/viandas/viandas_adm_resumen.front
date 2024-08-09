@@ -1,0 +1,281 @@
+<?php
+$TABS['A'] =  array('ICON' => '<i class="fa-solid fa-file-contract"></i>', 'TITLE' => 'Resumen');
+
+$TABLE['A']['COLUMNAS']			= array(
+	array('COLUMNA' => 'Fecha'),
+	array('COLUMNA' => 'Cantidad'),
+	array('COLUMNA' => 'Estado',)
+);
+$TABLE['A']['AJAX_URL'] 		= $LINK_BACK.'/Listado_Resumen';
+$TABLE['A']['HERRAMIENTAS'] 	= array('ALTA' => 'A','INFO' => 'C', 'PRINT' => 'C', 'CHECKLIST' => 'C', 'QUICK_SEARCH' => 'C', 'REFRESH' => 'C');
+$TABLE['A']['SETTING'] 			= array('ORDENAR' => "TRUE", 'ORDENAR_COL' => 1,'ORDENAR_METHOD' => 'ASC', 'DOBLE_CLICK' => 'Display_A_CheckList');
+$TABLE['A']['QUICK_SEARCH']		= "Buscar Fecha";
+
+$MAIN = CreateMain($TABS, $TABLE);
+
+if(in_array('Display_A_Principal', $TABLE_FUNCTION)){
+	unset($TMP);
+	$TMP['MODAL']['ID']			= 'A_PRINCIPAL';
+	$TMP['MODAL']['TITLE']		= 'Resumen';
+	$TMP['MODAL']['SIZE']		= '';
+	
+	$TMP['FOOTER']['SUBMIT'] 	= array('ID' => 'Guardar');
+	$TMP['FOOTER']['CLOSE']		= array('ID' => 'Cerrar');
+	
+	$TMP['BODY'] = '<input type="hidden" id="AUTOFOCUS">';
+	$TMP['BODY'] .= '<form id="'.$TMP['MODAL']['ID'].'_FORM" autocomplete="off">';
+		$TMP['BODY'] .= CreateFormInput(array('ID' => 'fecha', 'TIPO' => 'date', 'VALIDATE' => 'CFA', 'REQUIRED' => TRUE));
+		
+	$TMP['BODY'] .= '</form>';
+	array_push($MODALS,CreateModal($TMP['MODAL'], $TMP['BODY'], $TMP['FOOTER']));
+	array_push($VARS,"const MODAL_".$TMP['MODAL']['ID']."_INSTANCE = bootstrap.Modal.getOrCreateInstance('#MODAL_".$TMP['MODAL']['ID']."');");
+	array_push($VARS,"const MODAL_".$TMP['MODAL']['ID']." = document.getElementById('MODAL_".$TMP['MODAL']['ID']."');");	
+	unset($JS_TMP);
+	
+	$JS_TMP = 'function Display_A_Principal(){';
+		$JS_TMP .= 'FormErrorReset("A_PRINCIPAL_FORM");';
+		$JS_TMP .= 'FormReset("A_PRINCIPAL_FORM");';		
+		$JS_TMP .= '$("#MODAL_A_PRINCIPAL #AUTOFOCUS").val("FECHA");';
+		$JS_TMP .= 'var fecha = new Date();';
+		$JS_TMP .= 'fecha.setDate(fecha.getDate() + 2);';
+		$JS_TMP .= '$("#MODAL_A_PRINCIPAL #FECHA").val(fecha.toISOString().split("T")[0]);';
+		$JS_TMP .= 'MODAL_A_PRINCIPAL_INSTANCE.show();';		
+	$JS_TMP .= '}';	
+
+	$JS_TMP .= 'function MODAL_A_PRINCIPAL_Procesar(){';
+		$JS_TMP .= 'if($("#A_PRINCIPAL_FORM")[0].reportValidity()==false){return;}';
+		$JS_TMP .= 'FormErrorReset("A_PRINCIPAL_FORM");';
+		$JS_TMP .= '$.ajax({url: "'.$LINK_BACK.'/Procesar_Resumen/",data: JSON.stringify(FormDataPicker("A_PRINCIPAL_FORM"))}).done(function (response){';
+			$JS_TMP .= 'if(response.RESULTADO == "OK"){';
+				$JS_TMP .= 'TableLoad("A");';
+				$JS_TMP .= 'MODAL_A_PRINCIPAL_INSTANCE.hide();';
+				$JS_TMP .= SF('OK');
+			$JS_TMP .= '}else{';
+				$JS_TMP .= 'if(response.MESSAGE != ""){'.SF('MSG', 'response.MESSAGE').'}';
+				$JS_TMP .= 'else{'.SF('ERROR').'}';
+			$JS_TMP .= '}';
+		$JS_TMP .= '});';
+	$JS_TMP .= '}';	
+	array_push($FUNCTIONS,$JS_TMP);
+}
+if(in_array('Display_A_Info', $TABLE_FUNCTION)){
+	unset($TMP);
+	$TMP['MODAL']['ID']			= 'A_INFO';
+	$TMP['MODAL']['TITLE']		= 'Resumen';
+	$TMP['MODAL']['SIZE']		= '';
+	
+	$TMP['FOOTER']['BOTON']		= array('ID' => 'Copiar', 'ACTION' => 'Display_A_Info_Copy');
+	$TMP['FOOTER']['CLOSE']		= array('ID' => 'Cerrar');
+	
+	$TMP['BODY'] = '<div id="A_INFO"></div><div id="A_INFO_COPY" class="d-none"></div>';
+	
+	array_push($MODALS,CreateModal($TMP['MODAL'], $TMP['BODY'], $TMP['FOOTER']));
+	array_push($VARS,"const MODAL_".$TMP['MODAL']['ID']."_INSTANCE = bootstrap.Modal.getOrCreateInstance('#MODAL_".$TMP['MODAL']['ID']."');");
+	array_push($VARS,"const MODAL_".$TMP['MODAL']['ID']." = document.getElementById('MODAL_".$TMP['MODAL']['ID']."');");	
+	unset($JS_TMP);
+	
+	$JS_TMP = 'function Display_A_Info(){';
+		$JS_TMP .= 'if($("#Table_A_row").val() >= 1){';
+			$JS_TMP .= '$("#A_INFO").empty();';
+			$JS_TMP .= '$.ajax({url: "'.$LINK_BACK.'/Ver_Resumen/",data: JSON.stringify({"CTS_FECHA":$("#Row_A_" + $("#Table_A_row").val()).find("td").eq(0).html()})}).done(function (response){';
+				$JS_TMP .= 'if(response.FECHA != ""){';
+					$JS_TMP .= '$("#TITLE_A_INFO").html("RESUMEN DEL " + $("#Row_A_" + $("#Table_A_row").val()).find("td").eq(0).html());';
+					$JS_TMP .= 'var DATA = "<table class=\"table table-sm text-center\"><thead><tr><th class=\"text-secondary\">Detalle</th><th class=\"text-secondary\">Encargado</th><th class=\"text-secondary\">Retirado</th><th class=\"text-secondary\">No Retirado</th></tr></thead><tbody>";';
+					$JS_TMP .= 'var DATA_COPY = "Por medio del presente informamos el pedido de viandas para el " + $("#Row_A_" + $("#Table_A_row").val()).find("td").eq(0).html() + " \r\n \r\n";';
+					$JS_TMP .= 'var TOTAL = 0;';
+					$JS_TMP .= '$.each(response.ROWS, function(key, value){';
+						$JS_TMP .= 'DATA += "<tr><td>" + value[\'TIPO\'] + "</td><td>"+value[\'ENCARGADO\']+"</td><td>"+value[\'RETIRADO\']+"</td><td>"+value[\'NO_RETIRADO\']+"</td></tr>";';
+						$JS_TMP .= 'DATA_COPY += value[\'TIPO\'] + ": " + value[\'ENCARGADO\'] + " \r\n";';
+						$JS_TMP .= 'TOTAL += value[\'ENCARGADO\'];';
+					$JS_TMP .= '});';
+					$JS_TMP .= 'DATA_COPY += "\r\n \r\n Solicitamos por favor confirmar la recepción del pedido.";';
+					$JS_TMP .= 'DATA += "<tbody></table>";';
+					$JS_TMP .= '$("#A_INFO").append(DATA);';
+					$JS_TMP .= '$("#A_INFO_COPY").text(DATA_COPY);';
+				$JS_TMP .= '}';
+			$JS_TMP .= '});';	
+			$JS_TMP .= 'MODAL_A_INFO_INSTANCE.show();';
+		$JS_TMP .= '}';			
+	$JS_TMP .= '}';	
+	$JS_TMP .= 'function Display_A_Info_Copy(){';		
+		$JS_TMP .= 'var texto = $("#A_INFO_COPY").text();';
+		$JS_TMP .= 'navigator.clipboard.writeText(texto).then(() => {alert("Texto copiado al portapapeles: " + texto);})';
+	$JS_TMP .= '}';	
+	array_push($FUNCTIONS,$JS_TMP);
+}
+if(in_array('Display_A_Print', $TABLE_FUNCTION)){	
+	$JS_TMP = 'function Display_A_Print(){';
+		$JS_TMP .= 'if($("#Table_A_row").val() >= 1){';
+			$JS_TMP .= '$.ajax({url: "'.$LINK_BACK.'/Ver_Resumen/",data: JSON.stringify({"CTS_FECHA":$("#Row_A_" + $("#Table_A_row").val()).find("td").eq(0).html()})}).done(function (response){';
+				$JS_TMP .= 'if(response.FECHA != ""){';
+					$JS_TMP .= 'var NewTab = window.open("'.$URL['API'].'/ViandasResumen/Ver_Pdf_Resumen/" + response.FECHA + "/" + Math.floor(Math.random() * (99999 - 10000) + 10000) , "_blank");';
+					$JS_TMP .= 'if(NewTab){NewTab.focus();}else{'.SF('MSG','"El navegador esta bloqueando los popups"').'}';
+				$JS_TMP .= '}';
+			$JS_TMP .= '});';
+		$JS_TMP .= '}';
+	$JS_TMP .= '}';
+	array_push($FUNCTIONS,$JS_TMP);
+}
+if(in_array('Display_A_CheckList', $TABLE_FUNCTION)){
+	unset($TMP);
+	$TMP['MODAL']['ID']			= 'A_CHECKLIST';
+	$TMP['MODAL']['TITLE']		= 'Informar Retiro de Vianda';
+	$TMP['MODAL']['SIZE']		= 'LG';
+	
+	if($PP['A'] == 1){
+		$TMP['FOOTER']['BOTON'] 	= array('ID' => 'Agregar', 'ACTION' => 'Display_A_Agregar');
+		$TMP['FOOTER']['SUBMIT'] 	= array('ID' => 'Guardar');
+	}
+	$TMP['FOOTER']['CLOSE']		= array('ID' => 'Cerrar');
+	
+	$TMP['BODY'] = '<form id="'.$TMP['MODAL']['ID'].'_FORM" autocomplete="off">';
+	$TMP['BODY'] .= '<div class="alert alert-danger text-center fw-bold text-uppercase" role="alert">Marcar los que no retiraron</div>';
+	$TMP['BODY'] .= '<div id="A_CHECKLIST"></div>';
+	$TMP['BODY'] .= '</form>';
+	
+	array_push($MODALS,CreateModal($TMP['MODAL'], $TMP['BODY'], $TMP['FOOTER']));
+	array_push($VARS,"const MODAL_".$TMP['MODAL']['ID']."_INSTANCE = bootstrap.Modal.getOrCreateInstance('#MODAL_".$TMP['MODAL']['ID']."');");
+	array_push($VARS,"const MODAL_".$TMP['MODAL']['ID']." = document.getElementById('MODAL_".$TMP['MODAL']['ID']."');");	
+	unset($JS_TMP);
+	
+	$JS_TMP = 'function Display_A_CheckList(){';
+		$JS_TMP .= 'if($("#Table_A_row").val() >= 1){';
+			$JS_TMP .= '$("#A_CHECKLIST").empty();';
+			$JS_TMP .= '$.ajax({url: "'.$LINK_BACK.'/Ver_Pedidos/",data: JSON.stringify({"CTS_FECHA":$("#Row_A_" + $("#Table_A_row").val()).find("td").eq(0).html()})}).done(function (response){';
+				$JS_TMP .= 'if(response.FECHA != ""){';
+					$JS_TMP .= '$("#TITLE_A_CHECKLIST").html("PEDIDOS DEL " + $("#Row_A_" + $("#Table_A_row").val()).find("td").eq(0).html());';
+					$JS_TMP .= 'var DATA = "<ul class=\"list-group\">", CHECKED = "";';
+					$JS_TMP .= '$.each(response.ROWS, function(key, value){';
+						$JS_TMP .= 'CHECKED = "";';
+						$JS_TMP .= 'if(value[\'CHECKED\'] == 1){CHECKED ="checked";}';
+						$JS_TMP .= 'DATA += "<li class=\"list-group-item\"><input class=\"form-check-input me-1 InputPickUpCheckbox\" type=\"checkbox\" value=\"\" VALIDATE=\"CIB\" id=\""+value[\'ID\']+"\" "+CHECKED+"><label class=\"form-check-label\" for=\""+value[\'ID\']+"\">"+value[\'SHOW\']+"</label></li>";';
+					$JS_TMP .= '});';
+					$JS_TMP .= 'DATA += "</ul>";';
+					$JS_TMP .= '$("#A_CHECKLIST").append(DATA);';
+				$JS_TMP .= '}';
+			$JS_TMP .= '});';			
+			$JS_TMP .= 'MODAL_A_CHECKLIST_INSTANCE.show();';
+		$JS_TMP .= '}';			
+	$JS_TMP .= '}';	
+	if($PP['A'] == 1){
+		$JS_TMP .= 'function MODAL_A_CHECKLIST_Procesar(){';
+			$JS_TMP .= 'if($("#A_CHECKLIST_FORM")[0].reportValidity()==false){return;}';
+			$JS_TMP .= 'FormErrorReset("A_CHECKLIST_FORM");';
+			$JS_TMP .= 'var DATA = {};';
+			$JS_TMP .= 'DATA = FormDataPicker("A_CHECKLIST_FORM");';
+			$JS_TMP .= 'DATA["CTS_FECHA"] = $("#Row_A_" + $("#Table_A_row").val()).find("td").eq(0).html();';
+			$JS_TMP .= '$.ajax({url: "'.$LINK_BACK.'/Procesar_Retiros/",data: JSON.stringify(DATA)}).done(function (response){';
+				$JS_TMP .= 'if(response.RESULTADO == "OK"){';
+					$JS_TMP .= 'TableLoad("A");';
+					$JS_TMP .= 'MODAL_A_CHECKLIST_INSTANCE.hide();';
+					$JS_TMP .= SF('OK');
+				$JS_TMP .= '}else{';
+					$JS_TMP .= 'if(response.MESSAGE != ""){'.SF('MSG', 'response.MESSAGE').'}';
+					$JS_TMP .= 'else{'.SF('ERROR').'}';
+				$JS_TMP .= '}';
+			$JS_TMP .= '});';
+		$JS_TMP .= '}';	
+	}
+	array_push($FUNCTIONS,$JS_TMP);
+}
+if($PP['A'] == 1){
+	
+	unset($TMP);
+	$TMP['MODAL']['ID']			= 'A_AGREGAR';
+	$TMP['MODAL']['TITLE']		= 'Informar Vianda';
+	$TMP['MODAL']['SIZE']		= '';
+	
+	
+	$TMP['FOOTER']['SUBMIT'] 	= array('ID' => 'Guardar');
+	$TMP['FOOTER']['CLOSE']		= array('ID' => 'Cerrar');
+	
+	$TMP['BODY'] = '<input type="hidden" id="AUTOFOCUS">';
+	$TMP['BODY'] .= '<form id="'.$TMP['MODAL']['ID'].'_FORM" autocomplete="off">';
+		$TMP['BODY'] .= CreateFormInput(array('ID' => 'agente', 'TIPO' => 'datalist', 'VALIDATE' => 'CES', 'REQUIRED' => TRUE, 'MAXLENGTH' => 255, 'LABEL' => 'Nombre Apellido o Cuil'));
+		$TMP['BODY'] .= CreateFormInput(array('ID' => 'fecha', 'TIPO' => 'hidden', 'VALIDATE' => 'CTS'));
+		$TMP['BODY'] .= CreateFormInput(array('ID' => 'confirmar', 'TIPO' => 'hidden', 'VALIDATE' => 'CIB'));
+		$TMP['BODY'] .= '<div id="Menu"></div>';
+	$TMP['BODY'] .= '</form>';
+	array_push($MODALS,CreateModal($TMP['MODAL'], $TMP['BODY'], $TMP['FOOTER']));
+	array_push($VARS,"const MODAL_".$TMP['MODAL']['ID']."_INSTANCE = bootstrap.Modal.getOrCreateInstance('#MODAL_".$TMP['MODAL']['ID']."');");
+	array_push($VARS,"const MODAL_".$TMP['MODAL']['ID']." = document.getElementById('MODAL_".$TMP['MODAL']['ID']."');");	
+	
+	$JS_TMP = 'function Display_A_Agregar(){';
+		$JS_TMP .= 'var FECHA = $("#Row_A_" + $("#Table_A_row").val()).find("td").eq(0).html();';
+		$JS_TMP .= '$("#A_AGREGAR_FORM #AGENTE").val("").removeClass("is-valid");';
+		$JS_TMP .= '$("#A_AGREGAR_FORM #ID_AGENTE").val("");';
+		$JS_TMP .= '$("#A_AGREGAR_FORM #CONFIRMAR").val("0");';
+		$JS_TMP .= '$("#A_AGREGAR_FORM #AUTOFOCUS").val("AGENTE");';
+		$JS_TMP .= '$.ajax({url: "'.$LINK_BACK.'/DL_Menu/",data: JSON.stringify({"CFA_FECHA": FECHA.split("-").reverse().join("-")})}).done(function (response){';
+			$JS_TMP .= '$("#A_AGREGAR_FORM #Menu").empty();';
+			$JS_TMP .= '$.each(response, function(key, value){';
+				$JS_TMP .= '$("#A_AGREGAR_FORM #Menu").append(value.VALUE);';
+			$JS_TMP .= '});';
+			$JS_TMP .= 'if(response.length == 0){$("#A_AGREGAR_FORM #Menu").append(\'<label class="btn btn-outline-secondary text-wrap w-100 mb-2" for="Menu_Empty">No hay menu disponible para este dia</label>\')}';
+			$JS_TMP .= 'MODAL_A_CHECKLIST_INSTANCE.hide();';
+			$JS_TMP .= 'MODAL_A_AGREGAR_INSTANCE.show();';
+		$JS_TMP .= '});';
+	$JS_TMP .= '}';		
+
+	$JS_TMP .= 'function MODAL_A_AGREGAR_Procesar(){';
+		$JS_TMP .= 'if($("#A_AGREGAR_FORM")[0].reportValidity()==false){return;}';
+		$JS_TMP .= 'FormErrorReset("A_AGREGAR_FORM");';
+		$JS_TMP .= '$.ajax({url: "'.$LINK_BACK.'/Procesar_Agregar/",data: JSON.stringify(FormDataPicker("A_AGREGAR_FORM"))}).done(function (response){';
+			$JS_TMP .= 'if(response.RESULTADO == "DUPLICADO"){';
+				$JS_TMP .= 'MODAL_A_AGREGAR_INSTANCE.hide();';
+				$JS_TMP .= "Swal.fire({";
+					$JS_TMP .= "icon: 'warning',";
+					$JS_TMP .= "text: 'Ya hay un pedido registrado ¿Duplicar?',";
+					$JS_TMP .= "showCancelButton: true,";
+					$JS_TMP .= "confirmButtonText: 'Confirmar',";
+					$JS_TMP .= "cancelButtonText: 'Cancelar'";
+				$JS_TMP .= "}).then((result) => {";
+					$JS_TMP .= "if (result.isConfirmed) {";
+						$JS_TMP .= '$("#A_AGREGAR_FORM #CONFIRMAR").val("1");';
+						$JS_TMP .= "MODAL_A_AGREGAR_Procesar();";
+					$JS_TMP .= "}";
+				$JS_TMP .= "})";
+			$JS_TMP .= '}else if(response.RESULTADO == "OK"){';
+				$JS_TMP .= 'MODAL_A_AGREGAR_INSTANCE.hide();';
+				$JS_TMP .= 'Display_A_CheckList()';
+			$JS_TMP .= '}else{';
+				$JS_TMP .= 'if(response.MESSAGE != ""){'.SF('MSG', 'response.MESSAGE').'}';
+				$JS_TMP .= 'else{'.SF('ERROR').'}';
+			$JS_TMP .= '}';
+		$JS_TMP .= '});';
+	$JS_TMP .= '}';	
+
+	$JS_TMP .= '$("#A_AGREGAR_FORM #AGENTE").keyup(function(){';
+		$JS_TMP .= 'if($("#" + this.id).val().length >= 3){';
+			$JS_TMP .= '$("#A_AGREGAR_FORM #DLlist_AGENTE").empty();';
+			$JS_TMP .= '$.ajax({url: "'.$URL['AJAXAPI'].'ViandasSUM/DL_Empleados/",data: JSON.stringify({"CTS_AGENTE":$("#A_AGREGAR_FORM #AGENTE").val()})}).done(function (response){';
+				$JS_TMP .= '$.each(response, function(key, value){';
+					$JS_TMP .= '$("#A_AGREGAR_FORM #DLlist_AGENTE").append(\'<option data-value="\' + value.ID + \'" value="\'+value.VALUE+\'"></option>\');';
+				$JS_TMP .= '});';
+			$JS_TMP .= '});';
+		$JS_TMP .= '}';
+	$JS_TMP .= '});';
+	$JS_TMP .= '$("#A_AGREGAR_FORM #AGENTE").change(function(){';
+		$JS_TMP .= 'var getVal = document.querySelector(\'#DLlist_AGENTE option[value="\' + $(\'#A_AGREGAR_FORM #AGENTE\').val().toUpperCase() + \'"]\');';
+		$JS_TMP .= 'if(getVal){';
+			$JS_TMP .= '$.ajax({url: "'.$URL['AJAXAPI'].'ViandasSUM/DL_Ver_Empleados/",data: JSON.stringify({"CES_ID": getVal.dataset.value})}).done(function (response){';
+				$JS_TMP .= '$("#A_AGREGAR_FORM #AGENTE").removeClass("is-valid");';
+				$JS_TMP .= 'if(response.ID >= 1){';
+					$JS_TMP .= '$("#A_AGREGAR_FORM #ID_AGENTE").val(response.ID);';
+					$JS_TMP .= '$("#A_AGREGAR_FORM #AGENTE").addClass("is-valid");';
+				$JS_TMP .= '}else{';
+					$JS_TMP .= '$("#A_AGREGAR_FORM #AGENTE").removeClass("is-valid").val("");';
+					$JS_TMP .= '$("#A_AGREGAR_FORM #ID_AGENTE").val("");';
+					$JS_TMP .= 'Swal.fire({icon: "error",text: "El agente no es valido!"});';
+				$JS_TMP .= '}';
+			$JS_TMP .= '});';
+		$JS_TMP .= '}else{;';
+			$JS_TMP .= '$("#A_AGREGAR_FORM #AGENTE").removeClass("is-valid").val("");';
+			$JS_TMP .= '$("#A_AGREGAR_FORM #AGENTE").val("");';
+			$JS_TMP .= '$("#A_AGREGAR_FORM #ID_AGENTE").val("");';
+			$JS_TMP .= 'Swal.fire({icon: "error",text: "El agente no es valido!"});';
+		$JS_TMP .= '};';
+	$JS_TMP .= '});';
+	array_push($FUNCTIONS,$JS_TMP);
+}
+?>

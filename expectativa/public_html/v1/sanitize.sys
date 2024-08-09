@@ -1,0 +1,186 @@
+<?php
+function SANITIZE_TEXT($INPUT, $MIN = 1, $MAX = '', $UPPER = TRUE){
+	if($INPUT==""){return "";}
+	if(strlen($INPUT) < $MIN){ return "";}
+	if($MAX != '' && strlen($INPUT) > $MAX){ return "";}
+	$INPUT = str_ireplace(array("select", "update", "delete", "insert", "truncate", "drop", "union", "<", ">","$","·","%", "&", "'",'*', ";", '"'),"",$INPUT);
+	if($UPPER == TRUE){
+		return mb_strtoupper($INPUT,'utf-8');
+	}else{
+		return $INPUT;
+	}
+}
+function SANITIZE_NUM_ENT($INPUT, $MIN = 0, $MAX = 0){
+	if($INPUT==""){return "";}
+	if(filter_var($INPUT, FILTER_VALIDATE_INT, ["options" => ['min_range' => $MIN, 'max_range' => $MAX]]) === false) {return "";}
+	return number_format($INPUT,0,".","");
+}
+function SANITIZE_NUM_DEC($INPUT, $MIN = 0, $MAX = 0, $DECIMALES = 2){	
+	if($INPUT==""){return "";}
+	if(filter_var($INPUT, FILTER_VALIDATE_FLOAT, ["options" => ['min_range' => $MIN, 'max_range' => $MAX]]) === false) {return "";}
+	if(strlen(substr(strrchr($INPUT, "."), 1)) > $DECIMALES){return "";}
+	return number_format($INPUT,$DECIMALES,".","");
+}
+function SANITIZE_DATE($INPUT, $FORMATO = "Y-m-d"){	
+	if($INPUT==""){return "";}
+	$INPUT = str_replace("/","-",$INPUT);
+	$d = DateTime::createFromFormat($FORMATO, $INPUT);
+	$RESULT = $d && $d->format($FORMATO) == $INPUT;
+	if($RESULT === FALSE){return "";}
+	return $INPUT;
+}
+function SANITIZE_MAIL($INPUT){
+	if($INPUT==""){return "";}
+	$INPUT = mb_strtoupper(filter_var($INPUT, FILTER_SANITIZE_EMAIL),'utf-8');
+	if(filter_var($INPUT, FILTER_VALIDATE_EMAIL) === FALSE){return "";}
+	return $INPUT;
+}
+function SANITIZE_IP($INPUT){
+	if($INPUT==""){return "";}
+	if (filter_var($INPUT, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) === false) {return "";}
+	return $INPUT;
+}
+function SANITIZE_MAC($INPUT){
+	if($INPUT==""){return "";}
+	$SANITIZE = array(" ","-",":",".");
+	$INPUT = str_replace($SANITIZE,"",$INPUT);
+	if(strlen($INPUT) != 12 || ctype_xdigit($INPUT) === FALSE){return "";}
+	$MAC_SPLIT = str_split($INPUT, 2); if(count($MAC_SPLIT) != 6){return "";}
+	foreach($MAC_SPLIT as $K => $V){if($K == 0){$MAC = $V;}else{$MAC .= ":".$V;}}
+	if (filter_var($MAC, FILTER_VALIDATE_MAC) === false) {return "";}
+	return $MAC;
+}
+function SANITIZE_CUIT($INPUT){
+	if(strlen($INPUT) != 13 && strlen($INPUT) != 11){return "";}
+	$rv = false;
+	$resultado = 0;
+	$cuit_nro = str_replace("-", "", $INPUT);
+	$codes = "6789456789";
+	$verificador = intVal($cuit_nro[strlen($cuit_nro)-1]);
+	$x = 0;
+	while ($x < 10){
+		$digitoValidador = intVal(substr($codes, $x, 1));
+		$digito = intVal(substr($cuit_nro, $x, 1));
+		$digitoValidacion = $digitoValidador * $digito;
+		$resultado += $digitoValidacion;
+		$x++;
+	}
+	$resultado = intVal($resultado) % 11;
+	$rv = $resultado == $verificador;
+	if($rv === FALSE){return "";}
+	return $cuit_nro;
+}
+function SANITIZE_BOOLEAN($INPUT){
+	if($INPUT === TRUE || $INPUT === 1  || $INPUT === "1" || strcasecmp($INPUT,'TRUE') === 0){return 1;}
+	elseif($INPUT === FALSE || $INPUT === 0  || $INPUT === "0" || strcasecmp($INPUT,'FALSE') === 0){return 0;}
+	else{return "";}
+}
+function SANITIZE_BASE64($INPUT){
+	if(!preg_match('/^[a-zA-Z0-9\/\r\n+]*={0,2}$/', $INPUT)){return "";}
+    $decoded = base64_decode($INPUT, true);
+    if($decoded === FALSE){return "";}
+    if(base64_encode($decoded) != $INPUT){return "";}
+    return $INPUT;
+}
+function SANITIZE_VARIABLE($INPUT){
+	return preg_replace("/[^a-zA-Z0-9_ Ññ]/", "", $INPUT);
+}
+function SANITIZE_JSON($INPUT){
+	if($INPUT==""){return "";}
+	$TMP = json_decode(stripslashes($INPUT), true);
+	if(json_last_error()===0){return SANITIZE_JSON_VALUE($TMP);}
+	return "";
+}
+function SANITIZE_JSON_VALUE($INPUT){
+	foreach($INPUT as $VARIABLE2 => $VALOR2 ){
+		 $VARIABLE2 = SANITIZE_VARIABLE($VARIABLE2);
+		if(is_array($VALOR2)){$INPUT[$VARIABLE2] = SANITIZE_JSON_VALUE($VALOR2);}
+		else{$INPUT[$VARIABLE2] = SANITIZE_TEXT($VALOR2, 1, '', FALSE);}
+	}
+	return $INPUT;
+}
+
+function COMPROBAR($VALOR, $VARIABLE = '', $SKIP = FALSE){
+	if(is_array($VALOR)){
+		$TMP =(array) array();
+		foreach($VALOR as $VAR2 => $VAL2){
+			$VAR2 = SANITIZE_VARIABLE($VAR2);
+			$TMP[$VAR2] = COMPROBAR($VAL2,$VAR2,$SKIP);
+		}
+		return $TMP;
+	}
+	if($VALOR==""){return "";}
+	$VALOR = trim(addslashes(str_replace(";","",$VALOR)));
+	if($SKIP == true){
+		return SANITIZE_TEXT($VALOR, 1, '',FALSE);
+	}else{
+		if(PHP_INT_MAX <= 18446744073709551615){$CEB_MAX = PHP_INT_MAX;}else{$CEB_MAX = '18446744073709551615';}
+		$SANITIZE = substr($VARIABLE,0,3);
+		if($SANITIZE == 'CET'){ return SANITIZE_NUM_ENT($VALOR, 0, 255);}						//CONTROL NUMERO ENTERO TINYINT
+		if($SANITIZE == 'CES'){ return SANITIZE_NUM_ENT($VALOR, 0, 65535);}						//CONTROL NUMERO ENTERO SMALLINT
+		if($SANITIZE == 'CEI'){ return SANITIZE_NUM_ENT($VALOR, 0, 4294967295);}				//CONTROL NUMERO ENTERO INT
+		if($SANITIZE == 'CEB'){ return SANITIZE_NUM_ENT($VALOR, 0, 	$CEB_MAX);}					//CONTROL NUMERO ENTERO BIGINT
+		if($SANITIZE == 'CDA'){ return SANITIZE_NUM_DEC($VALOR, -99999999, 99999999, 2);}		//CONTROL NUMERO DECIMAL 10,2
+		if($SANITIZE == 'CIB'){ return SANITIZE_BOOLEAN($VALOR);}								//CONTROL INPUT BOOLEAN
+		if($SANITIZE == 'CFA'){ return SANITIZE_DATE($VALOR);}									//CONTROL FECHA  Y-m-d
+		if($SANITIZE == 'CFB'){ return SANITIZE_DATE($VALOR, 'mY');}							//CONTROL FECHA  mY
+		if($SANITIZE == 'CFC'){ return SANITIZE_DATE($VALOR, 'Ym');}							//CONTROL FECHA  Ym
+		if($SANITIZE == 'CIC'){ return SANITIZE_MAIL($VALOR);}									//CONTROL INPUT CORREO
+		if($SANITIZE == 'CIP'){ return SANITIZE_IP($VALOR);}									//CONTROL INPUT IP
+		if($SANITIZE == 'CIM'){ return SANITIZE_MAC($VALOR);}									//CONTROL INPUT MAC
+		if($SANITIZE == 'CPC'){ return SANITIZE_CUIT($VALOR);}									//CONTROL PERSONA CUIT
+		if($SANITIZE == 'CBN'){ return SANITIZE_BASE64($VALOR);}								//CONTROL BINARIO
+		if($SANITIZE == 'CJS'){ return SANITIZE_JSON($VALOR);}									//CONTROL JSON
+		if($SANITIZE == 'CTS'){ return SANITIZE_TEXT($VALOR, 1, 255);}							//CONTROL TEXTO MAX 255	UPPERCASE
+		if($SANITIZE == 'CTU'){ return SANITIZE_TEXT($VALOR);}									//CONTROL TEXTO UNLIMIT UPPERCASE
+		if($SANITIZE == 'CtS'){ return SANITIZE_TEXT($VALOR, 1, 255, FALSE);}					//CONTROL TEXTO MAX 255 NO UPPERCASE
+		if($SANITIZE == 'CtU'){ return SANITIZE_TEXT($VALOR, 1, '',FALSE);}						//CONTROL TEXTO UNLIMIT NO UPPERCASE
+	}
+	return "";
+}
+
+$sP = (array) array(0 => 1); 	//$_POST
+$sG = (array) array(0 => 1); 	//$_GET
+$sC = (array) array(0 => 1); 	//$_COOKIE
+$sH = (array) array(0 => 1); 	//$_SERVER
+$sJ = (array) array(0 => 1); 	//JSON
+
+$sP = COMPROBAR($_POST);
+$sG = COMPROBAR($_GET, '', TRUE);
+$sC = COMPROBAR($_COOKIE,'', TRUE);
+$sH = COMPROBAR($_SERVER, '', TRUE);
+
+$TMP_JSON = file_get_contents('php://input');
+if($TMP_JSON!=""){
+	$TMP = json_decode($TMP_JSON, true);
+	if(json_last_error()===0){$sJ = COMPROBAR($TMP);}
+}
+
+$_COOKIE="";
+$_GET = "";
+$_POST = "";
+$_SERVER = "";
+
+if(strpos($sH['REQUEST_URI'],".ico")>0){header("HTTP/2 404 Not Found"); exit;}
+
+if(array_key_exists('EsPorAca',$sG) && $sG['EsPorAca'] != ""){
+	if(substr_count($sG['EsPorAca'],"/")>=1){
+		$TMP = explode("/",$sG['EsPorAca']);
+		$t=1;
+		$ROUTE_ACT = "";
+		$BT = array();
+		foreach($TMP as $VALUE ){
+			if($ROUTE_ACT==""){
+				$ROUTE_ACT = $VALUE;
+			}elseif($ROUTE_OPC==""){
+				$ROUTE_OPC = $VALUE;
+			}else{
+				$BT["CTS_".($t++)] = $VALUE;
+			}
+		}
+		$ROUTE_PARAMS = COMPROBAR($BT);	
+	}else{
+		$ROUTE_ACT = $sG['EsPorAca'];
+	}
+}
+?>

@@ -1,0 +1,63 @@
+<?php
+$TABS['A'] =  array('ICON' => '<i class="fa-solid fa-file-invoice-dollar"></i>', 'TITLE' => 'Haberes');
+
+$TABLE['A']['COLUMNAS']			= array(
+	array('COLUMNA' => 'Fecha'),
+	array('COLUMNA' => 'Cantidad'),
+	array('COLUMNA' => 'Estado',)
+);
+$TABLE['A']['AJAX_URL'] 		= $LINK_BACK.'/Listado_Resumen';
+$TABLE['A']['HERRAMIENTAS'] 	= array('ALTA' => 'A', 'QUICK_SEARCH' => 'C', 'REFRESH' => 'C');
+$TABLE['A']['SETTING'] 			= array('ORDENAR' => "TRUE", 'ORDENAR_COL' => 1,'ORDENAR_METHOD' => 'ASC', 'DOBLE_CLICK' => 'Display_A_Principal');
+$TABLE['A']['QUICK_SEARCH']		= "Buscar Fecha";
+
+$MAIN = CreateMain($TABS, $TABLE);
+
+if(in_array('Display_A_Principal', $TABLE_FUNCTION)){
+	unset($TMP);
+	$TMP['MODAL']['ID']			= 'A_PRINCIPAL';
+	$TMP['MODAL']['TITLE']		= 'Resumen';
+	$TMP['MODAL']['SIZE']		= '';
+	
+	$TMP['FOOTER']['SUBMIT'] 	= array('ID' => 'Guardar');
+	$TMP['FOOTER']['CLOSE']		= array('ID' => 'Cerrar');
+	
+	$TMP['BODY'] = '<input type="hidden" id="AUTOFOCUS">';
+	$TMP['BODY'] .= '<form id="'.$TMP['MODAL']['ID'].'_FORM" autocomplete="off">';
+		$TMP['BODY'] .= CreateFormInput(array('ID' => 'desde', 'TIPO' => 'date', 'VALIDATE' => 'CFA', 'REQUIRED' => TRUE));
+		$TMP['BODY'] .= CreateFormInput(array('ID' => 'hasta', 'TIPO' => 'date', 'VALIDATE' => 'CFA', 'REQUIRED' => TRUE));
+		$TMP['BODY'] .= CreateFormInput(array('ID' => 'descuento', 'TIPO' => 'number', 'VALIDATE' => 'CET', 'DECIMAL' => FALSE, 'REQUIRED' => TRUE, 'LABEL' => '% Descuento Contratado'));
+		
+	$TMP['BODY'] .= '</form>';
+	array_push($MODALS,CreateModal($TMP['MODAL'], $TMP['BODY'], $TMP['FOOTER']));
+	array_push($VARS,"const MODAL_".$TMP['MODAL']['ID']."_INSTANCE = bootstrap.Modal.getOrCreateInstance('#MODAL_".$TMP['MODAL']['ID']."');");
+	array_push($VARS,"const MODAL_".$TMP['MODAL']['ID']." = document.getElementById('MODAL_".$TMP['MODAL']['ID']."');");	
+	unset($JS_TMP);
+	
+	$JS_TMP = 'function Display_A_Principal(){';
+		$JS_TMP .= 'FormErrorReset("A_PRINCIPAL_FORM");';
+		$JS_TMP .= 'FormReset("A_PRINCIPAL_FORM");';
+		$JS_TMP .= '$("#MODAL_A_PRINCIPAL #AUTOFOCUS").val("DESDE");';
+		$JS_TMP .= 'MODAL_A_PRINCIPAL_INSTANCE.show();';		
+	$JS_TMP .= '}';	
+
+	$JS_TMP .= 'function MODAL_A_PRINCIPAL_Procesar(){';
+		$JS_TMP .= 'if($("#A_PRINCIPAL_FORM")[0].reportValidity()==false){return;}';
+		$JS_TMP .= 'FormErrorReset("A_PRINCIPAL_FORM");';
+		$JS_TMP .= '$.ajax({url: "'.$LINK_BACK.'/Procesar_Liquidacion/",data: JSON.stringify(FormDataPicker("A_PRINCIPAL_FORM"))}).done(function (response){';
+			$JS_TMP .= 'if(response.RESULTADO == "OK"){';
+				$JS_TMP .= 'TableLoad("A");';
+				$JS_TMP .= 'MODAL_A_PRINCIPAL_INSTANCE.hide();';
+				$JS_TMP .= SF('OK');
+				$JS_TMP .= 'var NewTab = window.open("'.$URL['API'].'ViandasHaberes/Ver_Excel/" + $("#MODAL_A_PRINCIPAL #DESDE").val() + "/" + $("#MODAL_A_PRINCIPAL #HASTA").val() + "/" + $("#MODAL_A_PRINCIPAL #DESCUENTO").val() + "/" + Math.floor(Math.random() * (99999 - 10000) + 10000) , "_blank");';
+				$JS_TMP .= 'var NewTab = window.open("'.$URL['API'].'ViandasHaberes/Ver_Txt/" + $("#MODAL_A_PRINCIPAL #DESDE").val() + "/" + $("#MODAL_A_PRINCIPAL #HASTA").val() + "/" + $("#MODAL_A_PRINCIPAL #DESCUENTO").val() + "/" + Math.floor(Math.random() * (99999 - 10000) + 10000) , "_blank");';
+				$JS_TMP .= 'if(NewTab){NewTab.focus();}else{'.SF('MSG','"El navegador esta bloqueando los popups"').'}';
+			$JS_TMP .= '}else{';
+				$JS_TMP .= 'if(response.MESSAGE != ""){'.SF('MSG', 'response.MESSAGE').'}';
+				$JS_TMP .= 'else{'.SF('ERROR').'}';
+			$JS_TMP .= '}';
+		$JS_TMP .= '});';
+	$JS_TMP .= '}';	
+	array_push($FUNCTIONS,$JS_TMP);
+}
+?>

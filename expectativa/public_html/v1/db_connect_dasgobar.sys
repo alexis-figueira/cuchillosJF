@@ -1,0 +1,23 @@
+<?php
+$ZXSD_WEBDAS['HOST'] = '200.32.52.191';
+$ZXSD_WEBDAS['USER'] = 'cartillas';
+$ZXSD_WEBDAS['PASS'] = 'xxxxxxxxx';
+
+$ZXS_WEBDAS['L'] = '`cartillas`'; 			//BASE CARTILLAS
+
+$DBT_WEBDAS = array(
+	"CARTILLA_FARMACIAS"					=>	$ZXS_WEBDAS['L'].".`cartilla__farmacias`",
+	"CARTILLA_ODONTOLOGIA"					=>	$ZXS_WEBDAS['L'].".`cartilla__odontologia`",
+	"CARTILLA_OPTICAS"						=>	$ZXS_WEBDAS['L'].".`cartilla__opticas`",
+	"LICITACIONES"							=>	$ZXS_WEBDAS['L'].".`licitaciones`",
+	"OMINT_ESPECIALIDADES"					=>	$ZXS_WEBDAS['L'].".`omint__especialidades`",
+	"OMINT_PRESTADORES"						=>	$ZXS_WEBDAS['L'].".`omint__prestadores`",
+	"OMINT_PROCESOS"						=>	$ZXS_WEBDAS['L'].".`omint__procesos`",
+);
+
+try{
+	$GLOBALS['QWE_WEBDAS'] = new PDO("mysql:host=" . $ZXSD_WEBDAS['HOST'] . ";charset=utf8mb4", $ZXSD_WEBDAS['USER'], $ZXSD_WEBDAS['PASS'], [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC]);
+}catch(PDOException $e){
+	echo "Sitio en mantenimiento.";exit;
+}
+?>

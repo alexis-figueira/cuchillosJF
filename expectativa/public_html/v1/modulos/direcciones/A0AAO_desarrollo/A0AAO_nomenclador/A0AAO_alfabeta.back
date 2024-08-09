@@ -1,0 +1,284 @@
+<?php
+function AlfabetaDecode($FILE){
+	return iconv("850","UTF-8", file_get_contents($FILE));
+}
+function AlfabetaTroqueles($CODIGO, $EXTRA, $LABORATORIOS, $DROGAS){//AlfabetaTroqueles($VALUE, $EXTRA, $LABORATORIOS, $DROGAS);
+	if($CODIGO =="" || strlen($CODIGO) != 157){ return;}
+				
+	$MED["troquel"] = str_replace("'","",trim(substr($CODIGO,0,7)));
+	$MED["nombre"] = SANITIZE_TEXT(iconv("850","UTF-8", str_replace("'","",trim(substr($CODIGO,7,44)))),1,255);
+	$MED["codigo"] = str_replace("'","",trim(substr($CODIGO,126,5)));
+	$MED["presentacion"] = SANITIZE_TEXT(iconv("850","UTF-8", str_replace("'","",trim(substr($CODIGO,51,24)))),1,255);
+	if(str_starts_with($MED["presentacion"],"PED.")){$MED["presentacion"] = str_replace("PED.","PEDIATRICO ",$MED["presentacion"]);}
+	$MED["baja"] = str_replace("'","",trim(substr($CODIGO,131,1)));	
+	$MED["controlado"] = str_replace("'","",trim(substr($CODIGO,118,1)));
+	/*
+	$MED["unidades"] = ltrim(str_replace("'","",trim(substr($CODIGO,145,4))), '0');
+	$MED["tamano"] = ltrim(str_replace("'","",trim(substr($CODIGO[$MED["codigo"]],0,2))), '0');
+	$MED["accion"] = ltrim(str_replace("'","",trim(substr($EXTRA[$MED["codigo"]],2,5))), '0');
+	$MED["activo"] = ltrim(str_replace("'","",trim(substr($EXTRA[$MED["codigo"]],7,5))), '0');
+	$MED["forma"] = ltrim(str_replace("'","",trim(substr($EXTRA[$MED["codigo"]],12,5))), '0');	
+	$MED["potencia"] = str_replace("'","",trim(substr($EXTRA[$MED["codigo"]],17,16)));	
+	$MED["upotencia"] = ltrim(str_replace("'","",trim(substr($EXTRA[$MED["codigo"]],33,5))), '0');
+	$MED["nose"] = ltrim(str_replace("'","",trim(substr($EXTRA[$MED["codigo"]],38,5))), '0');
+	$MED["via"] = ltrim(str_replace("'","",trim(substr($EXTRA[$MED["codigo"]],43,5))), '0');
+	
+	*/
+	$MED["droga"] = ltrim(str_replace("'","",trim(substr($EXTRA[$MED["codigo"]],7,5))), '0');		
+	$MED["laboratorio"] = ltrim(str_replace("'","",trim(substr($CODIGO,123,3))), '0');
+	if(!array_key_exists($MED["droga"], $DROGAS)){return;}
+	if(!array_key_exists($MED["laboratorio"], $LABORATORIOS)){return;}
+	$MED["laboratorio"] = $LABORATORIOS[$MED["laboratorio"]];
+	$MED["droga"] = $DROGAS[$MED["droga"]];	
+	
+	$MED['COMPARAR'] = $MED['nombre']."_".$MED['droga']."_".$MED['presentacion']."_".$MED['laboratorio']."_".$MED["controlado"];
+	
+	$MED["precio"] = str_replace("'","",trim(substr($CODIGO,100,10)));
+	$MED["precio"] = substr($MED["precio"],0,8).".".substr($MED["precio"],-2);
+	$MED["precio"] = ltrim($MED["precio"], '0');
+	
+	if($MED["nombre"] == '' || $MED["presentacion"] == ''){return;}
+	
+	return $MED;
+}
+function DeleteDir($Path) {
+    if (!is_dir($Path)) {
+        return;
+    }
+    if (substr($Path, strlen($Path) - 1, 1) != '/') {
+        $Path .= '/';
+    }
+    $files = glob($Path . '*', GLOB_MARK);
+    foreach ($files as $file) {
+        if (is_dir($file)) {
+            deleteDir($file);
+        } else {
+            unlink($file);
+        }
+    }
+    rmdir($Path);
+}
+function Parametricas($DATA,$PARSE=5){
+	$DATA = explode("\n",$DATA);
+	$RETURN = array();
+	
+	foreach ($DATA as $KEY => $VALUE) {
+		if($VALUE!=""){
+			$r["id"] = ltrim(str_replace("'","",trim(substr($VALUE,0,$PARSE))),'0');
+			$r["nombre"] = SANITIZE_TEXT(str_replace("'","",trim(substr($VALUE,$PARSE))),1,255);
+			
+			if($r["nombre"] == ''){continue;}
+			$RETURN[$r["id"]] = $r["nombre"];
+		}
+	}
+	return $RETURN;
+}
+	
+if($ROUTE_OPC == 'Listado_Procesados'){
+	$RETURN['COUNT'] = 0;
+	$RETURN['TOTAL'] = 0;
+	$RETURN['PAGINAS'] = 1;
+	$RETURN['ROWS'] = [];
+	if($PP['C'] != 1){EJE($RETURN);}
+	
+	$ARRAY_ORDER = array(1 => '`nombre` {METHOD}', 2 => '`observacion` {METHOD}');
+	$FORM = LISTADO_QUERY($ARRAY_ORDER);
+	$SEARCH = "";
+	$Que = QuerySelect("SELECT P.`id_procesos`, F.`nombre`, P.`observacion` FROM ".$DBT['ALFABETA_PROCESOS']." P LEFT JOIN ".$DBT['FILES']." F ON F.`id_file`=P.`archivo`".$SEARCH." ORDER BY ".$FORM['ORDENAR']." LIMIT ".$FORM['LIMIT']." ,".$FORM['ROWS']);
+	while($Row = QueryFetch($Que)){
+		$RETURN['COUNT']++;
+		$TMP = [];
+		$TMP['ID'] 						= $Row['id_procesos'];
+		$TMP['DATA']['ARCHIVO'] 		= $Row['nombre'];
+		$TMP['DATA']['OBSERVACION'] 	= $Row['observacion'];
+		array_push($RETURN['ROWS'], $TMP);
+		unset($TMP);
+	}
+	$Que = QuerySelect("SELECT COUNT(*) AS 'total' FROM ".$DBT['ALFABETA_PROCESOS']." P LEFT JOIN ".$DBT['FILES']." F ON F.`id_file`=P.`archivo`".$SEARCH);
+	while($Row = QueryFetch($Que)){	
+		$RETURN['TOTAL'] = $Row['total'];
+		$RETURN['PAGINAS'] = ceil($RETURN['TOTAL']/$FORM['ROWS']);
+	}
+	EJE($RETURN);
+}
+elseif($ROUTE_OPC == 'Procesar_Manual'){
+	ini_set('memory_limit', '-1');
+	ini_set('max_execution_time', 3600);
+	if($PP['A'] != 1){RJRE("PERMISOS INSUFICIENTES");}
+	if(CIJE('CTS_ID_ARCHIVO') === TRUE){RJRE();};
+	if(CIJE('CFA_FECHA') === TRUE){RJRE();};
+	if(CFE($sJ['CTS_ID_ARCHIVO']) === FALSE){RJRE("No se pudo procesar el archivo");};
+	$ARCHIVO = CFE($sJ['CTS_ID_ARCHIVO']);
+	if(!in_array(Str_Lo($ARCHIVO['TYPE']),$CFG_UPLOADFILES['TYPE']['ZIP'])){RJRE("Solo se admiten archivos ZIP");}
+	
+	if(CIJE('CTS_OBSERVACION') === TRUE){$sJ['CTS_OBSERVACION'] = NULL;};
+	
+	$FILE_DATE = explode("_",$ARCHIVO["NOMBRE"])[0];
+	if($FILE_DATE != str_replace("-","",$sJ['CFA_FECHA'])){RJRE("La fecha ingresada no coincide con la del archivo!");}
+
+	$FOLDER = Return_File_Path('TEMP', $ARCHIVO['ID']);
+	if(!file_exists($FOLDER)){
+		mkdir($FOLDER, 0777, true);
+	}
+	$zip = new ZipArchive();
+	$zip->open($ARCHIVO['FILE'], ZipArchive::CREATE);
+	$zip->extractTo($FOLDER);
+	$zip->close();
+	
+	$LABORATORIOS = Parametricas(AlfabetaDecode($FOLDER."/laboratorios.txt"));
+	$DROGAS = Parametricas(AlfabetaDecode($FOLDER."/monodro.txt"));
+
+	unset($EXTRA);
+	$MANEXTRA= file_get_contents($FOLDER."/manextra.txt");
+	$MANEXTRA = explode("\n",$MANEXTRA);
+	foreach ($MANEXTRA as $KEY => $VALUE) {
+		if($VALUE!=""){
+			$EXTRA[substr($VALUE,0,5)]=substr($VALUE,5);
+		}
+	}
+	
+	$MANUAL = file_get_contents($FOLDER."/manual.dat");
+	$MANUAL = explode("\n",$MANUAL);
+	
+	if(count($MANUAL)<1){RJRE("El archivo no contiene datos");}
+	
+	$Que = QuerySelect("SELECT  max(`fecha`) as `fecha` FROM ".$DBT['ALFABETA_PROCESOS']);
+	if(QueryNumRows($Que) > 0){
+		while($Row = QueryFetch($Que)){
+			if($Row['fecha'] > $sJ["CFA_FECHA"]){
+				RJRE("Solo se pueden procesar archivos del ".Fecha_Formato($Row['fecha'])." o mas recientes");
+			}
+		}
+	}
+	
+	$Proceso = QueryInsert("INSERT INTO ".$DBT['ALFABETA_PROCESOS']." (`archivo`, `fecha`, `observacion`, `reg_usuario`, `reg_fecha`) VALUES ('".$ARCHIVO["ID"]."','".$sJ["CFA_FECHA"]."',".($sJ['CTS_OBSERVACION'] != NULL ? "'".$sJ['CTS_OBSERVACION']."'" : "NULL").",'".$C_USER['ID']."', NOW())");
+	$ID_PROCESO = QueryLastId();
+	
+	$TROQUEL = array();
+	$QueTroqueles = QuerySelect("SELECT `troquel`, `nombre`, `droga`, `presentacion`, `laboratorio`, `controlado`,`baja` FROM ".$DBT['ALFABETA_TOQUELES']);
+	if(QueryNumRows($QueTroqueles) > 0){
+		while($RowTroqueles = QueryFetch($QueTroqueles)){
+			$TROQUEL[$RowTroqueles['troquel']]['COMPARAR'] = $RowTroqueles['nombre']."_".$RowTroqueles['droga']."_".$RowTroqueles['presentacion']."_".$RowTroqueles['laboratorio']."_".$RowTroqueles['controlado'];
+			$TROQUEL[$RowTroqueles['troquel']]['BAJA'] = $RowTroqueles['baja'];
+		}
+	}
+	
+	$TROQUEL_ARRAY = array();
+	$TROQUEL_BAJA_TRUE = '';
+	$TROQUEL_BAJA_FALSE = '';
+	$PRECIOS = array();
+	$TROQUEL_PRECIO = array();
+	
+	foreach($MANUAL as $KEY => $VALUE){
+		$MED = AlfabetaTroqueles($VALUE, $EXTRA, $LABORATORIOS, $DROGAS);
+		if($MED == ''){continue;}
+		
+		if(!array_key_exists($MED['troquel'], $TROQUEL)){
+			$TROQUEL_ARRAY[$MED["troquel"]] = array('NOMBRE' => $MED["nombre"], 'DROGA' => $MED["droga"], 'PRESENTACION' => $MED["presentacion"], 'LABORATORIO' => $MED["laboratorio"], 'CONTROLADO' => $MED["controlado"], 'BAJA' => $MED["baja"]);
+		}else{
+			if($TROQUEL[$MED['troquel']]['COMPARAR'] != $MED['COMPARAR']){
+				QueryUpdate("UPDATE ".$DBT['ALFABETA_TOQUELES']." SET `nombre`='".$MED['nombre']."',`droga`='".$MED['droga']."',`presentacion`='".$MED['presentacion']."',`laboratorio`='".$MED['laboratorio']."',`controlado`='".$MED['controlado']."',`reg_proceso`='".$ID_PROCESO."',`reg_fecha`= NOW(),`baja`='".$MED['baja']."' WHERE `troquel`='".$MED['troquel']."'");
+			}else{
+				if($TROQUEL[$MED['troquel']]['BAJA'] != $MED["baja"]){
+					if($MED['baja'] == 0){
+						if($TROQUEL_BAJA_FALSE != ''){$TROQUEL_BAJA_FALSE .= ',';}
+						$TROQUEL_BAJA_FALSE .= $MED['troquel'];
+					}else{
+						if($TROQUEL_BAJA_TRUE != ''){$TROQUEL_BAJA_TRUE .= ',';}
+						$TROQUEL_BAJA_TRUE .= $MED['troquel'];	
+					}
+				}
+			}
+		}
+		if($MED["precio"] != '' && $MED["precio"] > 0){
+			$PRECIOS[$MED['troquel']] = $MED['precio'];
+		}
+	}
+	
+	if(count($TROQUEL_ARRAY)>0){
+		$TROQUEL_ARRAY_STRING = '';
+		$TROQUEL_COUNT = 0;
+		foreach($TROQUEL_ARRAY as $KEY => $VALUE){
+			$TROQUEL_COUNT++;
+			if($TROQUEL_ARRAY_STRING != ''){$TROQUEL_ARRAY_STRING .= ',';}
+			$TROQUEL_ARRAY_STRING .= "('".$KEY."','".$VALUE["NOMBRE"]."','".$VALUE["DROGA"]."','".$VALUE["PRESENTACION"]."','".$VALUE["LABORATORIO"]."','".$VALUE["CONTROLADO"]."','".$ID_PROCESO."', NOW() ,'".$VALUE["BAJA"]."')";
+			
+			if($TROQUEL_COUNT >= 10000 || $KEY === array_key_last($TROQUEL_ARRAY)){
+				$QueMed = QueryInsert("INSERT IGNORE ".$DBT['ALFABETA_TOQUELES']."(`troquel`, `nombre`, `droga`, `presentacion`, `laboratorio`,`controlado`, `reg_proceso`, `reg_fecha`, `baja`) VALUES ".$TROQUEL_ARRAY_STRING);
+				$TROQUEL_ARRAY_STRING = '';
+				$TROQUEL_COUNT = 0;
+			}
+		}
+	}
+	if($TROQUEL_BAJA_TRUE != ''){QueryUpdate("UPDATE ".$DBT['ALFABETA_TOQUELES']." SET `baja`='1', `reg_proceso` = '".$ID_PROCESO."', `reg_fecha` = NOW() WHERE `troquel` IN (".$TROQUEL_BAJA_TRUE.")");}
+	if($TROQUEL_BAJA_FALSE != ''){QueryUpdate("UPDATE ".$DBT['ALFABETA_TOQUELES']." SET `baja`='0', `reg_proceso` = '".$ID_PROCESO."', `reg_fecha` = NOW() WHERE `troquel` IN (".$TROQUEL_BAJA_FALSE.")");}
+	
+	$QuePrecios = QuerySelect("SELECT p1.`id_precio`, p1.`troquel`, p1.`precio`, p1.`fecha` FROM ".$DBT['ALFABETA_PRECIOS']." p1 INNER JOIN (SELECT `troquel`, MAX(`fecha`) AS `fecha` FROM ".$DBT['ALFABETA_PRECIOS']." GROUP BY `troquel`) p2 ON p1.`troquel` = p2.`troquel` AND p1.`fecha` = p2.`fecha`");
+	if(QueryNumRows($QuePrecios) > 0){
+		while($RowPrecios = QueryFetch($QuePrecios)){
+			$TROQUEL_PRECIO[$RowPrecios['troquel']]['PRECIO'] = $RowPrecios['precio'];
+			$TROQUEL_PRECIO[$RowPrecios['troquel']]['FECHA'] = $RowPrecios['fecha'];
+			$TROQUEL_PRECIO[$RowPrecios['troquel']]['ID'] = $RowPrecios['id_precio'];
+		}
+	}
+	
+	$PRECIO_ARRAY = array();
+	if(count($PRECIOS)>0){
+		foreach($PRECIOS as $KEY => $VALUE){
+			$INSERT = FALSE;
+			if(!array_key_exists($KEY, $TROQUEL_PRECIO)){
+				$INSERT = TRUE;
+			}else{
+				if($TROQUEL_PRECIO[$KEY]['PRECIO'] != $VALUE){
+					if($TROQUEL_PRECIO[$KEY]['FECHA'] == $sJ['CFA_FECHA']){
+						QueryUpdate("UPDATE ".$DBT['ALFABETA_PRECIOS']." SET `precio`='".$VALUE."' WHERE `id_precio` = '".$TROQUEL_PRECIO[$KEY]['ID']."'");
+					}else{
+						$INSERT = TRUE;
+					}
+				}
+			}
+			if($INSERT == TRUE){
+				$PRECIO_ARRAY[$KEY] = array('PRECIO' => $VALUE, 'FECHA' => $sJ['CFA_FECHA']);
+			}
+		}
+	}
+	if(count($PRECIO_ARRAY)>0){
+		$PRECIO_ARRAY_STRING = '';
+		$PRECIO_COUNT = 0;
+		foreach($PRECIO_ARRAY as $KEY => $VALUE){
+			$PRECIO_COUNT++;
+			if($PRECIO_ARRAY_STRING != ''){$PRECIO_ARRAY_STRING .= ',';}
+			$PRECIO_ARRAY_STRING .= "('".$KEY."','".$VALUE['PRECIO']."','".$VALUE["FECHA"]."')";
+			
+			if($PRECIO_COUNT >= 10000 || $KEY === array_key_last($PRECIO_ARRAY)){
+				QueryInsert("INSERT IGNORE ".$DBT['ALFABETA_PRECIOS']."(`troquel`, `precio`, `fecha`) VALUES ".$PRECIO_ARRAY_STRING);
+				$PRECIO_ARRAY_STRING = '';
+				$PRECIO_COUNT = 0;
+			}
+		}
+	}
+	DeleteDir($FOLDER);
+	RJRO();
+}
+elseif($ROUTE_OPC == 'Procesar_Sync_Portal'){	
+	if($PP['A'] != 1){RJRE("PERMISOS INSUFICIENTES");}
+	require_once './db_connect_autogestion.sys';
+	
+	$Que = QuerySelect("SELECT `troquel`, `nombre`, `droga`, `presentacion`, `controlado`, `detalle` FROM ".$DBT['V_FTDAS_GENERAL']);
+	if(QueryNumRows($Que) < 1){RJRE("ERROR LECTURA TROQUELES");}
+	$VALUES = '';
+	while($Row = QueryFetch($Que)){
+		if($VALUES != ''){ $VALUES .= ',';}
+		$VALUES .= '("'.$Row['troquel'].'", "'.$Row['nombre'].'", "'.$Row['droga'].'", "'.$Row['presentacion'].'", "'.$Row['controlado'].'", "'.$Row['detalle'].'")';
+	}
+	if($VALUES != ''){
+		QueryDelete("DELETE FROM ".$DBT_PORTAL['RECETAS_FTDAS']." WHERE `troquel` IS NOT NULL", "QWE_PORTAL");
+		QueryInsert("INSERT INTO ".$DBT_PORTAL['RECETAS_FTDAS']."(`troquel`, `nombre`, `droga`, `presentacion`, `controlado`, `detalle`) VALUES ".$VALUES, "QWE_PORTAL");
+	}
+	RJRO();
+	
+}
+else{
+	EE("NO_SE_PUEDE_PROCESAR_LA_SOLICITUD");
+}
+?>

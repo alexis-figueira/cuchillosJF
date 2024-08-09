@@ -1,0 +1,23 @@
+<nav class="navbar fixed-top navbar-dark <?php if($URL['SYS'] != 'https://movi.daslocal.gob.ar/'){ echo 'gradient-testing';}else{echo 'gradient';}?> bg-opacity-25 navbar-expand py-1">
+	<div class="container-fluid">
+		<a class="navbar-brand" href="<?php echo $ROUTE_BACK;?>">
+			<?php 
+			if($URL['SYS'] != 'https://movi.daslocal.gob.ar/'){ 
+				echo '<span class="fs-4">Testing</span>';			
+			}else{
+				echo '<img src="/public/custom-img/favicon.png" alt="Logo" width="50" class="d-inline-block align-text-top">';
+			}
+			?>
+			
+		</a>
+		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="btn-group me-3" style="min-width: 220px">
+			<button type="button" class="btn btn-outline-light btn-sm">
+				<i class="fa-solid fa-user mx-1"> </i><b><?php echo $C_USER['NAME'];?></b>
+			</button>		
+				<a href="/Salir" class="btn btn-outline-light btn-sm bg-danger"><i class="fa fa-sign-out-alt"></i></a>
+			</div>
+	</div>
+</nav>

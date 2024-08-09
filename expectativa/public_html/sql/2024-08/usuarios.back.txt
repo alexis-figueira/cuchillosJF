@@ -1,0 +1,105 @@
+2024-08-02 12:22:07 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_usuario`, `usuario`, `nombre`, `apellido`, `cuil`, `login_date` FROM `desa__alexis`.`sys__users`WHERE `disponible` = '1' ORDER BY `usuario` ASC LIMIT 0 ,100
+2024-08-02 12:22:07 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`sys__users`WHERE `disponible` = '1'
+2024-08-02 12:22:09 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `route`,`permiso` FROM `desa__alexis`.`sys__users_permisos` WHERE `id_usuario` = '12'
+2024-08-02 12:22:31 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_usuario` FROM `desa__alexis`.`sys__users` WHERE `id_usuario` = '12' AND `disponible` = '1'
+2024-08-02 12:22:31 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryDelete -> DELETE FROM  `desa__alexis`.`sys__users_permisos` WHERE `id_usuario` = '12'
+2024-08-02 12:22:31 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','Usuarios','CABM')
+2024-08-02 12:22:31 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','Sistema','C')
+2024-08-02 12:22:31 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','ViandasPersonal','CABM')
+2024-08-02 12:22:31 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','ViandasAdm','C')
+2024-08-02 12:22:31 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','Viandas','C')
+2024-08-02 12:22:31 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','ViandasMenu','CABME')
+2024-08-02 12:22:31 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','ViandasResumen','CABM')
+2024-08-02 12:22:31 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','ViandasHaberes','CA')
+2024-08-02 12:22:31 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','ViandasChamba','CM')
+2024-08-02 12:22:31 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','ViandasSUM','CABM')
+2024-08-02 12:22:31 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','Ft_Das','A')
+2024-08-02 12:22:31 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','Nomenclador','C')
+2024-08-02 12:22:31 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','Das','C')
+2024-08-02 12:22:31 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','TranscripcionesDerivar','CA')
+2024-08-02 12:22:31 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','Transcripciones','C')
+2024-08-02 12:22:31 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','TranscripcionesTranscribir','CA')
+2024-08-02 12:22:31 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','TranscripcionesRecetar','CA')
+2024-08-02 12:22:31 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','A0AAO_Alfabeta','CA')
+2024-08-02 12:22:31 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','A0AAO_Nomenclador','C')
+2024-08-02 12:22:31 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','A0AAO_Desarrollo','C')
+2024-08-02 12:22:31 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','Direcciones','C')
+2024-08-02 12:22:31 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','A0AAO_Cartilla_Farmacia','CABM')
+2024-08-02 12:22:31 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','A0AAO_Cartilla','C')
+2024-08-02 12:22:31 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','A0AAO_Cartilla_Odontologia','CABM')
+2024-08-02 12:22:31 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','A0AAO_Cartilla_Omint','CA')
+2024-08-02 12:22:31 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','A0AAO_Cartilla_Opticas','CABM')
+2024-08-02 12:22:31 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','A0AAO_Licitaciones','CABM')
+2024-08-02 12:22:31 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','A0AAO_PadronPortal','CA')
+2024-08-02 12:23:13 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_usuario`, `usuario`, `nombre`, `apellido`, `cuil`, `login_date` FROM `desa__alexis`.`sys__users`WHERE `disponible` = '1' ORDER BY `usuario` ASC LIMIT 0 ,100
+2024-08-02 12:23:13 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`sys__users`WHERE `disponible` = '1'
+2024-08-02 12:23:15 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `route`,`permiso` FROM `desa__alexis`.`sys__users_permisos` WHERE `id_usuario` = '12'
+2024-08-02 12:23:19 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_usuario` FROM `desa__alexis`.`sys__users` WHERE `id_usuario` = '12' AND `disponible` = '1'
+2024-08-02 12:23:19 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryDelete -> DELETE FROM  `desa__alexis`.`sys__users_permisos` WHERE `id_usuario` = '12'
+2024-08-02 12:23:19 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','Usuarios','CABM')
+2024-08-02 12:23:19 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','Sistema','C')
+2024-08-02 12:23:19 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','ViandasPersonal','CABM')
+2024-08-02 12:23:19 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','ViandasAdm','C')
+2024-08-02 12:23:19 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','Viandas','C')
+2024-08-02 12:23:19 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','ViandasMenu','CABME')
+2024-08-02 12:23:19 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','ViandasResumen','CABM')
+2024-08-02 12:23:19 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','ViandasHaberes','CA')
+2024-08-02 12:23:19 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','ViandasChamba','CAM')
+2024-08-02 12:23:19 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','ViandasSUM','CABM')
+2024-08-02 12:23:19 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','Ft_Das','A')
+2024-08-02 12:23:19 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','Nomenclador','C')
+2024-08-02 12:23:19 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','Das','C')
+2024-08-02 12:23:19 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','TranscripcionesDerivar','CA')
+2024-08-02 12:23:19 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','Transcripciones','C')
+2024-08-02 12:23:19 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','TranscripcionesTranscribir','CA')
+2024-08-02 12:23:19 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','TranscripcionesRecetar','CA')
+2024-08-02 12:23:19 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','A0AAO_Alfabeta','CA')
+2024-08-02 12:23:19 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','A0AAO_Nomenclador','C')
+2024-08-02 12:23:19 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','A0AAO_Desarrollo','C')
+2024-08-02 12:23:20 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','Direcciones','C')
+2024-08-02 12:23:20 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','A0AAO_Cartilla_Farmacia','CABM')
+2024-08-02 12:23:20 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','A0AAO_Cartilla','C')
+2024-08-02 12:23:20 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','A0AAO_Cartilla_Odontologia','CABM')
+2024-08-02 12:23:20 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','A0AAO_Cartilla_Omint','CA')
+2024-08-02 12:23:20 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','A0AAO_Cartilla_Opticas','CABM')
+2024-08-02 12:23:20 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','A0AAO_Licitaciones','CABM')
+2024-08-02 12:23:20 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','A0AAO_PadronPortal','CA')
+2024-08-05 09:39:37 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_usuario`, `usuario`, `nombre`, `apellido`, `cuil`, `login_date` FROM `desa__alexis`.`sys__users`WHERE `disponible` = '1' ORDER BY `usuario` ASC LIMIT 0 ,100
+2024-08-05 09:39:37 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`sys__users`WHERE `disponible` = '1'
+2024-08-05 09:39:47 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `route`,`permiso` FROM `desa__alexis`.`sys__users_permisos` WHERE `id_usuario` = '12'
+2024-08-05 09:39:57 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_usuario`, `usuario`, `nombre`, `apellido`, `cuil`, `login_date` FROM `desa__alexis`.`sys__users`WHERE `disponible` = '1' ORDER BY `usuario` ASC LIMIT 0 ,100
+2024-08-05 09:39:57 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`sys__users`WHERE `disponible` = '1'
+2024-08-08 11:54:40 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_usuario`, `usuario`, `nombre`, `apellido`, `cuil`, `login_date` FROM `desa__alexis`.`sys__users`WHERE `disponible` = '1' ORDER BY `usuario` ASC LIMIT 0 ,100
+2024-08-08 11:54:40 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`sys__users`WHERE `disponible` = '1'
+2024-08-08 11:54:41 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `route`,`permiso` FROM `desa__alexis`.`sys__users_permisos` WHERE `id_usuario` = '12'
+2024-08-08 11:54:46 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_usuario` FROM `desa__alexis`.`sys__users` WHERE `id_usuario` = '12' AND `disponible` = '1'
+2024-08-08 11:54:46 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryDelete -> DELETE FROM  `desa__alexis`.`sys__users_permisos` WHERE `id_usuario` = '12'
+2024-08-08 11:54:46 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','Usuarios','CABM')
+2024-08-08 11:54:46 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','Sistema','C')
+2024-08-08 11:54:46 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','ViandasPersonal','CABM')
+2024-08-08 11:54:46 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','ViandasAdm','C')
+2024-08-08 11:54:46 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','Viandas','C')
+2024-08-08 11:54:46 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','ViandasMenu','CABME')
+2024-08-08 11:54:46 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','ViandasResumen','CABM')
+2024-08-08 11:54:46 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','ViandasHaberes','CA')
+2024-08-08 11:54:46 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','ViandasChamba','CAM')
+2024-08-08 11:54:47 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','ViandasBusqueda','CAM')
+2024-08-08 11:54:47 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','ViandasSUM','CABM')
+2024-08-08 11:54:47 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','Ft_Das','A')
+2024-08-08 11:54:47 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','Nomenclador','C')
+2024-08-08 11:54:47 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','Das','C')
+2024-08-08 11:54:47 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','TranscripcionesDerivar','CA')
+2024-08-08 11:54:47 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','Transcripciones','C')
+2024-08-08 11:54:47 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','TranscripcionesTranscribir','CA')
+2024-08-08 11:54:47 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','TranscripcionesRecetar','CA')
+2024-08-08 11:54:47 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','A0AAO_Alfabeta','CA')
+2024-08-08 11:54:47 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','A0AAO_Nomenclador','C')
+2024-08-08 11:54:47 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','A0AAO_Desarrollo','C')
+2024-08-08 11:54:47 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','Direcciones','C')
+2024-08-08 11:54:47 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','A0AAO_Cartilla_Farmacia','CABM')
+2024-08-08 11:54:47 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','A0AAO_Cartilla','C')
+2024-08-08 11:54:47 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','A0AAO_Cartilla_Odontologia','CABM')
+2024-08-08 11:54:47 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','A0AAO_Cartilla_Omint','CA')
+2024-08-08 11:54:47 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','A0AAO_Cartilla_Opticas','CABM')
+2024-08-08 11:54:47 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','A0AAO_Licitaciones','CABM')
+2024-08-08 11:54:47 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QueryInsert -> INSERT INTO `desa__alexis`.`sys__users_permisos`(`id_usuario`, `route`, `permiso`) VALUES ('12','A0AAO_PadronPortal','CA')

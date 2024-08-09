@@ -1,0 +1,2 @@
+2024-07-22 17:27:42 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `fecha`, `total_viandas`, `estado` FROM `desa__alexis`.`viandas__resumen` ORDER BY `fecha` ASC LIMIT 0 ,100
+2024-07-22 17:27:42 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__resumen`

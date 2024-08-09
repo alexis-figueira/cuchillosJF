@@ -1,0 +1,102 @@
+<?php
+
+$TABS['A'] =  array('ICON' => '<i class="fa-solid fa-prescription-bottle-medical"></i>', 'TITLE' => 'Alfabeta');
+
+$TABLE['A']['COLUMNAS']			= array(
+	array('COLUMNA' => 'Archivo'),
+	array('COLUMNA' => 'Observacion')
+);
+$TABLE['A']['AJAX_URL'] 		= $LINK_BACK.'/Listado_Procesados';
+$TABLE['A']['HERRAMIENTAS'] 	= array('ALTA' => 'A', 'NUBE' => 'A', 'REFRESH' => 'C');
+$TABLE['A']['SETTING'] 			= array('ORDENAR' => "TRUE", 'ORDENAR_COL' => 1,'ORDENAR_METHOD' => 'DESC');
+
+$MAIN = CreateMain($TABS, $TABLE);
+
+
+if(in_array('Display_A_Principal', $TABLE_FUNCTION)){
+	unset($TMP);
+	$TMP['MODAL']['ID']			= 'A_PRINCIPAL';
+	$TMP['MODAL']['TITLE']		= 'Subir Manual';
+	$TMP['MODAL']['SIZE']		= '';
+	
+	$TMP['FOOTER']['SUBMIT'] 	= array('ID' => 'Guardar');
+	$TMP['FOOTER']['CLOSE']		= array('ID' => 'Cerrar');
+	
+	$TMP['BODY'] = '<input type="hidden" id="AUTOFOCUS">';
+	$TMP['BODY'] .= '<form id="'.$TMP['MODAL']['ID'].'_FORM" autocomplete="off">';
+		$TMP['BODY'] .= CreateFormInput(array('ID' => 'fecha', 'TIPO' => 'date', 'VALIDATE' => 'CFA', 'REQUIRED' => TRUE, 'VALUE'=> date("Y-m-d")));
+		$TMP['BODY'] .= CreateFormInput(array('ID' => 'archivo', 'TIPO' => 'file', 'VALIDATE' => 'CBN', 'REQUIRED' => TRUE));
+		$TMP['BODY'] .= CreateFormInput(array('ID' => 'observacion', 'TIPO' => 'text', 'VALIDATE' => 'CTS'));
+	$TMP['BODY'] .= '</form>';
+	array_push($MODALS,CreateModal($TMP['MODAL'], $TMP['BODY'], $TMP['FOOTER']));
+	array_push($VARS,"const MODAL_".$TMP['MODAL']['ID']."_INSTANCE = bootstrap.Modal.getOrCreateInstance('#MODAL_".$TMP['MODAL']['ID']."');");
+	array_push($VARS,"const MODAL_".$TMP['MODAL']['ID']." = document.getElementById('MODAL_".$TMP['MODAL']['ID']."');");	
+	unset($JS_TMP);
+	
+	$JS_TMP = 'function Display_A_Principal(){';
+		$JS_TMP .= 'FormErrorReset("A_PRINCIPAL_FORM");';
+		$JS_TMP .= 'FormReset("A_PRINCIPAL_FORM");';
+		$JS_TMP .= '$("#MODAL_A_PRINCIPAL #AUTOFOCUS").val("ARCHIVO");';
+		$JS_TMP .= 'MODAL_A_PRINCIPAL_INSTANCE.show();';		
+	$JS_TMP .= '}';	
+
+	$JS_TMP .= 'function MODAL_A_PRINCIPAL_Procesar(){';
+		$JS_TMP .= 'if($("#A_PRINCIPAL_FORM")[0].reportValidity()==false){return;}';
+		$JS_TMP .= 'FormErrorReset("A_PRINCIPAL_FORM");';
+		$JS_TMP .= 'if($("#A_PRINCIPAL_FORM #COMPLETO").val()=="1"){';
+			$JS_TMP .= 'Swal.fire({';
+				$JS_TMP .= 'icon: "warning",';
+				$JS_TMP .= 'text: "El Catalogo Mensual anula todos los troqueles antes de importar",';
+				$JS_TMP .= 'showDenyButton: true,';
+				$JS_TMP .= 'showCancelButton: false,';
+				$JS_TMP .= 'confirmButtonText: "Continuar",';
+				$JS_TMP .= 'denyButtonText: "Cancelar"';
+			$JS_TMP .= '}).then((result) => {';
+				$JS_TMP .= 'if (result.isConfirmed) {';					
+					$JS_TMP .= '$.ajax({url: "'.$LINK_BACK.'/Procesar_Manual/",data: JSON.stringify(FormDataPicker("A_PRINCIPAL_FORM"))}).done(function (response){';
+						$JS_TMP .= 'if(response.RESULTADO == "OK"){';
+							$JS_TMP .= 'TableLoad("A");';
+							$JS_TMP .= 'MODAL_A_PRINCIPAL_INSTANCE.hide();';
+							$JS_TMP .= SF('OK');
+						$JS_TMP .= '}else{';
+							$JS_TMP .= 'if(response.MESSAGE != ""){'.SF('MSG', 'response.MESSAGE').'}';
+							$JS_TMP .= 'else{'.SF('ERROR').'}';
+						$JS_TMP .= '}';
+					$JS_TMP .= '});';					
+				$JS_TMP .= '} else if (result.isDenied) {';
+					$JS_TMP .= 'return;';
+				$JS_TMP .= '}';
+			$JS_TMP .= '});';
+		$JS_TMP .= '}else{';
+			$JS_TMP .= '$.ajax({url: "'.$LINK_BACK.'/Procesar_Manual/",data: JSON.stringify(FormDataPicker("A_PRINCIPAL_FORM"))}).done(function (response){';
+				$JS_TMP .= 'if(response.RESULTADO == "OK"){';
+					$JS_TMP .= 'TableLoad("A");';
+					$JS_TMP .= 'MODAL_A_PRINCIPAL_INSTANCE.hide();';
+					$JS_TMP .= SF('OK');
+				$JS_TMP .= '}else{';
+					$JS_TMP .= 'if(response.MESSAGE != ""){'.SF('MSG', 'response.MESSAGE').'}';
+					$JS_TMP .= 'else{'.SF('ERROR').'}';
+				$JS_TMP .= '}';
+			$JS_TMP .= '});';
+		$JS_TMP .= '}';
+	$JS_TMP .= '}';
+	
+	$JS_TMP .= CreateFormUpload('ARCHIVO','A_PRINCIPAL_FORM', 'ZIP');
+	array_push($FUNCTIONS,$JS_TMP);
+}
+
+if(in_array('Display_A_Sync', $TABLE_FUNCTION)){
+	$JS_TMP = 'function Display_A_Sync(){';
+		$JS_TMP .= '$.ajax({url: "'.$LINK_BACK.'/Procesar_Sync_Portal/"}).done(function (response){';
+			$JS_TMP .= 'if(response.RESULTADO == "OK"){';
+				$JS_TMP .= SF('OK');
+			$JS_TMP .= '}else{';
+				$JS_TMP .= 'if(response.MESSAGE != ""){'.SF('MSG', 'response.MESSAGE').'}';
+				$JS_TMP .= 'else{'.SF('ERROR').'}';
+			$JS_TMP .= '}';
+		$JS_TMP .= '});';	
+	$JS_TMP .= '}';	
+	array_push($FUNCTIONS,$JS_TMP);
+}
+
+?>

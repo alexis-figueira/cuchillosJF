@@ -1,0 +1,6 @@
+2024-07-22 17:27:37 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_tipo`,`tipo` FROM `desa__alexis`.`viandas__tipo` WHERE `disponible` = '1' ORDER BY `tipo` ASC
+2024-07-22 17:27:37 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_menu`, `fecha`, `tipo`, `menu`, `precio`,`estado` FROM `desa__alexis`.`viandas__menu` ORDER BY `fecha` ASC LIMIT 0 ,100
+2024-07-22 17:27:37 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__menu`
+2024-07-24 15:50:06 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_menu`, `fecha`, `tipo`, `menu`, `precio`,`estado` FROM `desa__alexis`.`viandas__menu` ORDER BY `fecha` ASC LIMIT 0 ,100
+2024-07-24 15:50:06 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_tipo`,`tipo` FROM `desa__alexis`.`viandas__tipo` WHERE `disponible` = '1' ORDER BY `tipo` ASC
+2024-07-24 15:50:06 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__menu`

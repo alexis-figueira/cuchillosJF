@@ -1,0 +1,150 @@
+<?php
+require_once './db_connect_dasgobar.sys';
+if($ROUTE_OPC == 'Listado_Prestadores'){
+	$RETURN['COUNT'] = 0;
+	$RETURN['TOTAL'] = 0;
+	$RETURN['PAGINAS'] = 1;
+	$RETURN['ROWS'] = [];
+	if($PP['C'] != 1){EJE($RETURN);}
+	$ARRAY_ORDER = array(1 => '`nombre` {METHOD}', 2 => '`domicilio` {METHOD}', 3 => '`telefono` {METHOD}', 4 => '`especialidad` {METHOD}', 5 => '`categoria` {METHOD}', 6 => '`localidad` {METHOD}', 7 => '`provincia` {METHOD}');
+	$FORM = LISTADO_QUERY($ARRAY_ORDER);
+	if($FORM['SEARCH'] != NULL){ $SEARCH = "WHERE `nombre` LIKE '%".$FORM['SEARCH']."%' OR `especialidad` LIKE '%".$FORM['SEARCH']."%' OR `categoria` = '".$FORM['SEARCH']."' OR `localidad` = '%".$FORM['SEARCH']."%' OR `provincia` = '".$FORM['SEARCH']."'";}else{$SEARCH = "";}
+	$Que = QuerySelect("SELECT `nombre`, `domicilio`, `telefono`, `especialidad`, `categoria`, `localidad`, `provincia` FROM ".$DBT_WEBDAS['OMINT_PRESTADORES'].$SEARCH." ORDER BY ".$FORM['ORDENAR']." LIMIT ".$FORM['LIMIT']." ,".$FORM['ROWS'], "QWE_WEBDAS");
+	while($Row = QueryFetch($Que)){
+		$RETURN['COUNT']++;
+		$TMP = [];
+		$TMP['ID'] 						= $RETURN['COUNT'];
+		$TMP['DATA']['NOMBRE'] 			= $Row['nombre'];
+		$TMP['DATA']['DOMICILIO'] 		= $Row['domicilio'];
+		$TMP['DATA']['TELEFONO'] 		= $Row['telefono'];
+		$TMP['DATA']['ESPECIALIDAD']	= $Row['especialidad'];
+		$TMP['DATA']['CATEGORIA'] 		= $Row['categoria'];
+		$TMP['DATA']['LOCALIDAD'] 		= $Row['localidad'];
+		$TMP['DATA']['PROVINCIA'] 		= $Row['provincia'];	
+		array_push($RETURN['ROWS'], $TMP);
+		unset($TMP);
+	}
+	$Que = QuerySelect("SELECT COUNT(*) AS 'total' FROM ".$DBT_WEBDAS['OMINT_PRESTADORES'].$SEARCH, "QWE_WEBDAS");
+	while($Row = QueryFetch($Que)){	
+		$RETURN['TOTAL'] = $Row['total'];
+		$RETURN['PAGINAS'] = ceil($RETURN['TOTAL']/$FORM['ROWS']);
+	}
+	EJE($RETURN);
+}
+elseif($ROUTE_OPC == 'Procesar_Cartilla'){
+	ini_set('memory_limit', '-1');
+	ini_set('max_execution_time', 900);
+	if($PP['A'] != 1){RJRE("PERMISOS INSUFICIENTES");}
+	if(CIJE('CTS_ID_ARCHIVO') === TRUE){RJRE();};
+	if(CFE($sJ['CTS_ID_ARCHIVO']) === FALSE){RJRE("No se pudo procesar el archivo!");};
+	$ARCHIVO = CFE($sJ['CTS_ID_ARCHIVO']);
+	if(!in_array(Str_Lo($ARCHIVO['TYPE']),$CFG_UPLOADFILES['TYPE']['EXCEL'])){RJRE("Solo se admiten archivos XLS o XLSX");}
+	
+	try{
+		if(RFE($ARCHIVO['TYPE']) == 'xls'){     
+			$reader = new \PhpOffice\PhpSpreadsheet\Reader\Xls();
+		}elseif(RFE($ARCHIVO['TYPE']) == 'csv'){
+			$reader = new \PhpOffice\PhpSpreadsheet\Reader\Csv();
+		}else{     
+			$reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+		}		
+		$reader->setReadDataOnly(true);
+		$spreadsheet = $reader->load($ARCHIVO['FILE']);
+	} catch (\PhpOffice\PhpSpreadsheet\Exception $e) {
+		RJRE("No se pudo leer el archivo");
+	}
+	
+	$sheet = $spreadsheet->getSheet($spreadsheet->getFirstSheetIndex());
+	
+	$data = $sheet->toArray();
+	
+	if(count($data)<1){RJRE("No se pudo procesar el archivo!!");};
+	
+	$ALTA = '';
+	$ESPECIALIDADES = '';
+	$PROCESAR = array();
+	$COUNT = 0;
+	
+	foreach(array_slice($data,1) as $LINEA){
+		if(!array_key_exists(16,$LINEA)){RJRE("No se pueden procesar las columnas");}
+		$ID = SANITIZE_TEXT($LINEA[0], 1, 255);
+		$PRESTADOR = SANITIZE_TEXT($LINEA[2], 1, 255);
+		$ESPECIALIDAD = SANITIZE_TEXT($LINEA[5], 1, 255);
+		$DOMICILIO = SANITIZE_TEXT($LINEA[6], 1, 255);
+		$TELEFONO = SANITIZE_TEXT($LINEA[7], 1, 255);
+		$LOCALIDAD = SANITIZE_TEXT($LINEA[8], 1, 255);
+		$PROVINCIA = SANITIZE_TEXT($LINEA[12], 1, 255);
+		$CATEGORIA = SANITIZE_TEXT($LINEA[16], 1, 255);		
+		
+		if($ID == '' || $PRESTADOR == '' || $ESPECIALIDAD == '' || $LOCALIDAD == '' || $PROVINCIA == '' || $CATEGORIA == '' || ($DOMICILIO == '' && $TELEFONO == '')){continue;}
+		if(str_starts_with($PRESTADOR,'.')){$PRESTADOR = substr($PRESTADOR,1);}
+		if(str_starts_with($ESPECIALIDAD,'.')){$ESPECIALIDAD = substr($ESPECIALIDAD,1);}
+		if(str_starts_with($DOMICILIO,'.')){$DOMICILIO = substr($DOMICILIO,1);}
+		if(str_starts_with($TELEFONO,'.')){$TELEFONO = substr($TELEFONO,1);}
+		if(str_starts_with($LOCALIDAD,'.')){$LOCALIDAD = substr($LOCALIDAD,1);}
+		if(str_starts_with($PROVINCIA,'.')){$PROVINCIA = substr($PROVINCIA,1);}
+		if(str_starts_with($CATEGORIA,'.')){$CATEGORIA = substr($CATEGORIA,1);}
+		
+		$ESPECIALIDAD = trim($ESPECIALIDAD);
+		
+		if($ESPECIALIDAD == 'CLÍNICAS Y SANATORIOS PARA INTERNACIÓN Y CONSULTORIOS EXTERNOS'){
+			$CATEGORIA = 'CONSULTORIOS EXTERNOS';
+			if($ALTA != ''){$ALTA .= ',';}
+			$ALTA .= "('".$PRESTADOR."','".$DOMICILIO."','".$TELEFONO."','CLÍNICAS  Y SANATORIOS  PARA INTERNACIÓN','".$CATEGORIA."','".$LOCALIDAD."','".$PROVINCIA."')";
+			$COUNT++;
+			if($ALTA != ''){$ALTA .= ',';}
+			$CATEGORIA = 'INTERNACIONES';
+			$ALTA .= "('".$PRESTADOR."','".$DOMICILIO."','".$TELEFONO."','".$ESPECIALIDAD."','".$CATEGORIA."','".$LOCALIDAD."','".$PROVINCIA."')";
+			$COUNT++;
+		}elseif($CATEGORIA == 'CUERPO MEDICO'){
+			$CATEGORIA = 'CONSULTORIOS EXTERNOS';
+			if($ALTA != ''){$ALTA .= ',';}
+			$ALTA .= "('".$PRESTADOR."','".$DOMICILIO."','".$TELEFONO."','".$ESPECIALIDAD."','".$CATEGORIA."','".$LOCALIDAD."','".$PROVINCIA."')";
+			$COUNT++;
+		}elseif($CATEGORIA == 'ESTUDIOS DE DIAGNÓSTICO Y TRATAMIENTO'){
+			$CATEGORIA = 'ESTUDIOS Y LABORATORIOS';
+			if($ALTA != ''){$ALTA .= ',';}
+			$ALTA .= "('".$PRESTADOR."','".$DOMICILIO."','".$TELEFONO."','".$ESPECIALIDAD."','".$CATEGORIA."','".$LOCALIDAD."','".$PROVINCIA."')";
+			$COUNT++;
+		}elseif($CATEGORIA == 'CLÍNICAS Y SANATORIOS PARA INTERNACIÓN'){
+			$CATEGORIA = 'INTERNACIONES';
+			if($ALTA != ''){$ALTA .= ',';}
+			$ALTA .= "('".$PRESTADOR."','".$DOMICILIO."','".$TELEFONO."','".$ESPECIALIDAD."','".$CATEGORIA."','".$LOCALIDAD."','".$PROVINCIA."')";
+			$COUNT++;
+		}elseif($CATEGORIA == 'EMERGENCIAS Y URGENCIAS'){
+			$CATEGORIA = 'GUARDIAS';
+			if($ALTA != ''){$ALTA .= ',';}
+			$ALTA .= "('".$PRESTADOR."','".$DOMICILIO."','".$TELEFONO."','".$ESPECIALIDAD."','".$CATEGORIA."','".$LOCALIDAD."','".$PROVINCIA."')";
+			$COUNT++;
+		}else{
+			continue;
+		}
+		if($COUNT >= 10000){
+			$PROCESAR[] = $ALTA;
+			$ALTA = '';
+			$COUNT = 0;
+		}
+	}
+	$PROCESAR[] = $ALTA;
+	if(count($PROCESAR) > 0){
+		QueryDelete("DELETE FROM ".$DBT_WEBDAS['OMINT_PRESTADORES']." WHERE `nombre` IS NOT NULL", "QWE_WEBDAS");
+		foreach($PROCESAR as $KEY){
+			QueryInsert("INSERT INTO ".$DBT_WEBDAS['OMINT_PRESTADORES']." (`nombre`, `domicilio`, `telefono`, `especialidad`, `categoria`, `localidad`, `provincia`) VALUES ".$KEY, "QWE_WEBDAS");
+		}
+		QueryDelete("DELETE FROM ".$DBT_WEBDAS['OMINT_ESPECIALIDADES']." WHERE `categoria` IS NOT NULL", "QWE_WEBDAS");
+		QueryInsert("INSERT INTO ".$DBT_WEBDAS['OMINT_PROCESOS']." VALUES (NOW(), '".$C_USER['ID']."','".$sJ['CTS_ID_ARCHIVO']."')", "QWE_WEBDAS");
+		
+		$Que = QuerySelect("SELECT `especialidad`, `categoria` FROM ".$DBT_WEBDAS['OMINT_PRESTADORES']." GROUP BY `categoria`, `especialidad`", "QWE_WEBDAS");
+		if(QueryNumRows($Que) > 0){
+			while($Row = QueryFetch($Que)){
+				if($ESPECIALIDADES != ''){$ESPECIALIDADES .= ',';}$ESPECIALIDADES.= "('".$Row['especialidad']."','".$Row['categoria']."')";
+			}
+			if($ESPECIALIDADES != ''){QueryInsert("INSERT INTO ".$DBT_WEBDAS['OMINT_ESPECIALIDADES']." VALUES ".$ESPECIALIDADES, "QWE_WEBDAS");}
+		}		
+	}
+	RJRO();
+}
+else{
+	EE("NO_SE_PUEDE_PROCESAR_LA_SOLICITUD");
+}
+?>

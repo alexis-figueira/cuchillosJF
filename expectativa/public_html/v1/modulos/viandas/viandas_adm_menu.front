@@ -1,0 +1,218 @@
+<?php
+$TABS['A'] =  array('ICON' => '<i class="fa-solid fa-file-import"></i>', 'TITLE' => 'Menu');
+
+if($PP['E'] == 1){
+	$TABS['B'] =  array('ICON' => '<i class="fa-solid fa-gear"></i>', 'TITLE' => 'Categorias');
+}
+
+$TABLE['A']['COLUMNAS']			= array(
+	array('COLUMNA' => 'Fecha',),
+	array('COLUMNA' => 'Tipo'),
+	array('COLUMNA' => 'Menu'),
+	array('COLUMNA' => 'Precio'),
+	array('COLUMNA' => 'Estado', 'DB' => 'DISPONIBLE')
+);
+$TABLE['A']['AJAX_URL'] 		= $LINK_BACK.'/Listado_Menu';
+$TABLE['A']['HERRAMIENTAS'] 	= array('ALTA' => 'A','EDIT2' => 'M','LOCK' => 'B', 'QUICK_SEARCH' => 'C', 'REFRESH' => 'C');
+$TABLE['A']['SETTING'] 			= array('ORDENAR' => "TRUE", 'ORDENAR_COL' => 1,'ORDENAR_METHOD' => 'ASC', 'DOBLE_CLICK' => 'Display_A_Editar');
+$TABLE['A']['QUICK_SEARCH']		= "Buscar Por Tipo";
+
+if($PP['E'] == 1){
+	$TABLE['B']['COLUMNAS']			= array(
+		array('COLUMNA' => 'Tipo'),
+		array('COLUMNA' => 'Estado', 'DB' => 'DISPONIBLE')
+	);
+	$TABLE['B']['AJAX_URL'] 		= $LINK_BACK.'/Listado_Tipos';
+	$TABLE['B']['HERRAMIENTAS'] 	= array('ALTA' => 'E','EDIT' => 'E','LOCK' => 'E', 'QUICK_SEARCH' => 'E', 'REFRESH' => 'E');
+	$TABLE['B']['SETTING'] 			= array('ORDENAR' => "TRUE", 'ORDENAR_COL' => 1,'ORDENAR_METHOD' => 'ASC', 'DOBLE_CLICK' => 'Display_B_Principal');
+	$TABLE['B']['QUICK_SEARCH']		= "Buscar Tipo";
+}
+
+$MAIN = CreateMain($TABS, $TABLE);
+
+if(in_array('Display_A_Principal', $TABLE_FUNCTION)){
+	unset($TMP);
+	$TMP['MODAL']['ID']			= 'A_PRINCIPAL';
+	$TMP['MODAL']['TITLE']		= 'Menu';
+	$TMP['MODAL']['SIZE']		= '';
+	
+	$TMP['FOOTER']['SUBMIT'] 	= array('ID' => 'Guardar');
+	$TMP['FOOTER']['CLOSE']		= array('ID' => 'Cerrar');
+	
+	$TMP['BODY'] = '<input type="hidden" id="AUTOFOCUS">';
+	$TMP['BODY'] .= '<form id="'.$TMP['MODAL']['ID'].'_FORM" autocomplete="off">';
+		$TMP['BODY'] .= CreateFormInput(array('ID' => 'fecha', 'TIPO' => 'date', 'VALIDATE' => 'CFA', 'REQUIRED' => TRUE));
+		$TMP['BODY'] .= '<div id="Menus"></div>';
+		$TMP['BODY'] .= CreateFormInput(array('ID' => 'precio', 'TIPO' => 'number', 'VALIDATE' => 'CDA', 'REQUIRED' => TRUE, 'LABEL' => 'Precio Real', 'SHOW_FORMAT' => TRUE));
+		
+	$TMP['BODY'] .= '</form>';
+	array_push($MODALS,CreateModal($TMP['MODAL'], $TMP['BODY'], $TMP['FOOTER']));
+	array_push($VARS,"const MODAL_".$TMP['MODAL']['ID']."_INSTANCE = bootstrap.Modal.getOrCreateInstance('#MODAL_".$TMP['MODAL']['ID']."');");
+	array_push($VARS,"const MODAL_".$TMP['MODAL']['ID']." = document.getElementById('MODAL_".$TMP['MODAL']['ID']."');");	
+	unset($JS_TMP);
+	
+	$JS_TMP = 'function Display_A_Principal(){';
+		$JS_TMP .= 'FormErrorReset("A_PRINCIPAL_FORM");';
+		$JS_TMP .= 'FormReset("A_PRINCIPAL_FORM");';		
+		$JS_TMP .= '$("#MODAL_A_PRINCIPAL #AUTOFOCUS").val("FECHA");';
+		$JS_TMP .= 'MODAL_A_PRINCIPAL_INSTANCE.show();';		
+	$JS_TMP .= '}';	
+
+	$JS_TMP .= 'function MODAL_A_PRINCIPAL_Procesar(){';
+		$JS_TMP .= 'if($("#A_PRINCIPAL_FORM")[0].reportValidity()==false){return;}';
+		$JS_TMP .= 'FormErrorReset("A_PRINCIPAL_FORM");';
+		$JS_TMP .= '$.ajax({url: "'.$LINK_BACK.'/Procesar_Menu/",data: JSON.stringify(FormDataPicker("A_PRINCIPAL_FORM"))}).done(function (response){';
+			$JS_TMP .= 'if(response.RESULTADO == "OK"){';
+				$JS_TMP .= 'TableLoad("A");';
+				$JS_TMP .= 'MODAL_A_PRINCIPAL_INSTANCE.hide();';
+				$JS_TMP .= SF('OK');
+			$JS_TMP .= '}else{';
+				$JS_TMP .= 'if(response.MESSAGE != ""){'.SF('MSG', 'response.MESSAGE').'}';
+				$JS_TMP .= 'else{'.SF('ERROR').'}';
+			$JS_TMP .= '}';
+		$JS_TMP .= '});';
+	$JS_TMP .= '}';	
+	
+	$JS_TMP .= '$(document).ready(function(){';
+		$JS_TMP .= '$.ajax({url: "'.$LINK_BACK.'/DL_Categorias/"}).done(function (response){';
+			$JS_TMP .= '$.each(response, function(key, value){';
+				$JS_TMP .= 'var ITEM = \''.CreateFormInput(array('ID' => 'ITEM_ID', 'TIPO' => 'text', 'VALIDATE' => 'CTS', 'REQUIRED' => TRUE)).'\';';			
+				$JS_TMP .= '$("#A_PRINCIPAL_FORM #Menus").append(ITEM.replaceAll("ITEM_ID",value.VALUE));';
+			$JS_TMP .= '});';
+		$JS_TMP .= '});';
+	$JS_TMP .= '});';
+	array_push($FUNCTIONS,$JS_TMP);
+}
+
+if(in_array('Display_A_Editar', $TABLE_FUNCTION)){
+	unset($TMP);
+	$TMP['MODAL']['ID']			= 'A_EDITAR';
+	$TMP['MODAL']['TITLE']		= 'Menu';
+	$TMP['MODAL']['SIZE']		= '';
+	
+	$TMP['FOOTER']['SUBMIT'] 	= array('ID' => 'Guardar');
+	$TMP['FOOTER']['CLOSE']		= array('ID' => 'Cerrar');
+	
+	$TMP['BODY'] = '<input type="hidden" id="AUTOFOCUS">';
+	$TMP['BODY'] .= '<form id="'.$TMP['MODAL']['ID'].'_FORM" autocomplete="off">';
+		$TMP['BODY'] .= CreateFormInput(array('ID' => 'id_menu', 'TIPO' => 'hidden', 'VALIDATE' => 'CES', 'REQUIRED' => TRUE));
+		$TMP['BODY'] .= CreateFormInput(array('ID' => 'fecha', 'TIPO' => 'date', 'VALIDATE' => 'CFA', 'REQUIRED' => TRUE, 'READONLY' => TRUE));
+		$TMP['BODY'] .= CreateFormInput(array('ID' => 'tipo', 'TIPO' => 'text', 'VALIDATE' => 'CTS', 'REQUIRED' => TRUE, 'READONLY' => TRUE));
+		$TMP['BODY'] .= CreateFormInput(array('ID' => 'menu', 'TIPO' => 'text', 'VALIDATE' => 'CTS', 'REQUIRED' => TRUE));
+		$TMP['BODY'] .= CreateFormInput(array('ID' => 'precio', 'TIPO' => 'number', 'VALIDATE' => 'CDA', 'REQUIRED' => TRUE, 'LABEL' => 'Precio Real', 'DECIMAL' => TRUE, 'SHOW_FORMAT' => TRUE));
+		
+	$TMP['BODY'] .= '</form>';
+	array_push($MODALS,CreateModal($TMP['MODAL'], $TMP['BODY'], $TMP['FOOTER']));
+	array_push($VARS,"const MODAL_".$TMP['MODAL']['ID']."_INSTANCE = bootstrap.Modal.getOrCreateInstance('#MODAL_".$TMP['MODAL']['ID']."');");
+	array_push($VARS,"const MODAL_".$TMP['MODAL']['ID']." = document.getElementById('MODAL_".$TMP['MODAL']['ID']."');");	
+	unset($JS_TMP);
+	
+	$JS_TMP = 'function Display_A_Editar(){';
+		$JS_TMP .= 'if($("#Table_A_row").val() >= 1){';
+			$JS_TMP .= 'FormErrorReset("A_EDITAR_FORM");';
+			$JS_TMP .= 'FormReset("A_EDITAR_FORM");';
+			$JS_TMP .= '$.ajax({url: "'.$LINK_BACK.'/Ver_Menu/",data: JSON.stringify({"CES_ID":$("#Table_A_row").val()})}).done(function (response){';
+				$JS_TMP .= '$("#A_EDITAR_FORM #ID_MENU").val(response.ID_MENU);';
+				$JS_TMP .= '$("#A_EDITAR_FORM #TIPO").val(response.TIPO);';
+				$JS_TMP .= '$("#A_EDITAR_FORM #FECHA").val(response.FECHA);';
+				$JS_TMP .= '$("#A_EDITAR_FORM #MENU").val(response.MENU);';
+				$JS_TMP .= '$("#A_EDITAR_FORM #PRECIO").val(response.PRECIO);';
+				$JS_TMP .= '$("#A_EDITAR_FORM #ESTADO").val(response.ESTADO);';
+			$JS_TMP .= '});';
+			$JS_TMP .= '$("#MODAL_A_EDITAR #AUTOFOCUS").val("MENU");';
+			$JS_TMP .= 'MODAL_A_EDITAR_INSTANCE.show();';		
+		$JS_TMP .= '}else{';
+			$JS_TMP .= SF('ERROR','No se pudo procesar el menu');
+		$JS_TMP .= '}';
+	$JS_TMP .= '}';	
+
+	$JS_TMP .= 'function MODAL_A_EDITAR_Procesar(){';
+		$JS_TMP .= 'if($("#A_EDITAR_FORM")[0].reportValidity()==false){return;}';
+		$JS_TMP .= 'FormErrorReset("A_EDITAR_FORM");';
+		$JS_TMP .= '$.ajax({url: "'.$LINK_BACK.'/Procesar_Menu_Editar/",data: JSON.stringify(FormDataPicker("A_EDITAR_FORM"))}).done(function (response){';
+			$JS_TMP .= 'if(response.RESULTADO == "OK"){';
+				$JS_TMP .= 'TableLoad("A");';
+				$JS_TMP .= 'MODAL_A_EDITAR_INSTANCE.hide();';
+				$JS_TMP .= SF('OK');
+			$JS_TMP .= '}else{';
+				$JS_TMP .= 'if(response.MESSAGE != ""){'.SF('MSG', 'response.MESSAGE').'}';
+				$JS_TMP .= 'else{'.SF('ERROR').'}';
+			$JS_TMP .= '}';
+		$JS_TMP .= '});';
+	$JS_TMP .= '}';
+	array_push($FUNCTIONS,$JS_TMP);
+}
+if(in_array('Display_B_Principal', $TABLE_FUNCTION)){
+	unset($TMP);
+	$TMP['MODAL']['ID']			= 'B_PRINCIPAL';
+	$TMP['MODAL']['TITLE']		= 'Categoria Menu';
+	$TMP['MODAL']['SIZE']		= '';
+	
+	$TMP['FOOTER']['SUBMIT'] 	= array('ID' => 'Guardar');
+	$TMP['FOOTER']['CLOSE']		= array('ID' => 'Cerrar');
+	
+	$TMP['BODY'] = '<input type="hidden" id="AUTOFOCUS">';
+	$TMP['BODY'] .= '<form id="'.$TMP['MODAL']['ID'].'_FORM" autocomplete="off">';		
+		$TMP['BODY'] .= CreateFormInput(array('ID' => 'id_tipo', 'TIPO' => 'hidden', 'VALIDATE' => 'CES', 'VALUE' => 0));
+		$TMP['BODY'] .= CreateFormInput(array('ID' => 'tipo', 'TIPO' => 'text', 'VALIDATE' => 'CTS', 'REQUIRED' => TRUE, 'MAXLENGTH' => 255, 'LABEL' => 'Categoria del Menu'));
+		
+	$TMP['BODY'] .= '</form>';
+	array_push($MODALS,CreateModal($TMP['MODAL'], $TMP['BODY'], $TMP['FOOTER']));
+	array_push($VARS,"const MODAL_".$TMP['MODAL']['ID']."_INSTANCE = bootstrap.Modal.getOrCreateInstance('#MODAL_".$TMP['MODAL']['ID']."');");
+	array_push($VARS,"const MODAL_".$TMP['MODAL']['ID']." = document.getElementById('MODAL_".$TMP['MODAL']['ID']."');");	
+	unset($JS_TMP);
+	
+	$JS_TMP = 'function Display_B_Principal(){';
+		$JS_TMP .= 'FormErrorReset("B_PRINCIPAL_FORM");';
+		$JS_TMP .= 'FormReset("B_PRINCIPAL_FORM");';
+		if($PP['M'] == '1'){			
+			$JS_TMP .= 'if($("#Table_B_row").val() >= 1){';
+				$JS_TMP .= '$.ajax({url: "'.$LINK_BACK.'/Ver_Tipo/",data: JSON.stringify({"CES_ID":$("#Table_B_row").val()})}).done(function (response){';
+					$JS_TMP .= '$("#B_PRINCIPAL_FORM #ID_TIPO").val(response.ID_TIPO);';
+					$JS_TMP .= '$("#B_PRINCIPAL_FORM #TIPO").val(response.TIPO);';
+				$JS_TMP .= '});';
+			$JS_TMP .= '}';
+		}
+		$JS_TMP .= '$("#MODAL_B_PRINCIPAL #AUTOFOCUS").val("TIPO");';
+		$JS_TMP .= 'MODAL_B_PRINCIPAL_INSTANCE.show();';		
+	$JS_TMP .= '}';	
+
+	$JS_TMP .= 'function MODAL_B_PRINCIPAL_Procesar(){';
+		$JS_TMP .= 'if($("#B_PRINCIPAL_FORM")[0].reportValidity()==false){return;}';
+		$JS_TMP .= 'FormErrorReset("B_PRINCIPAL_FORM");';
+		$JS_TMP .= '$.ajax({url: "'.$LINK_BACK.'/Procesar_Tipo/",data: JSON.stringify(FormDataPicker("B_PRINCIPAL_FORM"))}).done(function (response){';
+			$JS_TMP .= 'if(response.RESULTADO == "OK"){';
+				$JS_TMP .= 'TableLoad("B");';
+				$JS_TMP .= 'MODAL_B_PRINCIPAL_INSTANCE.hide();';
+				$JS_TMP .= SF('OK');
+			$JS_TMP .= '}else{';
+				$JS_TMP .= 'if(response.MESSAGE != ""){'.SF('MSG', 'response.MESSAGE').'}';
+				$JS_TMP .= 'else{'.SF('ERROR').'}';
+			$JS_TMP .= '}';
+		$JS_TMP .= '});';
+	$JS_TMP .= '}';		
+	array_push($FUNCTIONS,$JS_TMP);
+}
+if(in_array('Display_A_Lock', $TABLE_FUNCTION)){
+	unset($JS_TMP);
+	$JS_TMP['SEND'] 				= 'CES_ID';
+	$JS_TMP['RESPONSE_ID']			= 'ID_MENU';
+	$JS_TMP['RESPONSE_STATUS']		= '';
+	$JS_TMP['RESPONSE_MESSAGE']		= "bloquear/desbloquear el MENU ' + response.MENU";
+	$JS_TMP['TARGET_CHECK']			= $LINK_BACK.'/Ver_Menu/';
+	$JS_TMP['TARGET_SUBMIT']		= "'".$LINK_BACK."/Procesar_Menu_Status'";
+	$JS_TMP['TARGET_SUBMIT_DATA']	= '{"CES_ID": response.ID_MENU}';
+	array_push($FUNCTIONS,SF_Lock('A',$JS_TMP));
+}
+if(in_array('Display_B_Lock', $TABLE_FUNCTION)){
+	unset($JS_TMP);
+	$JS_TMP['SEND'] 				= 'CES_ID';
+	$JS_TMP['RESPONSE_ID']			= 'ID_TIPO';
+	$JS_TMP['RESPONSE_STATUS']		= '';
+	$JS_TMP['RESPONSE_MESSAGE']		= "bloquear/desbloquear la CATEGORIA ' + response.TIPO";
+	$JS_TMP['TARGET_CHECK']			= $LINK_BACK.'/Ver_Tipo/';
+	$JS_TMP['TARGET_SUBMIT']		= "'".$LINK_BACK."/Procesar_Tipo_Status'";
+	$JS_TMP['TARGET_SUBMIT_DATA']	= '{"CES_ID": response.ID_TIPO}';
+	array_push($FUNCTIONS,SF_Lock('B',$JS_TMP));
+}
+?>

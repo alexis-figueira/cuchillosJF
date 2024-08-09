@@ -1,0 +1,204 @@
+@charset "utf-8";
+/* CSS Document */
+
+body {
+	font-family: 'Roboto', sans-serif;
+	font-size:1rem;
+}
+
+.app{	
+	height: 100vh;
+	position: relative;
+	padding-top: 7rem;
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-position: 50%;
+	background-color: #fff;
+	background-image: url('/public/custom-img/bg.jpg');
+}
+
+.navbar{
+	backdrop-filter: blur(4px);
+	box-shadow: 0px 8px 10px 0px rgba(0, 0, 0, 0.3);
+}
+
+.navbar-brand > img{
+	filter: invert(0);
+}
+
+.gradient{									   
+   background-image: linear-gradient(170deg, #71c0bdab 5%, #01a19aab 50%, #2d8d89ab 95%);
+}
+
+.gradient-testing{								   
+   background-image: linear-gradient(170deg, #dc3545ab 5%, #dc3545ab 50%, #dc3545ab 95%); 
+}
+
+.gradient_card{
+	background-image: linear-gradient(170deg, #71c0bd 5%, #01a19a 50%, #2d8d89 95%);
+	backdrop-filter: blur(4px); 
+}
+
+.gradient_table{
+	background-image: linear-gradient(170deg, #71c0bd 5%, #01a19a 50%, #2d8d89 95%);
+	background-color: white;
+}
+
+.nav-pills {
+	--bs-nav-pills-link-active-bg:#F78D1E !important;
+}
+
+.card-main {
+    border-radius: 3px;
+    padding: 1rem 15px;
+    margin-left: 15px;
+    margin-right: 15px;
+    margin-top: -2rem;
+    border: 0;
+}
+
+.card_header_btn {
+	min-width: 100px;
+    max-width: 100px;
+}
+
+.btn-footer {
+    width: 140px;
+}
+.btn-main{
+    padding: 1rem;
+    border-radius: 2rem;
+    border: none;
+    background: 0 0;
+    cursor: pointer;
+    text-decoration: none!important;
+    transition: background-color .3s ease-in-out;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+}
+.btn-main-div{
+    width: 100px;
+    height: 100px;
+    border-radius: 18px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 2px 2px 2px #00000020, 10px 1px 12px #00000020, 2px 2px 10px #00000020, 2px 2px 3px #00000020, inset 2px 2px 10px #00000020, inset 2px 2px 10px #00000020, inset 2px 2px 10px #00000020, inset 2px 2px 10px #00000020;
+    backdrop-filter: blur(2px);
+}
+.btn-main-div:hover {
+    filter: drop-shadow(0 2px 5px #000000b2);
+}
+
+.btn-main-div span{
+    font-size: 0.7em;
+    font-weight: 600;	
+}
+
+.tableFixHead { 
+	overflow: auto !important; 
+}
+.tableFixHead thead{ 
+	position: sticky !important; 
+	top: 0 !important; 
+	z-index: 1 !important; 
+}
+
+.btn-modal-footer {
+	min-width: 80px;
+}
+
+.table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
+  background: #3d4247d7;
+  color: #f8f9fa;
+}
+
+.table thead tr, thead th { background:transparent !important; color: white !important; }
+
+/* ===== Scrollbar CSS ===== */
+  /* Firefox */
+  * {
+    scrollbar-width: auto;
+    scrollbar-color: #000000 #ffffff;
+  }
+
+  /* Chrome, Edge, and Safari */
+  *::-webkit-scrollbar {
+    width: 12px;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: #ffffff;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background-color: #000000;
+    border-radius: 10px;
+    border: 3px solid #ffffff;
+  }
+  
+
+.pagination > li > a{
+    background-color: white;
+    color: #000;
+}
+
+.pagination > li > a:focus,
+.pagination > li > a:hover,
+.pagination > li > span:focus,
+.pagination > li > span:hover{
+    color: #5a5a5a;
+    background-color: #eee;
+}
+
+.pagination > .active > a{
+    color: white;
+    background-color: #000 !Important;
+}
+
+.pagination > .active > a:hover{
+    background-color: #000 !Important;
+}
+
+.tooltip {
+    z-index: 100000000; 
+}
+
+.select2js {width:100%!important;}
+
+#spinner-container {
+	z-index: 100000002;
+}
+#overlay{
+	z-index: 100000001;
+}
+
+.LoadingSpinner {
+	width: 56px;
+	height: 56px;
+	display: grid;
+	animation: LoadingSpinner-plncf9 4s infinite;
+}
+
+.LoadingSpinner::before,
+.LoadingSpinner::after {
+	content: "";
+	grid-area: 1/1;
+	border: 9px solid;
+	border-radius: 50%;
+	border-color: #474bff #474bff #0000 #0000;
+	mix-blend-mode: darken;
+	animation: LoadingSpinner-plncf9 1s infinite linear;
+}
+
+.LoadingSpinner::after {
+	border-color: #0000 #0000 #dbdcef #dbdcef;
+	animation-direction: reverse;
+}
+
+@keyframes LoadingSpinner-plncf9 {100% {transform: rotate(1turn);}}

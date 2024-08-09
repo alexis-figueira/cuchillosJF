@@ -1,0 +1,103 @@
+<?php
+$TABS['A'] =  array('ICON' => '<i class="fa-solid fa-person-cane"></i>', 'TITLE' => 'Sitace');
+
+$TABLE['A']['COLUMNAS']			= array(
+	array('COLUMNA' => 'Periodo'),
+	array('COLUMNA' => 'Usuario'),
+	array('COLUMNA' => 'Fecha'),
+	array('COLUMNA' => 'Enviado')
+);
+$TABLE['A']['AJAX_URL'] 		= $LINK_BACK.'/Listado_Procesos';
+$TABLE['A']['HERRAMIENTAS'] 	= array('ALTA' => 'A', 'QUICK_SEARCH' => 'C', 'REFRESH' => 'C');
+$TABLE['A']['SETTING'] 			= array('ORDENAR' => "TRUE", 'ORDENAR_COL' => 1,'ORDENAR_METHOD' => 'ASC', 'DOBLE_CLICK' => 'Display_A_Principal');
+$TABLE['A']['QUICK_SEARCH']		= "Buscar Periodo";
+
+$MAIN = CreateMain($TABS, $TABLE);
+
+
+if(in_array('Display_A_Principal', $TABLE_FUNCTION)){
+	unset($TMP);
+	$TMP['MODAL']['ID']			= 'A_PRINCIPAL';
+	$TMP['MODAL']['TITLE']		= 'Farmacia';
+	$TMP['MODAL']['SIZE']		= '';
+	
+	$TMP['FOOTER']['SUBMIT'] 	= array('ID' => 'Guardar');
+	$TMP['FOOTER']['CLOSE']		= array('ID' => 'Cerrar');
+	
+	$TMP['BODY'] = '<input type="hidden" id="AUTOFOCUS">';
+	$TMP['BODY'] .= '<form id="'.$TMP['MODAL']['ID'].'_FORM" autocomplete="off">';
+		$TMP['BODY'] .= CreateFormInput(array('ID' => 'periodo', 'TIPO' => 'text', 'VALIDATE' => 'CFC', 'REQUIRED' => TRUE, 'LABEL' => 'Archivo DAS.M'));
+		$TMP['BODY'] .= CreateFormInput(array('ID' => 'afno', 'TIPO' => 'file', 'VALIDATE' => 'CBN', 'REQUIRED' => TRUE));		
+	$TMP['BODY'] .= '</form>';
+	array_push($MODALS,CreateModal($TMP['MODAL'], $TMP['BODY'], $TMP['FOOTER']));
+	array_push($VARS,"const MODAL_".$TMP['MODAL']['ID']."_INSTANCE = bootstrap.Modal.getOrCreateInstance('#MODAL_".$TMP['MODAL']['ID']."');");
+	array_push($VARS,"const MODAL_".$TMP['MODAL']['ID']." = document.getElementById('MODAL_".$TMP['MODAL']['ID']."');");	
+	unset($JS_TMP);
+	
+	$JS_TMP = 'function Display_A_Principal(){';
+		$JS_TMP .= 'FormErrorReset("A_PRINCIPAL_FORM");';
+		$JS_TMP .= 'FormReset("A_PRINCIPAL_FORM");';
+			
+		$JS_TMP .= 'if($("#Table_A_row").val() >= 1){';
+			$JS_TMP .= '$.ajax({url: "'.$LINK_BACK.'/Ver_Farmacia/",data: JSON.stringify({"CEI_ID":$("#Table_A_row").val()})}).done(function (response){';
+				$JS_TMP .= '$("#A_PRINCIPAL_FORM #ID_FARMACIA").val(response.ID);';
+				$JS_TMP .= '$("#A_PRINCIPAL_FORM #FARMACIA").val(response.NOMBRE);';
+				$JS_TMP .= '$("#A_PRINCIPAL_FORM #DETALLE").val(response.DETALLE);';
+				$JS_TMP .= '$("#A_PRINCIPAL_FORM #LOCALIDAD").val(response.LOCALIDAD);';
+				$JS_TMP .= '$("#A_PRINCIPAL_FORM #PROVINCIA").val(response.PROVINCIA);';
+				$JS_TMP .= '$("#A_PRINCIPAL_FORM #OBSERVACION").val(response.OBSERVACION);';
+			$JS_TMP .= '});';
+		$JS_TMP .= '}';
+		$JS_TMP .= '$("#MODAL_A_PRINCIPAL #AUTOFOCUS").val("FARMACIA");';
+		$JS_TMP .= 'MODAL_A_PRINCIPAL_INSTANCE.show();';		
+	$JS_TMP .= '}';	
+
+	$JS_TMP .= 'function MODAL_A_PRINCIPAL_Procesar(){';
+		$JS_TMP .= 'if($("#A_PRINCIPAL_FORM")[0].reportValidity()==false){return;}';
+		$JS_TMP .= 'FormErrorReset("A_PRINCIPAL_FORM");';
+		$JS_TMP .= '$.ajax({url: "'.$LINK_BACK.'/Procesar_Farmacia/",data: JSON.stringify(FormDataPicker("A_PRINCIPAL_FORM"))}).done(function (response){';
+			$JS_TMP .= 'if(response.RESULTADO == "OK"){';
+				$JS_TMP .= 'TableLoad("A");';
+				$JS_TMP .= 'MODAL_A_PRINCIPAL_INSTANCE.hide();';
+				$JS_TMP .= SF('OK');
+			$JS_TMP .= '}else{';
+				$JS_TMP .= 'if(response.MESSAGE != ""){'.SF('MSG', 'response.MESSAGE').'}';
+				$JS_TMP .= 'else{'.SF('ERROR').'}';
+			$JS_TMP .= '}';
+		$JS_TMP .= '});';
+	$JS_TMP .= '}';		
+	
+	$JS_TMP = '$(document).ready(function(){';
+		$JS_TMP .= '$("#A_PRINCIPAL_FORM #AFNO").on("change",function(e){';
+			$JS_TMP .= 'var FilesSizeMax = '.$CFG_UPLOADFILES['SIZE'].';';
+			$JS_TMP .= 'var oFile = $("#A_PRINCIPAL_FORM #AFNO")[0].files[0];';		
+			$JS_TMP .= 'if(oFile != undefined){';
+				$JS_TMP .= 'var sFilename = oFile.name;';	
+				$JS_TMP .= 'if(oFile.size > parseInt(FilesSizeMax)){'.SF('MSG','"El archivo es muy pesado"').'$("#A_PRINCIPAL_FORM #AFNO").val("");return;}';
+				$JS_TMP .= 'var reader = new FileReader();';
+				$JS_TMP .= 'reader.readAsDataURL(oFile);';
+				$JS_TMP .= 'reader.onload = function(e) {';
+					$JS_TMP .= 'var data = e.target.result;';
+					$JS_TMP .= 'var formData = {};';
+					$JS_TMP .= 'formData["CBN_FILE"] = data.split(",")[1];';
+					
+				$JS_TMP .= '};';
+			$JS_TMP .= '};';			
+		$JS_TMP .= '});';			
+	$JS_TMP .= '});';
+			
+	array_push($FUNCTIONS,$JS_TMP);
+}
+
+if(in_array('Display_A_Lock', $TABLE_FUNCTION)){
+	unset($JS_TMP);
+	$JS_TMP['SEND'] 				= 'CEI_ID';
+	$JS_TMP['RESPONSE_ID']			= 'ID_FARMACIA';
+	$JS_TMP['RESPONSE_STATUS']		= '';
+	$JS_TMP['RESPONSE_MESSAGE']		= "bloquear/desbloquear la farmacia ' + response.NOMBRE";
+	$JS_TMP['TARGET_CHECK']			= $LINK_BACK.'/Ver_Farmacia/';
+	$JS_TMP['TARGET_SUBMIT']		= "'".$LINK_BACK."/Procesar_Farmacia_Status'";
+	$JS_TMP['TARGET_SUBMIT_DATA']	= '{"CEI_ID": response.ID}';
+	array_push($FUNCTIONS,SF_Lock('A',$JS_TMP));
+}
+?>

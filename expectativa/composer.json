@@ -1,0 +1,12 @@
+{
+    "require": {
+        "phpoffice/phpspreadsheet": "^1.29",
+        "phpmailer/phpmailer": "^6.9",
+		"dompdf/dompdf": "^2.0",
+		"tecnickcom/tc-lib-barcode": "^1.17",
+        "myokyawhtun/pdfmerger": "dev-master"
+    },
+	"config": {
+		"vendor-dir": "./public_html/vendor"
+	}
+}

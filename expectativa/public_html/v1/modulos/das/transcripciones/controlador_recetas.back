@@ -1,0 +1,765 @@
+<?php
+use Dompdf\Dompdf;
+use Dompdf\Options;
+
+require_once './db_connect_autogestion.sys';
+
+function Receta_Render($ID){
+	global $DBT_PORTAL, $DBT;
+	$QueReceta = QuerySelect("SELECT R.`id_receta`,R.`archivo_md5`, R.`dni`, R.`fecha`, R.`duplicado`, P.`apellido`, P.`nombre`, P.`cuil`, P.`nro_omint`, T.`diagnostico` FROM ".$DBT_PORTAL['RECETAS_ARCHIVOS']." R LEFT JOIN ".$DBT_PORTAL['PADRON']." P ON P.`dni`=R.`dni` LEFT JOIN ".$DBT_PORTAL['RECETAS_TRANSCRIPCION']." T ON T.`id_receta` = R.`id_receta` WHERE R.`id_receta` = '".$ID."' AND R.`disponible` = '1' AND P.`dni` IS NOT NULL",'QWE_PORTAL');
+	if(QueryNumRows($QueReceta) < 1){return;}
+	while($RowReceta = QueryFetch($QueReceta)){
+		$HEADER_NOMBRE = $RowReceta['apellido']." ".$RowReceta['nombre'];
+		$HEADER_DNI = $RowReceta['dni'];
+		$HEADER_MD5 = $RowReceta['archivo_md5'];
+
+		if(SANITIZE_CUIT($RowReceta['cuil']) != ''){
+			$HEADER_ID_TIPO = 'CUIL';
+			$HEADER_ID_NUMERO = $RowReceta['cuil'];
+		}else{
+			$HEADER_ID_TIPO = 'DNI';
+			$HEADER_ID_NUMERO = $RowReceta['dni'];
+		}
+		$HEADER_OMINT = $RowReceta['nro_omint'];
+		$HEADER_FECHA = Fecha_Formato($RowReceta['fecha']);
+		$HEADER_RECETA = "RP-".$RowReceta['id_receta']."-".Fecha_Formato($RowReceta['fecha'],"Y");
+		
+		$DIAGNOSTICO = $RowReceta['diagnostico'];
+		$DUPLICADO = $RowReceta['duplicado'];
+	}
+	
+	$QueTroqueles = QuerySelect("SELECT FT.`nombre`, FT.`droga`, FT.`presentacion`, TRO.`autoriza_cantidad` FROM ".$DBT_PORTAL['RECETAS_TRANSCRIPCION']." TRA LEFT JOIN ".$DBT_PORTAL['RECETAS_TROQUEL']." TRO ON TRA.`id_transcripcion`=TRO.`id_transcripcion` LEFT JOIN ".$DBT_PORTAL['RECETAS_FTDAS']." FT ON TRO.`autoriza_troquel`=FT.`troquel` WHERE TRA.`id_receta` = '".$ID."' AND TRA.`estado` = '2' AND TRO.`autoriza_troquel` IS NOT NULL AND TRO.`autoriza_cantidad` >= 1 AND FT.`troquel` IS NOT NULL",'QWE_PORTAL');
+	if(QueryNumRows($QueTroqueles) < 1){return;}
+	$MEDICAMENTOS = array();
+	while($RowTroqueles = QueryFetch($QueTroqueles)){
+		$MEDICAMENTOS[] = array('DROGA' => $RowTroqueles['droga'],'NOMBRE' => $RowTroqueles['nombre'],'PRESENTACION' => $RowTroqueles['presentacion'],'CANTIDAD' => $RowTroqueles['autoriza_cantidad']);
+	}
+	
+	$QueFirma = QuerySelect("SELECT `firma` FROM ".$DBT['USERS_FIRMA']." WHERE `id_usuario`='".$GLOBALS['C_USER']['ID']."'");
+	if(QueryNumRows($QueFirma) < 1){return;}
+	while($RowFirma = QueryFetch($QueFirma)){
+		$FIRMA = $RowFirma['firma'];
+	}
+	
+	$MT = "240"; //MARGIN TOP
+	$formatterES = new NumberFormatter("es", NumberFormatter::SPELLOUT);
+	
+	$STYLE = '<style>';
+		$STYLE .= 'body			{size: A4;font-size: 12px;color: #333;font-family: "Roboto Condensed", sans-serif}';
+		$STYLE .= '@page		{margin: '.($MT+30).'px 20px 100px 20px!important}';
+		$STYLE .= 'table 		{font-size: 13px;}';
+		$STYLE .= '.cabecera	{background: #ececec;overflow: hidden;height: '.$MT.'px}';
+		$STYLE .= '.leyenda		{margin-top: 8px;font-size: 10px;font-style: italic;color: #333}';
+		$STYLE .= '.titulo		{margin: 10px 110px 10px 20px;font-weight: 700;font-size: 19px;line-height: 19px;color: #333;}';
+		$STYLE .= '.qr			{position: absolute;top: 14px;right: 14px;width: 100px;}';
+		$STYLE .= '.gpdid		{position: absolute;top: 118px;right: 14px;width: 99px;height: 20.9px;line-height: 20.9px;font-weight: 700;background: #bdbdbd;color: #333;border-radius: 5px;text-align: center;}';
+		$STYLE .= '.fecha		{position: absolute;top: 142px;right: 14px;width: 99px;height: 20.9px;line-height: 20.9px;font-weight: 700;background: #bdbdbd;color: #333;border-radius: 5px;text-align: center;}';
+		$STYLE .= '.remi	 	{margin-left:10px}';
+		$STYLE .= '.label		{height: 21.89px;line-height: 20px;background: #bdbdbd;padding: 0 5px;border-bottom: 1px solid #bdbdbd;margin-right: -5px;font-weight: 700;border-radius: 5px 5px 0 5px;display: inline-block;width: 105px;text-align: center}';
+		$STYLE .= 'span			{border-bottom: 1px solid #bdbdbd;padding-left: 5px;display: inline-block}';
+		$STYLE .= '.header		{position:fixed;top:-'.($MT+10).'px;width:754px}';
+		$STYLE .= '.divbody		{width:694px;text-align:justify;margin-top: 0px; margin-left: 30px;margin-right:30px};';
+	$STYLE .= '</style>';
+	
+	$HEADER = '<div class="header">';
+		$HEADER .= '<div class="cabecera" align="center">';
+			//$HEADER .= '<div style="position: absolute;left:40px;top:40px;">RECETA DE EMERGENCIA COVID 19</div>';
+			$HEADER .= '<div><img style="width: 110px;" src="data:image/png;base64,'.$GLOBALS['CFG_LOGO_DAS'].'"></div>';
+			$HEADER .= '<div class="leyenda">Direccion de Ayuda Social para el Personal del Congreso de la Nacion</div>';
+
+			$HEADER .= '<div class="qr"><img src="data:image/png;base64,'.base64_encode(Generar_Qr(strtoupper("https://recetas.das.gob.ar/".$HEADER_DNI."/".$HEADER_MD5.".pdf"))).'" style="width:100px"></div>';
+			$HEADER .= '<div class="gpdid">RP-'.substr($ID,4,6)."-".substr($ID,0,4).'</div>';
+			$HEADER .= '<div class="fecha">Fec.:'.$HEADER_FECHA.'</div>';
+			$HEADER .= '<div class="titulo" align="left">RECETA / INDICACIONES</div>';
+			$HEADER .= '<div class="remi">';
+				$HEADER .= '<table width=100%>';
+					$HEADER .= '<tr style="vertical-align: bottom;">';
+						$HEADER .= '<td width=100% style="vertical-align: bottom;" colspan="2">';
+							$HEADER .= '<table width=100%>';
+								$HEADER .= '<tr style="vertical-align: bottom;">';
+									$HEADER .= '<td style="vertical-align: bottom;">';
+										$HEADER .= '<div class="originante" align="left"><div class="label">NOMBRE</div></div>';
+									$HEADER .= '</td>';
+									$HEADER .= '<td width=100% style="vertical-align: bottom;">';
+										$HEADER .= '<div class="originante" align="left"><span>'.substr($HEADER_NOMBRE,0,29).'</span></div>';
+									$HEADER .= '</td>';
+								$HEADER .= '</tr>';
+							$HEADER .= '</table>';
+						$HEADER .= '</td>';
+					$HEADER .= '</tr>';
+					$HEADER .= '<tr style="vertical-align: bottom;">';
+						$HEADER .= '<td width=50% style="vertical-align: bottom;"><table width=100%>';
+							$HEADER .= '<tr style="vertical-align: bottom;">';
+								$HEADER .= '<td style="vertical-align: bottom;">';
+									$HEADER .= '<div class="destinatario" align="left"><div class="label">NRO OMINT</div></div>';
+								$HEADER .= '</td>';
+								$HEADER .= '<td width=100% style="vertical-align: bottom;">';
+									$HEADER .= '<div class="destinatario" align="left"><span>'.$HEADER_OMINT.'</span></div>';
+								$HEADER .= '</td>';
+							$HEADER .= '</tr>';
+						$HEADER .= '</table></td>';
+						$HEADER .= '<td width=50% style="vertical-align: bottom;"><table width=100%>';
+							$HEADER .= '<tr style="vertical-align: bottom;">';
+								$HEADER .= '<td style="vertical-align: bottom;">';
+									$HEADER .= '<div class="destinatario" align="left"><div class="label">'.$HEADER_ID_TIPO.'</div></div>';
+								$HEADER .= '</td>';
+								$HEADER .= '<td width=100% style="vertical-align: bottom;">';
+									$HEADER .= '<div class="destinatario" align="left"><span>'.$HEADER_ID_NUMERO.'</span></div>';
+								$HEADER .= '</td>';
+							$HEADER .= '</tr>';
+						$HEADER .= '</table></td>';
+					$HEADER .= '</tr>';
+				$HEADER .= '</table>';
+			$HEADER .= '</div>';
+		$HEADER .= '</div>';
+	$HEADER .= '</div>';
+	
+	$BODY = '<div class="divbody">';
+		$BODY .= '<table style="color:#333; border-collapse: collapse;" border=1 width="100%">';
+			$BODY .= '<thead>';
+				$BODY .= '<tr>';
+					$BODY .= '<th style="border: 1px solid #bdbdbd;border-collapse: collapse;" width=20px><span style="white-space:pre;border:none;"> </span></th>';
+					$BODY .= '<th style="border: 1px solid #bdbdbd;border-collapse: collapse;">NOMBRE GENERICO / MARCA COMERCIAL</th>';
+					$BODY .= '<th style="border: 1px solid #bdbdbd;border-collapse: collapse;" width=200px>FORMA Y CONCENTRACION</th>';
+					$BODY .= '<th style="border: 1px solid #bdbdbd;border-collapse: collapse;" width=100px>CANTIDAD</th>';
+				$BODY .= '</tr>';
+			$BODY .= '</thead>';
+			$BODY .= '<tbody>';
+				$i = 0;
+				foreach($MEDICAMENTOS as $KEY){
+					$i++;
+					$BODY .= '<tr>';
+						$BODY .= '<th style="border: 1px solid #bdbdbd;border-collapse: collapse;">'.$i.'</th>';
+						$BODY .= '<td style="border: 1px solid #bdbdbd;border-collapse: collapse;">'.$KEY['DROGA'].'<BR>'.$KEY['NOMBRE'].'</td>';
+						$BODY .= '<td style="border: 1px solid #bdbdbd;border-collapse: collapse;">'.$KEY['PRESENTACION'].'</td>';
+						$BODY .= '<td style="border: 1px solid #bdbdbd;border-collapse: collapse;">'.strtoupper($formatterES->format($KEY['CANTIDAD'])).' ('.$KEY['CANTIDAD'].')</td>';
+					$BODY .= '</tr>';
+				}
+			$BODY .= '</tbody>';
+		$BODY .= '</table><br><br>';
+		$BODY .= '<div>DX: '.$DIAGNOSTICO.'</div>';
+		$BODY .= '<div style="position: absolute;right:10%"><img src="data:image/png;base64,'.$FIRMA.'" width=200px/></div>';
+		$BODY .= '<br><br><br><br><br><br><br><br><br><br><br><br><br><br>';
+		$BODY .= '<div style="position: absolute;right:20%">FIRMA</div>';		
+	$BODY .= '</div>';
+	
+	$PDF = $STYLE.$HEADER.$BODY;
+	if($DUPLICADO == 1){
+		$PDF .= '<div style="page-break-after: always;"></div>';
+		$lastDivPos = strrpos($HEADER, '</div>');
+		if ($lastDivPos !== false) {
+			// Divide la cadena en dos partes: antes y después del último </div>
+			$beforeLastDiv = substr($HEADER, 0, $lastDivPos);
+			// Reemplaza el último </div> con el nuevo código
+			$HEADER = $beforeLastDiv.'<div style="position: fixed;left:40px;top:160px;font-size:80; transform: rotate(-45deg);z-index:999;color:#333;opacity:0.2;">DUPLICADO</div></div>';
+		}
+		$PDF .= $STYLE.$HEADER.$BODY;
+	}
+	
+	$dompdf = new Dompdf();
+	$dompdf->set_option('isHtml5ParserEnabled', true);
+	$dompdf->set_option('isPhpEnabled', true);
+	$dompdf->loadHtml($PDF, "UTF-8");
+	$dompdf->setPaper("A4", "portrait");
+	$dompdf->set_option('defaultMediaType', 'all');
+	$dompdf->set_option('isFontSubsettingEnabled', true);
+	$dompdf->render();
+	$pdfOutput = $dompdf->output();
+	$BASE64 = base64_encode($pdfOutput);
+	$FOLDER = Return_File_Path('RECETAS', $HEADER_DNI.'/'.$HEADER_MD5.'.pdf');
+	file_put_contents($FOLDER,$pdfOutput);
+	return $BASE64;
+}
+
+if($ROUTE_OPC == 'DL_Medicamentos'){
+	$RETURN['items'] =array();
+	if(CIJE('CTS_SEARCH') === TRUE){EJE($RETURN);}
+	
+	$Que = QuerySelect("SELECT `troquel`, `detalle` FROM ".$DBT_PORTAL['RECETAS_FTDAS']." WHERE `detalle` LIKE '%".$sJ['CTS_SEARCH']."%' ORDER BY `detalle` ASC LIMIT 0,50",'QWE_PORTAL');
+	if(QueryNumRows($Que) > 0){
+		while($Row = QueryFetch($Que)){
+			unset($TMP);
+			$TMP = array("ID" => $Row['troquel'], "VALUE"=> $Row['detalle']);
+			array_push($RETURN['items'], $TMP);
+		}
+	}
+	EJE($RETURN);
+}
+elseif($ROUTE_OPC == 'Listado_Afiliado'){
+	$RETURN['COUNT'] = 0;
+	$RETURN['TOTAL'] = 0;
+	$RETURN['PAGINAS'] = 1;
+	$RETURN['ROWS'] = [];
+	if($PS['TranscripcionesRecetar']['C'] != 1){EJE($RETURN);}
+	$ARRAY_ORDER = array(1 => '`afiliado` {METHOD}', 2 => '`dni` {METHOD}', 3 => '`cuil` {METHOD}', 4 => '`fecha_nacimiento` {METHOD}', 4 => '`sexo` {METHOD}');
+	$FORM = LISTADO_QUERY($ARRAY_ORDER);
+	if($FORM['SEARCH'] == NULL){EJE($RETURN);}
+	$FORM['ROWS'] = 20;
+	$SEARCH = "WHERE `dni` = '".$FORM['SEARCH']."' or `cuil` = '".$FORM['SEARCH']."' or `apellido` LIKE '%".$FORM['SEARCH']."%'";
+	$Que = QuerySelect("SELECT CONCAT(`nombre`,' ',`apellido`) AS 'afiliado', `dni`, `cuil`, `fecha_nacimiento`, `sexo` FROM ".$DBT_PORTAL['PADRON'].$SEARCH." ORDER BY ".$FORM['ORDENAR']." LIMIT ".$FORM['LIMIT']." ,".$FORM['ROWS'],'QWE_PORTAL');
+	while($Row = QueryFetch($Que)){
+		$RETURN['COUNT']++;
+		$TMP = [];
+		$TMP['ID'] 						= $Row['dni'];
+		$TMP['DATA']['AFILIADO'] 		= $Row['afiliado'];
+		$TMP['DATA']['DNI'] 			= $Row['dni'];
+		$TMP['DATA']['CUIL'] 			= $Row['cuil'];
+		$TMP['DATA']['NACIMIENTO'] 		= Fecha_Formato($Row['fecha_nacimiento']).'('.Calcular_Edad($Row['fecha_nacimiento']).')';	
+		$TMP['DATA']['SEXO'] 			= $Row['sexo'];
+		array_push($RETURN['ROWS'], $TMP);
+		unset($TMP);
+	}
+	$Que = QuerySelect("SELECT COUNT(*) AS 'total' FROM ".$DBT_PORTAL['PADRON'].$SEARCH, 'QWE_PORTAL');
+	while($Row = QueryFetch($Que)){	
+		$RETURN['TOTAL'] = $Row['total'];
+		$RETURN['PAGINAS'] = ceil($RETURN['TOTAL']/$FORM['ROWS']);
+	}
+	EJE($RETURN);
+}
+elseif($ROUTE_OPC == 'Listado_Medicos_Transcripciones'){
+	$RETURN['COUNT'] = 0;
+	$RETURN['TOTAL'] = 0;
+	$RETURN['PAGINAS'] = 1;
+	$RETURN['ROWS'] = [];
+	if($PS['TranscripcionesDerivar']['C'] != 1){EJE($RETURN);}
+	$ARRAY_ORDER = array(1 => '`usuario` {METHOD}');
+	$FORM = LISTADO_QUERY($ARRAY_ORDER);
+	$SEARCH =" WHERE F.`firma` IS NOT NULL AND P.`route` = 'TranscripcionesTranscribir' AND P.`permiso` LIKE '%A%'";
+	$Que = QuerySelect("SELECT U.`id_usuario`, U.`usuario`, U.`nombre`, U.`apellido` FROM ".$DBT['USERS']." U LEFT JOIN ".$DBT['USERS_FIRMA']." F ON U.`id_usuario`=F.`id_usuario` LEFT JOIN ".$DBT['USERS_PERMISOS']." P ON U.`id_usuario`=P.`id_usuario` ".$SEARCH." ORDER BY ".$FORM['ORDENAR']." LIMIT ".$FORM['LIMIT']." ,".$FORM['ROWS']);
+	while($Row = QueryFetch($Que)){
+		$RETURN['COUNT']++;
+		$TMP = [];
+		$TMP['ID'] 						= $Row['id_usuario'];
+		$TMP['DATA']['USUARIO'] 			= $Row['usuario'];
+		$TMP['DATA']['NOMBRE'] 		= $Row['nombre'];
+		$TMP['DATA']['APELLIDO'] 			= $Row['apellido'];
+		array_push($RETURN['ROWS'], $TMP);
+		unset($TMP);
+	}
+	$Que = QuerySelect("SELECT COUNT(*) AS 'total' FROM ".$DBT['USERS']." U LEFT JOIN ".$DBT['USERS_FIRMA']." F ON U.`id_usuario`=F.`id_usuario` LEFT JOIN ".$DBT['USERS_PERMISOS']." P ON U.`id_usuario`=P.`id_usuario` ".$SEARCH);
+	while($Row = QueryFetch($Que)){	
+		$RETURN['TOTAL'] = $Row['total'];
+		$RETURN['PAGINAS'] = ceil($RETURN['TOTAL']/$FORM['ROWS']);
+	}
+	EJE($RETURN);
+}
+elseif($ROUTE_OPC == 'Listado_MisTranscripciones_Autorizadas'){
+	$RETURN['COUNT'] = 0;
+	$RETURN['TOTAL'] = 0;
+	$RETURN['PAGINAS'] = 1;
+	$RETURN['ROWS'] = [];
+	if($PS['TranscripcionesTranscribir']['C'] != 1){EJE($RETURN);}
+	$ARRAY_ORDER = array(1 => '`id_transcripcion` {METHOD}', 2 => '`afiliado` {METHOD}', 3 => '`dni` {METHOD}', 4 => '`cuil` {METHOD}', 5 => '`correo` {METHOD}', 6 => '`pedido_fecha` {METHOD}', 7 => '`procesa_fecha` {METHOD}');
+	$FORM = LISTADO_QUERY($ARRAY_ORDER);
+	if($FORM['SEARCH'] != NULL){$SEARCH =" WHERE `estado` = '2' AND `procesa_usuario` = '".$C_USER['ID']."' AND (P.`apellido` LIKE '%".$FORM['SEARCH']."%' or P.`dni`='".$FORM['SEARCH']."' or P.`cuil`='".$FORM['SEARCH']."')";}else{$SEARCH =" WHERE `estado` = '2' AND `procesa_usuario` = '".$C_USER['ID']."'";}
+	$Que = QuerySelect("SELECT T.`id_transcripcion`, CONCAT(P.`nombre`,' ',P.`apellido`) AS 'afiliado',P.`dni`,P.`cuil`, P.`correo`, T.`pedido_fecha`, T.`procesa_fecha` FROM ".$DBT_PORTAL['RECETAS_TRANSCRIPCION']." T LEFT JOIN ".$DBT_PORTAL['PADRON']." P ON P.`dni`=T.`dni` ".$SEARCH." ORDER BY ".$FORM['ORDENAR']." LIMIT ".$FORM['LIMIT']." ,".$FORM['ROWS'],'QWE_PORTAL');
+	while($Row = QueryFetch($Que)){
+		$RETURN['COUNT']++;
+		$TMP = [];
+		$TMP['ID'] 						= $Row['id_transcripcion'];
+		$TMP['DATA']['NRO'] 			= $Row['id_transcripcion'];
+		$TMP['DATA']['AFILIADO'] 		= $Row['afiliado'];
+		$TMP['DATA']['DNI'] 			= $Row['dni'];
+		$TMP['DATA']['CUIL'] 			= $Row['cuil'];
+		$TMP['DATA']['CORREO']	 		= $Row['correo'];
+		$TMP['DATA']['FECHA_PEDIDO'] 	= Fecha_Formato($Row['pedido_fecha'], 'd-m-Y H:i');
+		$TMP['DATA']['FECHA_AUTORIZADO']	= Fecha_Formato($Row['procesa_fecha'], 'd-m-Y H:i');
+		array_push($RETURN['ROWS'], $TMP);
+		unset($TMP);
+	}
+	$Que = QuerySelect("SELECT COUNT(*) AS 'total' FROM ".$DBT_PORTAL['RECETAS_TRANSCRIPCION']." T LEFT JOIN ".$DBT_PORTAL['PADRON']." P ON P.`dni`=T.`dni` ".$SEARCH, 'QWE_PORTAL');
+	while($Row = QueryFetch($Que)){	
+		$RETURN['TOTAL'] = $Row['total'];
+		$RETURN['PAGINAS'] = ceil($RETURN['TOTAL']/$FORM['ROWS']);
+	}
+	EJE($RETURN);
+}
+elseif($ROUTE_OPC == 'Listado_MisTranscripciones_Pendientes'){
+	$RETURN['COUNT'] = 0;
+	$RETURN['TOTAL'] = 0;
+	$RETURN['PAGINAS'] = 1;
+	$RETURN['ROWS'] = [];
+	if($PS['TranscripcionesTranscribir']['C'] != 1){EJE($RETURN);}
+	$ARRAY_ORDER = array(1 => '`id_transcripcion` {METHOD}', 2 => '`afiliado` {METHOD}', 3 => '`dni` {METHOD}', 4 => '`cuil` {METHOD}', 5 => '`correo` {METHOD}', 6 => '`pedido_fecha` {METHOD}', 7 => '`deriva_fecha` {METHOD}');
+	$FORM = LISTADO_QUERY($ARRAY_ORDER);
+	if($FORM['SEARCH'] != NULL){$SEARCH =" WHERE `estado` = '1' AND `deriva_usuario` = '".$C_USER['ID']."' AND (P.`apellido` LIKE '%".$FORM['SEARCH']."%' or P.`dni`='".$FORM['SEARCH']."' or P.`cuil`='".$FORM['SEARCH']."')";}else{$SEARCH =" WHERE `estado` = '1' AND `deriva_usuario` = '".$C_USER['ID']."'";}
+	$Que = QuerySelect("SELECT T.`id_transcripcion`, CONCAT(P.`nombre`,' ',P.`apellido`) AS 'afiliado',P.`dni`,P.`cuil`,P.`fecha_nacimiento`, P.`correo`, T.`pedido_fecha`, T.`deriva_fecha` FROM ".$DBT_PORTAL['RECETAS_TRANSCRIPCION']." T LEFT JOIN ".$DBT_PORTAL['PADRON']." P ON P.`dni`=T.`dni` ".$SEARCH." ORDER BY ".$FORM['ORDENAR']." LIMIT ".$FORM['LIMIT']." ,".$FORM['ROWS'],'QWE_PORTAL');
+	while($Row = QueryFetch($Que)){
+		$RETURN['COUNT']++;
+		$TMP = [];
+		$TMP['ID'] 						= $Row['id_transcripcion'];
+		$TMP['DATA']['NRO'] 			= $Row['id_transcripcion'];
+		$TMP['DATA']['AFILIADO'] 		= $Row['afiliado'];
+		$TMP['DATA']['DNI'] 			= $Row['dni'];
+		$TMP['DATA']['CUIL'] 			= $Row['cuil'];
+		$TMP['DATA']['CORREO']	 		= $Row['correo'];
+		$TMP['DATA']['FECHA_PEDIDO'] 	= Fecha_Formato($Row['pedido_fecha'], 'd-m-Y H:i');
+		$TMP['DATA']['FECHA_DERIVADO']	= Fecha_Formato($Row['deriva_fecha'], 'd-m-Y H:i');
+		array_push($RETURN['ROWS'], $TMP);
+		unset($TMP);
+	}
+	$Que = QuerySelect("SELECT COUNT(*) AS 'total' FROM ".$DBT_PORTAL['RECETAS_TRANSCRIPCION']." T LEFT JOIN ".$DBT_PORTAL['PADRON']." P ON P.`dni`=T.`dni` ".$SEARCH, 'QWE_PORTAL');
+	while($Row = QueryFetch($Que)){	
+		$RETURN['TOTAL'] = $Row['total'];
+		$RETURN['PAGINAS'] = ceil($RETURN['TOTAL']/$FORM['ROWS']);
+	}
+	EJE($RETURN);
+}
+elseif($ROUTE_OPC == 'Listado_Recetas_Cuil'){
+	$RETURN['COUNT'] = 0;
+	$RETURN['TOTAL'] = 0;
+	$RETURN['PAGINAS'] = 1;
+	$RETURN['ROWS'] = [];
+	if($PS['TranscripcionesRecetar']['C'] != 1){EJE($RETURN);}
+	if(CIJE('CtU_ADVANCE') === TRUE){EJE($RETURN);}
+	$ARRAY_ORDER = array(1 => 'RE.`id_receta` {METHOD}', 2 => 'RE.`fecha` {METHOD}', 3 => 'TRA.`observacion` {METHOD}');
+	$FORM = LISTADO_QUERY($ARRAY_ORDER);
+	if($FORM['SEARCH'] != NULL){ $SEARCH = " WHERE RE.`dni` = '".$sJ['CtU_ADVANCE']."' AND RE.`disponible` = '1' AND (RE.`fecha` = str_to_date('".str_replace("-","/",$FORM['SEARCH'])."', '%d/%m/%Y') OR RE.`id_receta` = '".$FORM['SEARCH']."')";}else{$SEARCH =" WHERE RE.`dni` = '".$sJ['CtU_ADVANCE']."' AND RE.`disponible` = '1'";}
+	$Que = QuerySelect("SELECT RE.`id_receta`, RE.`fecha`, TRA.`observacion` FROM ".$DBT_PORTAL['RECETAS_ARCHIVOS']." RE LEFT JOIN ".$DBT_PORTAL['RECETAS_TRANSCRIPCION']." TRA ON TRA.`id_receta`=RE.`id_receta` ".$SEARCH." ORDER BY ".$FORM['ORDENAR']." LIMIT ".$FORM['LIMIT']." ,".$FORM['ROWS'],'QWE_PORTAL');
+	while($Row = QueryFetch($Que)){
+		$RETURN['COUNT']++;
+		$TMP = [];
+		$TMP['ID'] 						= $Row['id_receta'];
+		$TMP['DATA']['NRO'] 			= $Row['id_receta'];
+		$TMP['DATA']['FECHA'] 			= Fecha_Formato($Row['fecha']);
+		$TMP['DATA']['OBSERVACIONES'] 	= $Row['observacion'];
+		array_push($RETURN['ROWS'], $TMP);
+		unset($TMP);
+	}
+	$Que = QuerySelect("SELECT COUNT(*) AS 'total' FROM ".$DBT_PORTAL['RECETAS_ARCHIVOS']." RE LEFT JOIN ".$DBT_PORTAL['RECETAS_TRANSCRIPCION']." TRA ON TRA.`id_receta`=RE.`id_receta` ".$SEARCH, 'QWE_PORTAL');
+	while($Row = QueryFetch($Que)){	
+		$RETURN['TOTAL'] = $Row['total'];
+		$RETURN['PAGINAS'] = ceil($RETURN['TOTAL']/$FORM['ROWS']);
+	}
+	EJE($RETURN);
+}
+elseif($ROUTE_OPC == 'Listado_Transcripcion_Medicamentos'){
+	$RETURN['COUNT'] = 0;
+	$RETURN['TOTAL'] = 0;
+	$RETURN['PAGINAS'] = 1;
+	$RETURN['ROWS'] = [];
+	if($PS['TranscripcionesTranscribir']['C'] != 1){EJE($RETURN);}
+	if(CIJE('CtU_ADVANCE') === TRUE){EJE($RETURN);}
+	$ARRAY_ORDER = array(1 => '`pedido_troquel` {METHOD}', 2 => '`pedido_cantidad` {METHOD}');
+	$FORM = LISTADO_QUERY($ARRAY_ORDER);
+	$SEARCH =" WHERE TRA.`id_transcripcion`='".$sJ['CtU_ADVANCE']."' AND TRA.`deriva_usuario`='".$C_USER['ID']."' AND TRA.`estado`='1' AND `pedido_origen` = 'PORTAL'";
+	$Que = QuerySelect("SELECT TRO.`id_pedido`, TRO.`pedido_troquel`, FT.`detalle`, TRO.`pedido_cantidad` FROM ".$DBT_PORTAL['RECETAS_TRANSCRIPCION']." TRA LEFT JOIN ".$DBT_PORTAL['RECETAS_TROQUEL']." TRO ON TRA.`id_transcripcion`=TRO.`id_transcripcion` LEFT JOIN ".$DBT_PORTAL['RECETAS_FTDAS']." FT ON TRO.`pedido_troquel`=FT.`troquel` ".$SEARCH." ORDER BY ".$FORM['ORDENAR']." LIMIT ".$FORM['LIMIT']." ,".$FORM['ROWS'],'QWE_PORTAL');
+	while($Row = QueryFetch($Que)){
+		$RETURN['COUNT']++;
+		$TMP = [];
+		$TMP['ID'] 						= $Row['id_pedido'];
+		$TMP['DATA']['MEDICAMENTO'] 	= $Row['detalle'];
+		$TMP['DATA']['CANTIDAD'] 		= $Row['pedido_cantidad'];
+		array_push($RETURN['ROWS'], $TMP);
+		unset($TMP);
+	}
+	$Que = QuerySelect("SELECT COUNT(*) AS 'total' FROM ".$DBT_PORTAL['RECETAS_TRANSCRIPCION']." TRA LEFT JOIN ".$DBT_PORTAL['RECETAS_TROQUEL']." TRO ON TRA.`id_transcripcion`=TRO.`id_transcripcion` LEFT JOIN ".$DBT_PORTAL['RECETAS_FTDAS']." FT ON TRO.`pedido_troquel`=FT.`troquel` ".$SEARCH, 'QWE_PORTAL');
+	while($Row = QueryFetch($Que)){	
+		$RETURN['TOTAL'] = $Row['total'];
+		$RETURN['PAGINAS'] = ceil($RETURN['TOTAL']/$FORM['ROWS']);
+	}
+	EJE($RETURN);	
+}
+elseif($ROUTE_OPC == 'Listado_Transcripciones_Autorizadas'){
+	$RETURN['COUNT'] = 0;
+	$RETURN['TOTAL'] = 0;
+	$RETURN['PAGINAS'] = 1;
+	$RETURN['ROWS'] = [];
+	if($PS['TranscripcionesTranscribir']['C'] != 1){EJE($RETURN);}	
+	if(CIJE('CtU_ADVANCE') === TRUE){EJE($RETURN);}
+	$ARRAY_ORDER = array(1 => '`fecha` {METHOD}', 2 => '`autoriza_med` {METHOD}', 3 => '`autoriza_cantidad` {METHOD}');
+	$FORM = LISTADO_QUERY($ARRAY_ORDER);
+	$SEARCH =" WHERE TRO.`autoriza_cantidad` > 0 AND TRA.id_receta IS NOT NULL AND TRA.`dni` = '".$sJ['CtU_ADVANCE']."'";
+	$Que = QuerySelect("SELECT RE.`fecha`, TRO.`autoriza_med`, TRO.`autoriza_cantidad` FROM ".$DBT_PORTAL['RECETAS_TROQUEL']." TRO LEFT JOIN ".$DBT_PORTAL['RECETAS_TRANSCRIPCION']." TRA ON TRO.`id_transcripcion`=TRA.`id_transcripcion` LEFT JOIN ".$DBT_PORTAL['RECETAS_ARCHIVOS']." RE ON RE.`id_receta` = TRA.`id_receta` ".$SEARCH." ORDER BY ".$FORM['ORDENAR']." LIMIT ".$FORM['LIMIT']." ,".$FORM['ROWS'],'QWE_PORTAL');
+	
+	while($Row = QueryFetch($Que)){
+		$RETURN['COUNT']++;
+		$TMP = [];
+		$TMP['ID'] 						= $RETURN['COUNT'];
+		$TMP['DATA']['FECHA'] 			= Fecha_Formato($Row['fecha']);
+		$TMP['DATA']['MEDICAMENTO'] 	= $Row['autoriza_med'];
+		$TMP['DATA']['CANTIDAD']	 	= $Row['autoriza_cantidad'];
+		array_push($RETURN['ROWS'], $TMP);
+		unset($TMP);
+	}
+	$Que = QuerySelect("SELECT COUNT(*) AS 'total' FROM ".$DBT_PORTAL['RECETAS_TROQUEL']." TRO LEFT JOIN ".$DBT_PORTAL['RECETAS_TRANSCRIPCION']." TRA ON TRO.`id_transcripcion`=TRA.`id_transcripcion` LEFT JOIN ".$DBT_PORTAL['RECETAS_ARCHIVOS']." RE ON RE.`id_receta` = TRA.`id_receta` ".$SEARCH, 'QWE_PORTAL');
+	while($Row = QueryFetch($Que)){	
+		$RETURN['TOTAL'] = $Row['total'];
+		$RETURN['PAGINAS'] = ceil($RETURN['TOTAL']/$FORM['ROWS']);
+	}
+	EJE($RETURN);
+}
+elseif($ROUTE_OPC == 'Listado_Transcripciones_Derivadas'){
+	$RETURN['COUNT'] = 0;
+	$RETURN['TOTAL'] = 0;
+	$RETURN['PAGINAS'] = 1;
+	$RETURN['ROWS'] = [];
+	if($PS['TranscripcionesDerivar']['C'] != 1){EJE($RETURN);}
+	$ARRAY_ORDER = array(1 => '`id_transcripcion` {METHOD}', 2 => '`afiliado` {METHOD}', 3 => '`dni` {METHOD}', 4 => '`correo` {METHOD}', 5 => '`pedido_fecha` {METHOD}', 6 => '`deriva_usuario` {METHOD}', 7 => '`deriva_fecha` {METHOD}');
+	$FORM = LISTADO_QUERY($ARRAY_ORDER);
+	$SEARCH =" WHERE `estado` = '1' AND `deriva_usuario` IS NOT NULL";
+	$Que = QuerySelect("SELECT T.`id_transcripcion`, CONCAT(P.`nombre`,' ',P.`apellido`) AS 'afiliado',P.`dni`, P.`correo`, T.`pedido_fecha`, T.`deriva_usuario`, T.`deriva_fecha` FROM ".$DBT_PORTAL['RECETAS_TRANSCRIPCION']." T LEFT JOIN ".$DBT_PORTAL['PADRON']." P ON P.`dni`=T.`dni` ".$SEARCH." ORDER BY ".$FORM['ORDENAR']." LIMIT ".$FORM['LIMIT']." ,".$FORM['ROWS'],'QWE_PORTAL');
+	
+	$QueUSUARIOS = QuerySelect("SELECT U.`id_usuario`, U.`usuario` FROM ".$DBT['USERS']." U LEFT JOIN ".$DBT['USERS_FIRMA']." F ON U.`id_usuario`=F.`id_usuario` LEFT JOIN ".$DBT['USERS_PERMISOS']." P ON U.`id_usuario`=P.`id_usuario` WHERE F.`firma` IS NOT NULL AND P.`route` = 'TranscripcionesTranscribir' AND P.`permiso` LIKE '%A%'");
+	if(QueryNumRows($QueUSUARIOS) > 0 ){
+		while($RowUSUARIOS = QueryFetch($QueUSUARIOS)){
+			$PROFESIONALES[$RowUSUARIOS['id_usuario']] = $RowUSUARIOS['usuario'];
+		}
+	}
+	while($Row = QueryFetch($Que)){
+		$RETURN['COUNT']++;
+		$TMP = [];
+		$TMP['ID'] 						= $Row['id_transcripcion'];
+		$TMP['DATA']['NRO'] 			= $Row['id_transcripcion'];
+		$TMP['DATA']['AFILIADO'] 		= $Row['afiliado'];
+		$TMP['DATA']['DNI'] 			= $Row['dni'];
+		$TMP['DATA']['CORREO']	 		= $Row['correo'];
+		$TMP['DATA']['FECHA'] 			= Fecha_Formato($Row['pedido_fecha'], 'd-m-Y H:i');
+		$TMP['DATA']['DERIVADO_USUARIO']= array_key_exists($Row['deriva_usuario'], $PROFESIONALES) ? $PROFESIONALES[$Row['deriva_usuario']] : $Row['deriva_usuario'];
+		$TMP['DATA']['DERIVADO_FECHA'] 	= Fecha_Formato($Row['deriva_fecha'], 'd-m-Y H:i');
+		array_push($RETURN['ROWS'], $TMP);
+		unset($TMP);
+	}
+	$Que = QuerySelect("SELECT COUNT(*) AS 'total' FROM ".$DBT_PORTAL['RECETAS_TRANSCRIPCION']." T LEFT JOIN ".$DBT_PORTAL['PADRON']." P ON P.`dni`=T.`dni` ".$SEARCH, 'QWE_PORTAL');
+	while($Row = QueryFetch($Que)){	
+		$RETURN['TOTAL'] = $Row['total'];
+		$RETURN['PAGINAS'] = ceil($RETURN['TOTAL']/$FORM['ROWS']);
+	}
+	EJE($RETURN);
+}
+elseif($ROUTE_OPC == 'Listado_Transcripciones_Pendientes'){
+	$RETURN['COUNT'] = 0;
+	$RETURN['TOTAL'] = 0;
+	$RETURN['PAGINAS'] = 1;
+	$RETURN['ROWS'] = [];
+	if($PS['TranscripcionesDerivar']['C'] != 1){EJE($RETURN);}
+	$ARRAY_ORDER = array(1 => '`pedido_fecha` {METHOD}', 2 => '`id_transcripcion` {METHOD}', 3 => '`afiliado` {METHOD}', 4 => '`dni` {METHOD}', 5 => '`correo` {METHOD}', 6 => '`pedido_fecha` {METHOD}');
+	$FORM = LISTADO_QUERY($ARRAY_ORDER);
+	$SEARCH =" WHERE `estado` = '1' AND `deriva_usuario` IS NULL";
+	$Que = QuerySelect("SELECT T.`id_transcripcion`, CONCAT(P.`nombre`,' ',P.`apellido`) AS 'afiliado',P.`dni`, P.`correo`, T.`pedido_fecha` FROM ".$DBT_PORTAL['RECETAS_TRANSCRIPCION']." T LEFT JOIN ".$DBT_PORTAL['PADRON']." P ON P.`dni`=T.`dni` ".$SEARCH." ORDER BY ".$FORM['ORDENAR']." LIMIT ".$FORM['LIMIT']." ,".$FORM['ROWS'],'QWE_PORTAL');
+	while($Row = QueryFetch($Que)){
+		$RETURN['COUNT']++;
+		$TMP = [];
+		$TMP['ID'] 						= $Row['id_transcripcion'];
+		$TMP['DATA']['CHECK'] 			= '<input class="form-check-input InputPickUp" validate="CIB" type="checkbox" value="1" id="'.$Row['id_transcripcion'].'">';
+		$TMP['DATA']['NRO'] 			= $Row['id_transcripcion'];
+		$TMP['DATA']['AFILIADO'] 		= $Row['afiliado'];
+		$TMP['DATA']['DNI'] 			= $Row['dni'];
+		$TMP['DATA']['CORREO']	 		= $Row['correo'];
+		$TMP['DATA']['FECHA'] 			= Fecha_Formato($Row['pedido_fecha'], 'd-m-Y H:i');
+		array_push($RETURN['ROWS'], $TMP);
+		unset($TMP);
+	}
+	$Que = QuerySelect("SELECT COUNT(*) AS 'total' FROM ".$DBT_PORTAL['RECETAS_TRANSCRIPCION']." T LEFT JOIN ".$DBT_PORTAL['PADRON']." P ON P.`dni`=T.`dni` ".$SEARCH, 'QWE_PORTAL');
+	while($Row = QueryFetch($Que)){	
+		$RETURN['TOTAL'] = $Row['total'];
+		$RETURN['PAGINAS'] = ceil($RETURN['TOTAL']/$FORM['ROWS']);
+	}
+	EJE($RETURN);
+}
+elseif($ROUTE_OPC == 'Procesar_Derivacion'){
+	if(CIJE('CES_PROFESIONAL') === TRUE){RJRE("Error en la validación del profesional.");};
+	if(CIJE('CTS_DERIVADOS') === TRUE){RJRE("Error en la validación de las transcripciones.");};
+	
+	if($PS['TranscripcionesDerivar']['A'] != 1){RJRE("Error, permisos insuficientes.");};
+	$QueFirma = QuerySelect("SELECT F.`id_usuario` FROM ".$DBT['USERS_FIRMA']." F LEFT JOIN ".$DBT['USERS_PERMISOS']." P ON F.`id_usuario`=P.`id_usuario` WHERE F.`id_usuario` = '".$sJ['CES_PROFESIONAL']."' AND  F.`firma` IS NOT NULL AND P.`route` = 'TranscripcionesTranscribir' AND P.`permiso` LIKE '%A%'");
+	if(QueryNumRows($QueFirma) < 1 ){RJRE("Error el profesional no se encuentra habilitado.");};
+	
+	$TRANSCRIPCIONES = explode("_",$sJ['CTS_DERIVADOS']);
+	$DERIVAR = '';
+	$NO_DERIVAR = '';
+	foreach($TRANSCRIPCIONES as $VALUE){
+		$Que = QuerySelect("SELECT `id_transcripcion` FROM ".$DBT_PORTAL['RECETAS_TRANSCRIPCION']." WHERE `id_transcripcion` = '".$VALUE."' AND `pedido_origen` = 'PORTAL' AND `deriva_usuario` IS NULL AND `estado` = '1'",'QWE_PORTAL');
+		if(QueryNumRows($Que) < 1 ){ if($NO_DERIVAR != ''){ $NO_DERIVAR .= ' - ';} $NO_DERIVAR .= $VALUE;}
+		else{if($DERIVAR != ''){ $DERIVAR .= ', ';} $DERIVAR .= $VALUE;}
+	}
+	if($DERIVAR != ''){
+		QueryUpdate("UPDATE ".$DBT_PORTAL['RECETAS_TRANSCRIPCION']." SET `deriva_usuario`='".$sJ['CES_PROFESIONAL']."',`deriva_fecha`= NOW() WHERE `id_transcripcion` IN (".$DERIVAR.")",'QWE_PORTAL');
+	}
+	if($NO_DERIVAR != ''){
+		RJRO("No se pudieron derivar las siguientes transcripciones: ".$NO_DERIVAR);
+	}
+	RJRO();
+}
+elseif($ROUTE_OPC == 'Procesar_Desderivacion'){
+	if(CIJE('CEB_TRANSCRIPCION') === TRUE){RJRE();};
+	
+	if($PS['TranscripcionesTranscribir']['A'] != 1){RJRE("Error, permisos insuficientes.");};
+	$Que = QuerySelect("SELECT `id_transcripcion` FROM ".$DBT_PORTAL['RECETAS_TRANSCRIPCION']." WHERE `id_transcripcion` = '".$sJ['CEB_TRANSCRIPCION']."' AND  `deriva_usuario` = '".$C_USER['ID']."' AND `estado` = '1'",'QWE_PORTAL');
+	if(QueryNumRows($Que) < 1 ){RJRE("Error en la validación de la transcripcion.");};
+	while($Row = QueryFetch($Que)){
+		QueryUpdate("UPDATE ".$DBT_PORTAL['RECETAS_TRANSCRIPCION']." SET `deriva_usuario`=NULL,`deriva_fecha`=NULL WHERE `id_transcripcion`='".$sJ['CEB_TRANSCRIPCION']."'",'QWE_PORTAL');			
+	}
+	RJRO();
+}
+elseif($ROUTE_OPC == 'Procesar_Envio'){
+	if(CIJE('CEB_TRANSCRIPCION') === TRUE){return;};
+	$QueTRANSCRIPCION = QuerySelect("SELECT CONCAT(PA.nombre,' ',PA.apellido) AS 'afiliado', PA.`dni`, PA.`correo`, PA.`sexo`, RE.`id_receta`, RE.`archivo_md5`, TRA.`observacion` FROM ".$DBT_PORTAL['RECETAS_TRANSCRIPCION']." TRA LEFT JOIN ".$DBT_PORTAL['PADRON']." PA ON TRA.`dni` = PA.`dni` LEFT JOIN ".$DBT_PORTAL['RECETAS_ARCHIVOS']." RE ON TRA.`id_receta`=RE.`id_receta` WHERE TRA.`id_transcripcion` = '".$sJ['CEB_TRANSCRIPCION']."' AND PA.correo IS NOT NULL",'QWE_PORTAL');
+	if(QueryNumRows($QueTRANSCRIPCION) < 1 ){return;}
+	while($RowTRANSCRIPCION = QueryFetch($QueTRANSCRIPCION)){
+		if($RowTRANSCRIPCION["sexo"]=="X"){
+			$MSG = "Estimade afiliade ".$RowTRANSCRIPCION["afiliado"]."<br><br>";			
+		}elseif($RowTRANSCRIPCION["sexo"]=="F"){
+			$MSG = "Estimada afiliada ".$RowTRANSCRIPCION["afiliado"]."<br><br>";
+		}else{
+			$MSG = "Estimado afiliado ".$RowTRANSCRIPCION["afiliado"]."<br><br>";
+		}		
+		$MSG.= "En relación a su solicitud de transcripción de recetas número: ".$sJ['CEB_TRANSCRIPCION']."<br><br>";
+		
+		$PDF_ARCHIVO = array();
+		if($RowTRANSCRIPCION['id_receta'] > 0){
+			$FOLDER = Return_File_Path('RECETAS', $RowTRANSCRIPCION['dni'].'/'.$RowTRANSCRIPCION['archivo_md5'].'.pdf', TRUE);
+			if(file_exists($FOLDER)){
+				$PDF_ARCHIVO[] = array($FOLDER,"RP-".substr($RowTRANSCRIPCION['id_receta'],4,6)."-".substr($RowTRANSCRIPCION['id_receta'],0,4).".pdf");				
+				$MSG.= "Se ha generado la receta RP-".substr($RowTRANSCRIPCION['id_receta'],4,6)."-".substr($RowTRANSCRIPCION['id_receta'],0,4).", la cual se encuentra adjunta en formato PDF en este correo electrónico.<br><br>";
+			}
+		}
+		$QueDENEGADOS = QuerySelect("SELECT `autoriza_med` FROM ".$DBT_PORTAL['RECETAS_TROQUEL']." WHERE `id_transcripcion` = '".$sJ['CEB_TRANSCRIPCION']."' AND `autoriza_cantidad` = '0' AND `ftdas_baja` = '0'",'QWE_PORTAL');
+		if(QueryNumRows($QueDENEGADOS) > 0 ){
+			if(QueryNumRows($QueDENEGADOS) == 1){
+				$MSG.="<b>Importante:</b> No se ha generado una receta para el siguiente medicamento:<br>";
+			}else{
+				$MSG.="<b>Importante:</b> No se ha generado una receta para los siguientes medicamentos:<br>";
+			}
+			while($RowDENEGADOS = QueryFetch($QueDENEGADOS)){
+				$MSG.=" -".$RowDENEGADOS['autoriza_med']."<br>";
+			}
+			$MSG.="<br>";
+		}
+		if($RowTRANSCRIPCION['observacion'] != NULL){
+			$MSG.="<b>Atención:</b> El profesional realizó la siguiente observación:<br>".$RowTRANSCRIPCION['observacion']."<br><br>";
+		}
+		
+		$MSG.="Por favor, recuerde que para acceder a este servicio, que es solo para medicación crónica, debe tener actualizada su historia clínica en los últimos 12 meses.<br>Atentamente.";
+		Send_Mail(array(array('CORREO' => $RowTRANSCRIPCION['correo'], 'NOMBRE' => $RowTRANSCRIPCION['afiliado'])),'Recetas Das',$MSG, $CCOO='',(count($PDF_ARCHIVO)>0 ? $PDF_ARCHIVO : ''));
+	}
+	
+	return;	
+}
+elseif($ROUTE_OPC == 'Procesar_Receta'){
+
+	if(CIJE('CEI_DNI') === TRUE){RJRE("Error en la validación del afiliado.");};
+	if(CIJE('CEB_TRANSCRIPCION') === TRUE){RJRE("No se ha podido validar la transcripción.");};
+	if(CIJE('CFA_FECHA') === TRUE){RJRE("No se ha podido validar la fecha.");};
+	if(CIJE('CTS_DIAGNOSTICO') === TRUE){RJRE("No se ha podido validar el diagnostico.");};
+	if(CIJE('CTS_OBSERVACION') === TRUE){$sJ['CTS_OBSERVACION'] = NULL;}
+	
+	if(CIJE('CEB_PEDIDO_1') === TRUE || CIJE('CEB_PEDIDO_2') === TRUE){RJRE("No se ha podido validar el pedido.");};
+	if(CIJE('CEI_TROQUEL_1') === TRUE){RJRE("Por favor, ingrese un medicamento en el renglón 1.");};
+	if(CIJE('CEI_CANTIDAD_1') === TRUE){RJRE("Por favor, ingrese una cantidad en el renglón 1.");};
+	
+	if($sJ['CEB_TRANSCRIPCION'] == 0){
+		$sJ['ORIGEN'] = 'RECETAR';
+		if($PS['TranscripcionesRecetar']['A'] != 1){RJRE("Permisos insuficientes.");}
+	}else{
+		$sJ['ORIGEN'] = 'PORTAL';
+		if($PS['TranscripcionesTranscribir']['A'] != 1){RJRE("Permisos insuficientes.");}
+	}
+	
+	$QueDNI = QuerySelect("SELECT `dni`, `dni_titular` FROM ".$DBT_PORTAL['PADRON']." WHERE `dni` = '".$sJ['CEI_DNI']."'",'QWE_PORTAL');
+	if(QueryNumRows($QueDNI) < 1 ){ RJRE("Error en la validación del afiliado.");}
+	
+	$AUTORIZA = array();
+	$RECETA_DUPLICADO = 0;
+	$OBSERVACION_REQUIRED = FALSE;
+	
+	for($A = 1; $A <=2; $A++){
+		if(CIJE('CEI_TROQUEL_'.$A) === FALSE && CIJE('CEI_CANTIDAD_'.$A) === FALSE){
+			$QueTROQUEL = QuerySelect("SELECT `troquel`,`controlado`,`detalle` FROM ".$DBT_PORTAL['RECETAS_FTDAS']." WHERE `troquel` = '".$sJ['CEI_TROQUEL_'.$A]."'",'QWE_PORTAL');
+			if(QueryNumRows($QueTROQUEL) < 1 ){ RJRE("No se ha podido validar el medicamento #".$A);}
+			while($RowTROQUEL = QueryFetch($QueTROQUEL)){
+				if($RowTROQUEL['controlado'] == 1){$RECETA_DUPLICADO = 1;}
+				$TMP = array('PEDIDO' => $sJ['CEB_PEDIDO_'.$A], 'TROQUEL' => $sJ['CEI_TROQUEL_'.$A], 'CANTIDAD' => $sJ['CEI_CANTIDAD_'.$A], 'DETALLE' => $RowTROQUEL['detalle'], 'FTDAS_BAJA' => 0);
+				array_push($AUTORIZA,$TMP);
+			}
+			
+			if($sJ['CEI_CANTIDAD_'.$A] == 0){$OBSERVACION_REQUIRED  = TRUE;}
+		}
+	}
+	if(count($AUTORIZA) == 0){RJRE("No se pudo validar ningún medicamento.");}
+	if($OBSERVACION_REQUIRED  == TRUE && $sJ['CTS_OBSERVACION'] == NULL){RJRE("Es necesario ingresar una Observacion sobre el medicamento no autorizado!");}
+	$ID_PEDIDOS = array_column($AUTORIZA, 'PEDIDO');
+	//DESDE RECETAR
+	if($sJ['CEB_TRANSCRIPCION'] == 0){
+		if(count($AUTORIZA) > 2){RJRE("Se supero el máximo de medicamentos por recetas.");}
+		QueryInsert("INSERT INTO ".$DBT_PORTAL['RECETAS_TRANSCRIPCION']."(`dni`, `pedido_fecha`, `pedido_origen`, `procesa_usuario`, `procesa_fecha`,`observacion`,`diagnostico`, `estado`) VALUES ('".$sJ['CEI_DNI']."', NOW(), '".$sJ['ORIGEN']."', '".$C_USER['ID']."', NOW(),".($sJ['CTS_OBSERVACION'] != NULL ? "'".$sJ['CTS_OBSERVACION']."'" : "NULL").",'".$sJ['CTS_DIAGNOSTICO']."', 2)",'QWE_PORTAL');
+		$sJ['CEB_TRANSCRIPCION'] = QueryLastId('QWE_PORTAL');
+	}
+	//DESDE TRANSCRIBIR
+	else{
+		
+		$QueTRANSCRIPCION = QuerySelect("SELECT `dni`,`id_receta`, `estado` FROM ".$DBT_PORTAL['RECETAS_TRANSCRIPCION']." WHERE `id_transcripcion` = '".$sJ['CEB_TRANSCRIPCION']."'",'QWE_PORTAL');
+		if(QueryNumRows($QueTRANSCRIPCION) < 1 ){ RJRE("No se ha podido validar la transcripción.");}
+		while($RowTRANSCRIPCION = QueryFetch($QueTRANSCRIPCION)){
+			if($RowTRANSCRIPCION['dni'] != $sJ['CEI_DNI']){RJRE("No se ha podido validar la transcripción.");}
+			if($RowTRANSCRIPCION['estado'] != 1){RJRE("No es posible modificar una receta ya notificada.");}
+			
+			$QueTROQUEL = QuerySelect("SELECT TRO.`id_pedido`, TRO.`pedido_troquel`, TRO.`pedido_cantidad`, FT.`detalle` FROM ".$DBT_PORTAL['RECETAS_TROQUEL']." TRO LEFT JOIN ".$DBT_PORTAL['RECETAS_FTDAS']." FT ON FT.`troquel`=TRO.`pedido_troquel` WHERE `id_transcripcion` = '".$sJ['CEB_TRANSCRIPCION']."' AND (`autoriza_cantidad` IS NULL or `autoriza_cantidad` > 0)",'QWE_PORTAL');
+			if(QueryNumRows($QueTROQUEL)<1){RJRE("No se ha podido validar el pedido.");}
+			while($RowTROQUEL = QueryFetch($QueTROQUEL)){
+				//TROQUEL DADO DE BAJA ALFABETA
+				if($RowTROQUEL['detalle'] == NULL){
+					$TMP = array('PEDIDO' => $RowTROQUEL['id_pedido'], 'TROQUEL' => $RowTROQUEL['pedido_troquel'], 'CANTIDAD' => 0, 'DETALLE' => NULL, 'FTDAS_BAJA' => 1);
+					array_push($AUTORIZA,$TMP);
+				}else{
+					$INDICE = array_search($RowTROQUEL['id_pedido'], $ID_PEDIDOS);
+					if($INDICE === false){RJRE("No se pudo validar informacion sobre el medicamento ".$RowTROQUEL['detalle']);}
+				}
+			}
+			QueryUpdate("UPDATE ".$DBT_PORTAL['RECETAS_TRANSCRIPCION']." SET `procesa_usuario`='".$C_USER['ID']."',`procesa_fecha`=NOW(), `observacion` = ".($sJ['CTS_OBSERVACION'] != NULL ? "'".$sJ['CTS_OBSERVACION']."'" : "NULL").", `diagnostico` = '".$sJ['CTS_DIAGNOSTICO']."',`estado`=2 WHERE `id_transcripcion`='".$sJ['CEB_TRANSCRIPCION']."'",'QWE_PORTAL');			
+		}
+	}
+	$GENERAR_RECETA = FALSE;
+	foreach($AUTORIZA as $MED){
+		if($MED['CANTIDAD'] > 0){$GENERAR_RECETA = TRUE;}
+		if($MED['PEDIDO'] == 0){
+			QueryInsert("INSERT INTO ".$DBT_PORTAL['RECETAS_TROQUEL']."(`id_transcripcion`, `pedido_troquel`, `pedido_cantidad`, `autoriza_troquel`, `autoriza_cantidad`, `autoriza_med`, `ftdas_baja`, `reg_fecha`) VALUES ('".$sJ['CEB_TRANSCRIPCION']."','0','0','".$MED['TROQUEL']."','".$MED['CANTIDAD']."',".($MED['CANTIDAD'] != NULL ? "'".$MED['DETALLE']."'" : NULL).",'".$MED['FTDAS_BAJA']."', NOW())",'QWE_PORTAL');
+		}else{
+			QueryUpdate("UPDATE ".$DBT_PORTAL['RECETAS_TROQUEL']." SET `autoriza_troquel`='".$MED['TROQUEL']."',`autoriza_cantidad`='".$MED['CANTIDAD']."',`autoriza_med` = ".($MED['CANTIDAD'] != NULL ? "'".$MED['DETALLE']."'" : NULL).", `reg_fecha`=NOW() WHERE `id_pedido`='".$MED['PEDIDO']."'",'QWE_PORTAL');
+		}
+	}
+	
+	if($GENERAR_RECETA === TRUE){
+		while(true){
+			$MD5 = md5($sJ['CEI_DNI'].strrev(date("U")).CodeRandom(50));
+			$QueTRANSCRIPCION = QuerySelect("SELECT `archivo_md5` FROM ".$DBT_PORTAL['RECETAS_ARCHIVOS']." WHERE `archivo_md5` = '".$MD5."'",'QWE_PORTAL');
+			if(QueryNumRows($QueTRANSCRIPCION) == 0){break;}
+		}
+		
+		$QueID = QuerySelect("SELECT MAX(CAST(SUBSTRING(`id_receta`, 5, 6) AS UNSIGNED)) AS 'max_id' FROM ".$DBT_PORTAL['RECETAS_ARCHIVOS']." WHERE `id_receta` LIKE '".Fecha_Formato($sJ['CFA_FECHA'],"Y")."%'",'QWE_PORTAL');
+		while($RowID = QueryFetch($QueID)){
+			$max_id = $RowID['max_id'] ? $RowID['max_id'] : 0;
+			$next_id = date('Y') . str_pad($max_id + 1, 6, '0', STR_PAD_LEFT);
+		}
+		
+		QueryInsert("INSERT INTO ".$DBT_PORTAL['RECETAS_ARCHIVOS']."(`id_receta`,`archivo_md5`, `dni`, `fecha`, `duplicado`, `procesa_usuario`, `procesa_fecha`, `procesa_ip`) VALUES ('".$next_id."','".$MD5."', '".$sJ['CEI_DNI']."','".$sJ['CFA_FECHA']."','".$RECETA_DUPLICADO."', '".$C_USER['ID']."', NOW(), '".ClientIP()."')",'QWE_PORTAL');
+		$ID_RECETA = QueryLastId('QWE_PORTAL');
+		
+		QueryUpdate("UPDATE ".$DBT_PORTAL['RECETAS_TRANSCRIPCION']." SET `id_receta`='".$ID_RECETA."' WHERE `id_transcripcion`='".$sJ['CEB_TRANSCRIPCION']."'",'QWE_PORTAL');
+		
+		$BASE64 = SANITIZE_BASE64(Receta_Render($ID_RECETA));
+		if($BASE64 != ''){QueryUpdate("UPDATE ".$DBT_PORTAL['RECETAS_ARCHIVOS']." SET `archivo_base64`='".$BASE64."' WHERE `id_receta`='".$ID_RECETA."'",'QWE_PORTAL');}
+	}
+	RJRO($sJ['CEB_TRANSCRIPCION']);
+}
+elseif($ROUTE_OPC == 'Ver_Receta'){
+	if($PS['TranscripcionesRecetar']['C'] != 1 && $PS['TranscripcionesTranscribir']['C'] != 1){EJE($RETURN);}
+	if(!array_key_exists('CTS_1',$ROUTE_PARAMS) || SANITIZE_NUM_ENT($ROUTE_PARAMS['CTS_1'], 0, 4294967295) == ''){EE('NO_SE_PUEDE_PROCESAR_LA_SOLICITUD');}
+	if(!array_key_exists('CTS_2',$ROUTE_PARAMS) || strlen($ROUTE_PARAMS['CTS_2']) != 36){EE('NO_SE_PUEDE_PROCESAR_LA_SOLICITUD');}
+	$ROUTE_PARAMS['CTS_2'] = Str_Lo(substr($ROUTE_PARAMS['CTS_2'],0,32));
+	if(isValidMd5($ROUTE_PARAMS['CTS_2']) === FALSE){EE('NO_SE_PUEDE_PROCESAR_LA_SOLICITUD');}
+	
+	$QueRECETA = QuerySelect("SELECT `id_receta` FROM ".$DBT_PORTAL['RECETAS_ARCHIVOS']." WHERE `archivo_md5` = '".$ROUTE_PARAMS['CTS_2']."' AND `dni` = '".$ROUTE_PARAMS['CTS_1']."' AND `disponible` = '1'",'QWE_PORTAL');
+	if(QueryNumRows($QueRECETA)<1){
+		$ROUTE_PARAMS['CTS_1'] = '00000000';
+		$ROUTE_PARAMS['CTS_2'] = 'd8f4a1993546cc4b850cde3599e27aec';
+		$ID_RECETA = '0000000000';
+	}else{
+		while($RowRECETA = QueryFetch($QueRECETA)){
+			$ID_RECETA = $RowRECETA['id_receta'];
+		}
+	}
+	$FOLDER = Return_File_Path('RECETAS', $ROUTE_PARAMS['CTS_1'].'/'.$ROUTE_PARAMS['CTS_2'].'.pdf', TRUE);
+
+	$MODIFICADO = filemtime($FOLDER);
+
+	header("Last-Modified: ".gmdate("D, d M Y H:i:s", $MODIFICADO)." GMT");
+	header("Etag: ".md5_file($FOLDER));
+	header("Content-Type: application/pdf; charset=UTF-8");
+	header("Content-Length: ".filesize($FOLDER));	
+	
+	header("Content-Disposition: filename=\"RP-".substr($ID_RECETA,4,6)."-".substr($ID_RECETA,0,4).".pdf");
+	
+	readfile($FOLDER);
+	exit;
+}
+elseif($ROUTE_OPC == 'Ver_Receta_Datos'){
+	$RETURN['ID_RECETA'] = 0;
+	if($PS['TranscripcionesRecetar']['C'] != 1){EJE($RETURN);}
+	if(CIJE('CEB_RECETA') === TRUE){EJE($RETURN);};
+	
+	$Que = QuerySelect("SELECT `id_receta`,`archivo_md5`, `dni` FROM ".$DBT_PORTAL['RECETAS_ARCHIVOS']." WHERE `id_receta` = '".$sJ['CEB_RECETA']."' AND `disponible` = '1'",'QWE_PORTAL');
+	if(QueryNumRows($Que)<1){EJE($RETURN);};		
+	while($Row = QueryFetch($Que)){
+		$RETURN['ID_RECETA'] 	= $Row['id_receta'];
+		$RETURN['ARCHIVO'] 		= $Row['archivo_md5'];
+		$RETURN['DNI'] 			= $Row['dni'];
+	}
+	EJE($RETURN);
+}
+elseif($ROUTE_OPC == 'Ver_Transcripcion'){
+	$RETURN['ID_TRANSCRIPCION'] = 0;
+	if($PS['TranscripcionesTranscribir']['C'] != 1){EJE($RETURN);}
+	if(CIJE('CEB_TRANSCRIPCION') === TRUE){EJE($RETURN);};
+	
+	$QueTRANSCRIPCION = QuerySelect("SELECT `id_transcripcion`,`dni`,`estado` FROM ".$DBT_PORTAL['RECETAS_TRANSCRIPCION']." WHERE `id_transcripcion` = '".$sJ['CEB_TRANSCRIPCION']."' AND `pedido_origen` = 'PORTAL' AND `deriva_usuario` = '".$C_USER['ID']."'",'QWE_PORTAL');
+	if(QueryNumRows($QueTRANSCRIPCION)<1){EJE($RETURN);}
+	while($RowTRANSCRIPCION = QueryFetch($QueTRANSCRIPCION)){
+		$RETURN['ID_TRANSCRIPCION'] = $RowTRANSCRIPCION['id_transcripcion'];
+		$RETURN['DNI'] = $RowTRANSCRIPCION['dni'];
+		$RETURN['ESTADO'] = $RowTRANSCRIPCION['estado'];
+	}
+	
+	$RETURN['PEDIDO_1'] = 0;
+	$RETURN['ID_TROQUEL_1'] = '';
+	$RETURN['TROQUEL_1'] = '';
+	$RETURN['CANTIDAD_1'] = '';	
+	$RETURN['PEDIDO_2'] = 0;
+	$RETURN['ID_TROQUEL_2'] = '';
+	$RETURN['TROQUEL_2'] = '';
+	$RETURN['CANTIDAD_2'] = '';
+	
+	$QueTROQUEL = QuerySelect("SELECT TRO.`id_pedido`, TRO.`pedido_troquel`, FT.`detalle`, TRO.`pedido_cantidad` FROM ".$DBT_PORTAL['RECETAS_TROQUEL']." TRO LEFT JOIN ".$DBT_PORTAL['RECETAS_FTDAS']." FT ON FT.`troquel`=TRO.`pedido_troquel` WHERE TRO.`id_transcripcion` = '".$sJ['CEB_TRANSCRIPCION']."' AND TRO.`autoriza_cantidad` IS NULL AND FT.`detalle` IS NOT NULL",'QWE_PORTAL');
+	if(QueryNumRows($QueTROQUEL)<1){EJE($RETURN);}
+	$i = 0;
+	while($RowTROQUEL = QueryFetch($QueTROQUEL)){
+		$i++;
+		$RETURN['PEDIDO_'.$i] = $RowTROQUEL['id_pedido'];
+		$RETURN['ID_TROQUEL_'.$i] = $RowTROQUEL['pedido_troquel'];
+		$RETURN['TROQUEL_'.$i] = $RowTROQUEL['detalle'];
+		$RETURN['CANTIDAD_'.$i] = $RowTROQUEL['pedido_cantidad'];			
+	}
+	EJE($RETURN);
+}
+elseif($ROUTE_OPC == 'Ver_Transcripcion_Procesada'){
+	$RETURN['ID_TRANSCRIPCION'] = 0;
+	if($PS['TranscripcionesTranscribir']['C'] != 1){EJE($RETURN);}
+	if(CIJE('CEB_TRANSCRIPCION') === TRUE){EJE($RETURN);};
+	
+	$QueTRANSCRIPCION = QuerySelect("SELECT TRA.`id_transcripcion`,TRA.`dni`, RE.`fecha`,RE.`archivo_md5`,TRA.`observacion`,TRA.`id_receta`,TRA.`estado` FROM ".$DBT_PORTAL['RECETAS_TRANSCRIPCION']." TRA LEFT JOIN ".$DBT_PORTAL['RECETAS_ARCHIVOS']." RE ON RE.`id_receta`=TRA.`id_receta` WHERE TRA.`id_transcripcion` = '".$sJ['CEB_TRANSCRIPCION']."'",'QWE_PORTAL');
+	if(QueryNumRows($QueTRANSCRIPCION)<1){EJE($RETURN);}
+	while($RowTRANSCRIPCION = QueryFetch($QueTRANSCRIPCION)){
+		$RETURN['ID_TRANSCRIPCION'] = $RowTRANSCRIPCION['id_transcripcion'];
+		$RETURN['DNI'] = $RowTRANSCRIPCION['dni'];
+		$RETURN['ESTADO'] = $RowTRANSCRIPCION['estado'];
+		$RETURN['FECHA'] = $RowTRANSCRIPCION['fecha'];
+		$RETURN['OBSERVACION'] = $RowTRANSCRIPCION['observacion'];
+		$RETURN['ID_RECETA'] = $RowTRANSCRIPCION['id_receta'];
+		$RETURN['ARCHIVO'] = $RowTRANSCRIPCION['archivo_md5'];
+	}
+	
+	$RETURN['PEDIDO_1'] = 0;
+	$RETURN['ID_TROQUEL_1'] = '';
+	$RETURN['TROQUEL_1'] = '';
+	$RETURN['CANTIDAD_1'] = '';	
+	$RETURN['PEDIDO_2'] = 0;
+	$RETURN['ID_TROQUEL_2'] = '';
+	$RETURN['TROQUEL_2'] = '';
+	$RETURN['CANTIDAD_2'] = '';
+	
+	$QueTROQUEL = QuerySelect("SELECT `id_pedido`, `autoriza_troquel`, `autoriza_med`, `autoriza_cantidad` FROM ".$DBT_PORTAL['RECETAS_TROQUEL']." WHERE `id_transcripcion` = '".$sJ['CEB_TRANSCRIPCION']."' AND `autoriza_cantidad` IS NOT NULL AND `autoriza_med` IS NOT NULL AND `ftdas_baja` = '0'",'QWE_PORTAL');
+	if(QueryNumRows($QueTROQUEL)<1){EJE($RETURN);}
+	$i = 0;
+	while($RowTROQUEL = QueryFetch($QueTROQUEL)){
+		$i++;
+		$RETURN['PEDIDO_'.$i] = $RowTROQUEL['id_pedido'];
+		$RETURN['ID_TROQUEL_'.$i] = $RowTROQUEL['autoriza_troquel'];
+		$RETURN['TROQUEL_'.$i] = $RowTROQUEL['autoriza_med'];
+		$RETURN['CANTIDAD_'.$i] = $RowTROQUEL['autoriza_cantidad'];			
+	}
+	EJE($RETURN);
+}
+else{
+	EE("NO_SE_PUEDE_PROCESAR_LA_SOLICITUD");
+}
+?>

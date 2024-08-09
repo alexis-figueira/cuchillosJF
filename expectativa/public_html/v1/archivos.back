@@ -1,0 +1,56 @@
+<?php
+require_once './app.sys';
+header("Access-Control-Allow-Origin: ".$URL['SYS']);
+header("Access-Control-Allow-Credentials: true");
+header("Access-Control-Allow-Methods: POST, GET");
+header("Access-Control-Allow-Header: content-type");
+
+session_name($CFG_SESSION['NAME']);
+session_start($CFG_SESSION['CONFIG']);
+session_write_close();
+
+require_once './sanitize.sys';
+if(!array_key_exists('B_USER',$_SESSION)){ echo "SIN_AUTENTICAR";exit;}
+if(!array_key_exists('B_PERMISOS',$_SESSION)){ echo "SIN_ACCESO";exit;}
+$C_USER = SANITIZE_JSON($_SESSION['B_USER']);
+$C_PERMISOS = SANITIZE_JSON($_SESSION['B_PERMISOS']);
+if($C_USER == ''){echo "SIN_AUTENTICAR";exit;}
+if($C_PERMISOS == ''){echo "SIN_ACCESO";exit;}
+
+require_once './config.sys';
+require_once './db_connect.sys';
+require_once './function.sys';
+require_once './function.back';
+
+if($ROUTE_ACT == 'Procesar_Upload'){
+
+	header('Content-Type: application/json');	
+	if(CIJE('CBN_FILE') === TRUE){RJRE();}
+	if(CIJE('CEI_SIZE') === TRUE){RJRE();}
+	if(CIJE('CTS_FORMAT') === TRUE){RJRE();}
+	if(CIJE('CTS_NAME') === TRUE){RJRE();}
+	if(CIJE('CTS_TYPE') === TRUE){RJRE();}
+	
+	if(!array_key_exists($sJ['CTS_FORMAT'],$CFG_UPLOADFILES['TYPE'])){RJRE("El tipo de archivo es invalido 1 ");}
+	if(!in_array(Str_Lo($sJ['CTS_TYPE']), $CFG_UPLOADFILES['TYPE'][$sJ['CTS_FORMAT']])){RJRE("El tipo de archivo es invalido ".$sJ['CTS_TYPE']);}
+	if($sJ['CEI_SIZE'] > $CFG_UPLOADFILES['SIZE']){RJRE("El peso del archivo es superior al aceptado.");}
+	
+	$FileContent = base64_decode($sJ['CBN_FILE'], true);
+	if($FileContent === FALSE){RJRE("El archivo no es valido o esta dañado");}
+	$FileSize = strlen($FileContent);
+	$FileMD5 = md5($FileContent);
+	if($FileSize != $sJ['CEI_SIZE']){RJRE("El archivo no es valido o esta dañado");}
+		
+	$Que = QuerySelect("SELECT `id_file` FROM ".$DBT['FILES']." WHERE `id_file` = '".$FileMD5."'");
+	if(QueryNumRows($Que) <= 0){
+		QueryInsert("INSERT INTO ".$DBT['FILES']."(`id_file`, `fecha`, `nombre`, `type`, `size`, `id_usuario`) VALUES ('".$FileMD5."',NOW(),'".$sJ['CTS_NAME']."','".$sJ['CTS_TYPE']."','".$sJ['CEI_SIZE']."','".$C_USER['ID']."')");
+		$FOLDER = Return_File_Path('UPLOADS', date("Y")."/".date("n").'/'.$FileMD5.".npi");
+		file_put_contents($FOLDER, $FileContent);
+	}
+	$RETURN['RESULTADO'] = "OK";
+	$RETURN['FILE'] = $FileMD5.".".RFE($sJ['CTS_TYPE']);
+	EJE($RETURN);
+}else{
+	EE("NO_SE_PUEDE_PROCESAR_LA_SOLICITUD");
+}
+?>

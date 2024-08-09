@@ -1,0 +1,43 @@
+<?php
+require_once './app.sys';
+require_once './sanitize.sys';
+require_once './config.sys';
+require_once './config.front';
+require_once './function.sys';
+require_once './function.front';
+require_once './db_connect.sys';
+
+require_once './login.front';
+require_once './routes.sys';
+
+$MAIN = '';
+$MODALS = array();
+$VARS = array();
+$FUNCTIONS = array();
+
+if($ROUTE_FILE == '' or $PP['C'] == FALSE){
+	header("Location: ".$URL['SYS']);exit;
+}
+$LINK_FRONT = $URL['SYS'].$ROUTE_ACT;
+$LINK_BACK = $URL['AJAXAPI'].$ROUTE_ACT;
+$LINK_GEN = $URL['AJAXAPI'].'Genericos';
+$ROUTE_FILE = "./modulos/".$ROUTE_FILE.".front";
+if(file_exists($ROUTE_FILE)){require_once $ROUTE_FILE;}
+
+?>
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<?php require_once './template_head.front'; ?>
+</head>
+<body>	
+	<div class="app"><?php require_once './template_nav.front';echo $MAIN;?></div>	
+	<?php foreach($MODALS as $KEY){echo $KEY;} ?>
+	<?php require_once './template_scripts.front';?>
+	<script type="text/javascript">
+	<?php foreach($VARS as $KEY){echo $KEY;} ?>
+	<?php foreach($FUNCTIONS as $KEY){echo $KEY;} ?>
+	</script>
+</body>
+</html>

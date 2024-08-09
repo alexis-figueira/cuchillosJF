@@ -1,0 +1,180 @@
+<?php
+if($ROUTE_OPC == 'Listado_Resumen'){
+	$RETURN['COUNT'] = 0;
+	$RETURN['TOTAL'] = 0;
+	$RETURN['PAGINAS'] = 1;
+	$RETURN['ROWS'] = [];
+	if($PP['C'] != 1){EJE($RETURN);}
+	$ARRAY_ORDER = array(1 => '`fecha` {METHOD}', 2 => '`total_viandas` {METHOD}', 3 => '`estado` {METHOD}');
+	$FORM = LISTADO_QUERY($ARRAY_ORDER);
+	if($FORM['SEARCH'] != NULL){ $SEARCH = " WHERE `fecha` = '".$FORM['SEARCH']."'";}else{$SEARCH = "";}
+	$Que = QuerySelect("SELECT `fecha`, `total_viandas`, `estado` FROM ".$DBT['VIANDAS_RESUMEN'].$SEARCH." ORDER BY ".$FORM['ORDENAR']." LIMIT ".$FORM['LIMIT']." ,".$FORM['ROWS']);
+	while($Row = QueryFetch($Que)){
+		$RETURN['COUNT']++;
+		$TMP = [];
+		$TMP['ID'] 						= $RETURN['COUNT'];
+		$TMP['DATA']['FECHA'] 			= Fecha_Formato($Row['fecha']);
+		$TMP['DATA']['CANTIDAD'] 		= $Row['total_viandas'];
+		if($Row['estado'] == '1'){ $TMP['DATA']['ESTADO'] = 'Encargado';}
+		if($Row['estado'] == '2'){ $TMP['DATA']['ESTADO'] = 'Retirado';}
+		if($Row['estado'] == '3'){ $TMP['DATA']['ESTADO'] = 'Liquidado';}
+		array_push($RETURN['ROWS'], $TMP);
+		unset($TMP);
+	}
+	$Que = QuerySelect("SELECT COUNT(*) AS 'total' FROM ".$DBT['VIANDAS_RESUMEN'].$SEARCH);
+	while($Row = QueryFetch($Que)){	
+		$RETURN['TOTAL'] = $Row['total'];
+		$RETURN['PAGINAS'] = ceil($RETURN['TOTAL']/$FORM['ROWS']);
+	}
+	EJE($RETURN);
+}
+elseif($ROUTE_OPC == 'Procesar_Liquidacion'){
+	if($PP['A'] == 0){RJRE();}
+	if(CIJE('CFA_DESDE') === TRUE){RJRE();};
+	if(CIJE('CFA_HASTA') === TRUE){RJRE();};
+	if(CIJE('CET_DESCUENTO') === TRUE){RJRE();};
+	
+	if($sJ['CFA_DESDE'] > $sJ['CFA_HASTA']){RJRE("La fecha DESDE debe ser inferior a la de HASTA");};
+	if($sJ['CET_DESCUENTO'] < 1 || $sJ['CET_DESCUENTO'] > 100){RJRE("El descuento debe ser un porcentaje entre 1 y 100");};
+	$Que = QuerySelect("SELECT `id_menu` FROM ".$DBT['VIANDAS_MENU']." WHERE `fecha` >= '".$sJ['CFA_DESDE']."' AND `fecha` <= '".$sJ['CFA_HASTA']."' AND `estado` IN (1,2)");
+	if(QueryNumRows($Que) > 1){RJRE('Aun quedan dias sin procesar quien retiro o no la vianda');}
+
+	QueryUpdate("UPDATE ".$DBT['VIANDAS_MENU']." SET `estado` = '4', `reg_fecha` = NOW(), `reg_usuario` = '".$C_USER['ID']."' WHERE `fecha` >= '".$sJ['CFA_DESDE']."' AND `fecha` <= '".$sJ['CFA_HASTA']."' AND `estado` = 3");
+	QueryUpdate("UPDATE ".$DBT['VIANDAS_RESUMEN']." SET `estado` = 3 WHERE `fecha` >= '".$sJ['CFA_DESDE']."' AND `fecha` <= '".$sJ['CFA_HASTA']."'");	
+	
+	RJRO();
+}
+elseif($ROUTE_OPC == 'Ver_Excel'){
+	if($PP['A'] == 0){RJRE();}
+	if(!array_key_exists('CTS_1',$ROUTE_PARAMS) || SANITIZE_DATE($ROUTE_PARAMS['CTS_1']) == ''){EE('NO_SE_PUEDE_PROCESAR_LA_SOLICITUD');}
+	if(!array_key_exists('CTS_2',$ROUTE_PARAMS) || SANITIZE_DATE($ROUTE_PARAMS['CTS_2']) == ''){EE('NO_SE_PUEDE_PROCESAR_LA_SOLICITUD');}
+	if(!array_key_exists('CTS_3',$ROUTE_PARAMS) || SANITIZE_NUM_ENT($ROUTE_PARAMS['CTS_3'], 1, 50) == ''){EE('NO_SE_PUEDE_PROCESAR_LA_SOLICITUD');}		
+	if($ROUTE_PARAMS['CTS_1'] > $ROUTE_PARAMS['CTS_2']){EE('NO_SE_PUEDE_PROCESAR_LA_SOLICITUD');}
+	
+	$Que = QuerySelect("SELECT VE.`cuil`, VE.`agente`, VE.`grupo`, count(VE.`cuil`) AS 'cant', SUM(VM.`precio`) AS 'total' FROM ".$DBT['VIANDAS_PEDIDOS']." VP LEFT JOIN ".$DBT['VIANDAS_MENU']." VM ON VP.`id_menu`=VM.`id_menu` LEFT JOIN ".$DBT['VIANDAS_EMPLEADOS']." VE ON VE.`id_agente`=VP.`id_empleado` WHERE VM.`fecha` >= '".$ROUTE_PARAMS['CTS_1']."' AND VM.`fecha` <= '".$ROUTE_PARAMS['CTS_2']."'  AND VP.`estado` >= 2 GROUP BY VE.`cuil`");
+	if(QueryNumRows($Que) < 1){EE('NO_SE_PUEDE_PROCESAR_EL_ARCHIVO');}
+	
+	$spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+
+	$spreadsheet 	->getProperties()
+					->setCreator('Sistema')
+					->setTitle('ResumenViandas');
+
+	$spreadsheet	->setActiveSheetIndex(0);
+	$spreadsheet	->getActiveSheet()
+					->setTitle('Contratados')
+					->setCellValue('A1', 'CUIL')
+					->setCellValue('B1', 'AGENTE')
+					->setCellValue('C1', 'CANTIDAD')
+					->setCellValue('D1', 'MONTO');
+
+	$spreadsheet	->getActiveSheet()
+					->getStyle("A1:D1")
+					->getAlignment()
+					->setHorizontal('center');
+	$styleArray = array(
+		'font'  => array(
+			'bold'  => true,
+			'color' => array('rgb' => 'ffffff'),
+			'size'  => 11
+		));
+
+	$spreadsheet	->getActiveSheet()->getStyle('A1')->applyFromArray($styleArray);
+	$spreadsheet	->getActiveSheet()->getStyle('A1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('000000');
+	$spreadsheet	->getActiveSheet()->getStyle('B1')->applyFromArray($styleArray);
+	$spreadsheet	->getActiveSheet()->getStyle('B1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('000000');
+	$spreadsheet	->getActiveSheet()->getStyle('C1')->applyFromArray($styleArray);
+	$spreadsheet	->getActiveSheet()->getStyle('C1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('000000');
+	$spreadsheet	->getActiveSheet()->getStyle('D1')->applyFromArray($styleArray);
+	$spreadsheet	->getActiveSheet()->getStyle('D1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('000000');
+	
+	$spreadsheet	->createSheet();
+	$spreadsheet	->setActiveSheetIndex(1);
+	
+	$spreadsheet	->getActiveSheet()
+					->setTitle('Monotributo')
+					->setCellValue('A1', 'CUIL')
+					->setCellValue('B1', 'AGENTE')
+					->setCellValue('C1', 'CANTIDAD')
+					->setCellValue('D1', 'MONTO');
+
+	$spreadsheet	->getActiveSheet()
+					->getStyle("A1:D1")
+					->getAlignment()
+					->setHorizontal('center');
+	$styleArray = array(
+		'font'  => array(
+			'bold'  => true,
+			'color' => array('rgb' => 'ffffff'),
+			'size'  => 11
+		));
+
+	$spreadsheet	->getActiveSheet()->getStyle('A1')->applyFromArray($styleArray);
+	$spreadsheet	->getActiveSheet()->getStyle('A1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('000000');
+	$spreadsheet	->getActiveSheet()->getStyle('B1')->applyFromArray($styleArray);
+	$spreadsheet	->getActiveSheet()->getStyle('B1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('000000');
+	$spreadsheet	->getActiveSheet()->getStyle('C1')->applyFromArray($styleArray);
+	$spreadsheet	->getActiveSheet()->getStyle('C1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('000000');
+	$spreadsheet	->getActiveSheet()->getStyle('D1')->applyFromArray($styleArray);
+	$spreadsheet	->getActiveSheet()->getStyle('D1')->getFill()->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)->getStartColor()->setRGB('000000');
+	
+	$FILA_C = 1;
+	$FILA_M = 1;
+	while($Row = QueryFetch($Que)){
+		if($Row['grupo'] == 'CONTRATADO'){
+			$spreadsheet	->setActiveSheetIndex(0);
+			$FILA_C++;
+			$FILA = $FILA_C;
+			$MONTO = ($Row['total']*$ROUTE_PARAMS['CTS_3'])/100;
+		}else{
+			$spreadsheet	->setActiveSheetIndex(1);
+			$FILA_M++;
+			$FILA = $FILA_M;
+			$MONTO = $Row['total'];
+		}
+		$MONTO = number_format((float)$MONTO,2,'.','');
+		$spreadsheet	->getActiveSheet()
+						->setCellValue('A'.$FILA, $Row['cuil'])
+						->setCellValue('B'.$FILA, $Row['agente'])
+						->setCellValue('C'.$FILA, $Row['cant'])
+						->setCellValue('D'.$FILA, $MONTO);
+	}
+	
+	$writer = new PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+	header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+	header('Content-Disposition: attachment; filename="Liquidacion.xlsx"');
+	$writer->save('php://output');
+	
+}
+elseif($ROUTE_OPC == 'Ver_Txt'){
+	if($PP['A'] == 0){RJRE();}
+	if(!array_key_exists('CTS_1',$ROUTE_PARAMS) || SANITIZE_DATE($ROUTE_PARAMS['CTS_1']) == ''){EE('NO_SE_PUEDE_PROCESAR_LA_SOLICITUD');}
+	if(!array_key_exists('CTS_2',$ROUTE_PARAMS) || SANITIZE_DATE($ROUTE_PARAMS['CTS_2']) == ''){EE('NO_SE_PUEDE_PROCESAR_LA_SOLICITUD');}
+	if(!array_key_exists('CTS_3',$ROUTE_PARAMS) || SANITIZE_NUM_ENT($ROUTE_PARAMS['CTS_3'], 1, 50) == ''){EE('NO_SE_PUEDE_PROCESAR_LA_SOLICITUD');}		
+	if($ROUTE_PARAMS['CTS_1'] > $ROUTE_PARAMS['CTS_2']){EE('NO_SE_PUEDE_PROCESAR_LA_SOLICITUD');}
+	ini_set('display_errors', FALSE);
+	$Que = QuerySelect("SELECT VE.`cuil`, VE.`agente`, VE.`grupo`, count(VE.`cuil`) AS 'cant', SUM(VM.`precio`) AS 'total' FROM ".$DBT['VIANDAS_PEDIDOS']." VP LEFT JOIN ".$DBT['VIANDAS_MENU']." VM ON VP.`id_menu`=VM.`id_menu` LEFT JOIN ".$DBT['VIANDAS_EMPLEADOS']." VE ON VE.`id_agente`=VP.`id_empleado` WHERE VM.`fecha` >= '".$ROUTE_PARAMS['CTS_1']."' AND VM.`fecha` <= '".$ROUTE_PARAMS['CTS_2']."'  AND VP.`estado` >= 2 GROUP BY VE.`cuil`");
+	header('Content-Disposition: attachment; filename="Liquidacion.txt"');
+	header("Content-Type: application/force-download");
+	header('Expires: 0');
+	header('Cache-Control: must-revalidate');
+	header('Pragma: public');
+	header("Content-Type: text/plain");
+	if(QueryNumRows($Que) > 0){
+		while($Row = QueryFetch($Que)){
+			if($Row['grupo'] == 'CONTRATADO'){
+				$MONTO = ($Row['total']*$ROUTE_PARAMS['CTS_3'])/100;
+				$MONTO = number_format((float)$MONTO,2,'.','');
+				$MONTO = str_pad($MONTO, 11,0,STR_PAD_LEFT);
+				$PERIODO = substr($ROUTE_PARAMS['CTS_2'],0,7);
+				$PERIODO = str_replace("-","",$PERIODO);
+				echo $Row['cuil']."0003960206".$MONTO.$PERIODO.$PERIODO."\n";
+			}
+		}
+	}
+	
+}
+else{
+	EE("NO_SE_PUEDE_PROCESAR_LA_SOLICITUD");
+}
+?>

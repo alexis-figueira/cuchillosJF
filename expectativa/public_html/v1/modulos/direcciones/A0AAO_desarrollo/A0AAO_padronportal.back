@@ -1,0 +1,71 @@
+<?php
+require_once './db_connect_sio.sys';
+if($ROUTE_OPC == 'Listado_Sincronizaciones'){
+	$RETURN['COUNT'] = 0;
+	$RETURN['TOTAL'] = 0;
+	$RETURN['PAGINAS'] = 1;
+	$RETURN['ROWS'] = [];
+	if($PP['C'] != 1){EJE($RETURN);}
+	$ARRAY_ORDER = array(1 => '`date` {METHOD}', 2 => '`usuario` {METHOD}');
+	$FORM = LISTADO_QUERY($ARRAY_ORDER);
+	$SEARCH = "";
+	$Que = QuerySelect("SELECT `date`, U.`usuario` FROM ".$DBT['PADRON_SYNC']." P LEFT JOIN ".$DBT['USERS']." U ON U.id_usuario=P.id_usuario ".$SEARCH." ORDER BY ".$FORM['ORDENAR']." LIMIT ".$FORM['LIMIT']." ,".$FORM['ROWS']);
+	while($Row = QueryFetch($Que)){
+		$RETURN['COUNT']++;
+		$TMP = [];
+		$TMP['ID'] 						= $RETURN['COUNT'];
+		$TMP['DATA']['SINCRONIZACION']	= Fecha_Formato($Row['date'], "d-m-Y H:i");
+		$TMP['DATA']['USUARIO'] 		= $Row['usuario'];
+		array_push($RETURN['ROWS'], $TMP);
+		unset($TMP);
+	}
+	$Que = QuerySelect("SELECT COUNT(*) AS 'total' FROM ".$DBT['PADRON_SYNC']." P LEFT JOIN ".$DBT['USERS']." U ON U.id_usuario=P.id_usuario".$SEARCH);
+	while($Row = QueryFetch($Que)){	
+		$RETURN['TOTAL'] = $Row['total'];
+		$RETURN['PAGINAS'] = ceil($RETURN['TOTAL']/$FORM['ROWS']);
+	}
+	EJE($RETURN);
+}
+elseif($ROUTE_OPC == 'Procesar_Sync_Portal'){
+	if($PP['A'] != 1){RJRE("PERMISOS INSUFICIENTES");}
+	require_once './db_connect_autogestion.sys';
+	
+	$Que = QuerySelect("SELECT PA.`ida` AS `dni`, PP.`cuil`, PP.`apellido`, PP.`nombre`, DATE_FORMAT(STR_TO_DATE(PP.`fechanac`, '%Y%m%d'),'%Y-%m-%d') AS `fecha_nacimiento`, PP.`sexo`, CAST(PP.`nroomint` AS CHAR CHARSET utf8mb4) AS `nro_omint`, PD.`mail` AS `correo`, PA.`titular` AS `dni_titular`FROM ".$DBT_SIO['AFILIACION']." PA LEFT JOIN ".$DBT_SIO['PADRON']." PP ON PA.`ida` = PP.`dni` LEFT JOIN ".$DBT_SIO['DATOS']." PD ON PD.`ide` = PA.`ida` WHERE PP.`activa` = 'SI'",'QWE_SIO');
+	if(QueryNumRows($Que) < 1){RJRE("ERROR LECTURA DEL PADRON");}
+	QueryDelete("DELETE FROM ".$DBT_PORTAL['PADRON']." WHERE `dni` IS NOT NULL", "QWE_PORTAL");
+	$VALUES = '';
+	$COUNT = 0;
+	while($Row = QueryFetch($Que)){
+		
+		$DNI = SANITIZE_NUM_ENT((int)$Row['dni'], 0, 4294967295);
+		$CUIL = SANITIZE_CUIT($Row['cuil']);
+		$APELLIDO = SANITIZE_TEXT($Row['apellido'], 1, 255);
+		$NOMBRE = SANITIZE_TEXT($Row['nombre'], 1, 255);
+		$NACIMIENTO = SANITIZE_DATE($Row['fecha_nacimiento']);
+		$SEXO = SANITIZE_TEXT($Row['sexo'], 1, 50);
+		$OMINT = SANITIZE_TEXT($Row['nro_omint'], 1, 20);
+		$CORREO = SANITIZE_MAIL($Row['correo']);
+		$TITULAR = SANITIZE_NUM_ENT($Row['dni_titular'], 0, 4294967295);
+		
+		if($DNI == '' || $APELLIDO == '' || $NOMBRE == '' || $NACIMIENTO == '' || $SEXO == ''){ continue;}
+		
+		if($VALUES != ''){ $VALUES .= ',';}
+		$COUNT++;
+		$VALUES .= '("'.$DNI.'", '.($CUIL != '' ? '"'.$CUIL.'"':'NULL').', "'.$APELLIDO.'", "'.$NOMBRE.'", "'.$NACIMIENTO.'", "'.$SEXO.'", '.($OMINT != '' ? '"'.$OMINT.'"':'NULL').', '.($CORREO != '' ? '"'.$CORREO.'"':'NULL').', '.($TITULAR != '' ? '"'.$TITULAR.'"':'NULL').')';
+		
+		if($COUNT == 10000){
+			QueryInsert("INSERT INTO ".$DBT_PORTAL['PADRON']."(`dni`, `cuil`, `apellido`, `nombre`, `fecha_nacimiento`, `sexo`, `nro_omint`, `correo`, `dni_titular`) VALUES ".$VALUES, "QWE_PORTAL");
+			$VALUES = '';
+			$COUNT = 0;	
+		}
+	}
+	if($VALUES != ''){
+		QueryInsert("INSERT INTO ".$DBT_PORTAL['PADRON']."(`dni`, `cuil`, `apellido`, `nombre`, `fecha_nacimiento`, `sexo`, `nro_omint`, `correo`, `dni_titular`) VALUES ".$VALUES, "QWE_PORTAL");
+	}
+	QueryInsert("INSERT INTO ".$DBT['PADRON_SYNC']."(`date`, `id_usuario`) VALUES (NOW(),'".$C_USER['ID']."')");
+	RJRO();
+}
+else{
+	EE("NO_SE_PUEDE_PROCESAR_LA_SOLICITUD");
+}
+?>

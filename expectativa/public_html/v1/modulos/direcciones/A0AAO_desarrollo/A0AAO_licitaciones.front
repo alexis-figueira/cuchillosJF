@@ -1,0 +1,88 @@
+<?php
+$TABS['A'] =  array('ICON' => '<i class="fa-solid fa-cart-shopping"></i>', 'TITLE' => 'Licitaciones');
+
+$TABLE['A']['COLUMNAS']			= array(
+	array('COLUMNA' => 'Disponible'),
+	array('COLUMNA' => 'Expediente'),
+	array('COLUMNA' => 'Apertura'),
+	array('COLUMNA' => 'Objeto'),
+	array('COLUMNA' => 'Link'),
+);
+$TABLE['A']['AJAX_URL'] 		= $LINK_BACK.'/Listado_Licitaciones';
+$TABLE['A']['HERRAMIENTAS'] 	= array('ALTA' => 'A','EDIT' => 'M','LOCK' => 'B', 'QUICK_SEARCH' => 'C', 'REFRESH' => 'C');
+$TABLE['A']['SETTING'] 			= array('ORDENAR' => "TRUE", 'ORDENAR_COL' => 2,'ORDENAR_METHOD' => 'DESC', 'DOBLE_CLICK' => 'Display_A_Principal');
+$TABLE['A']['QUICK_SEARCH']		= "Buscar Expediente";
+
+$MAIN = CreateMain($TABS, $TABLE);
+
+
+if(in_array('Display_A_Principal', $TABLE_FUNCTION)){
+	unset($TMP);
+	$TMP['MODAL']['ID']			= 'A_PRINCIPAL';
+	$TMP['MODAL']['TITLE']		= 'Licitacion';
+	$TMP['MODAL']['SIZE']		= '';
+	
+	$TMP['FOOTER']['SUBMIT'] 	= array('ID' => 'Guardar');
+	$TMP['FOOTER']['CLOSE']		= array('ID' => 'Cerrar');
+	
+	$TMP['BODY'] = '<input type="hidden" id="AUTOFOCUS">';
+	$TMP['BODY'] .= '<form id="'.$TMP['MODAL']['ID'].'_FORM" autocomplete="off">';		
+		$TMP['BODY'] .= CreateFormInput(array('ID' => 'id_licitacion', 'TIPO' => 'hidden', 'VALIDATE' => 'CEI', 'VALUE' => 0));
+		$TMP['BODY'] .= CreateFormInput(array('ID' => 'apertura', 'TIPO' => 'date', 'VALIDATE' => 'CFA', 'REQUIRED' => TRUE));
+		$TMP['BODY'] .= CreateFormInput(array('ID' => 'expediente', 'TIPO' => 'text', 'VALIDATE' => 'CTS', 'REQUIRED' => TRUE, 'MAXLENGTH' => 255));
+		$TMP['BODY'] .= CreateFormInput(array('ID' => 'objeto', 'TIPO' => 'text', 'VALIDATE' => 'CTS', 'REQUIRED' => TRUE, 'MAXLENGTH' => 255));
+		$TMP['BODY'] .= CreateFormInput(array('ID' => 'tramite', 'TIPO' => 'text', 'VALIDATE' => 'CTS', 'REQUIRED' => TRUE, 'MAXLENGTH' => 255, 'LABEL' => 'Link'));
+		
+	$TMP['BODY'] .= '</form>';
+	array_push($MODALS,CreateModal($TMP['MODAL'], $TMP['BODY'], $TMP['FOOTER']));
+	array_push($VARS,"const MODAL_".$TMP['MODAL']['ID']."_INSTANCE = bootstrap.Modal.getOrCreateInstance('#MODAL_".$TMP['MODAL']['ID']."');");
+	array_push($VARS,"const MODAL_".$TMP['MODAL']['ID']." = document.getElementById('MODAL_".$TMP['MODAL']['ID']."');");	
+	unset($JS_TMP);
+	
+	$JS_TMP = 'function Display_A_Principal(){';
+		$JS_TMP .= 'FormErrorReset("A_PRINCIPAL_FORM");';
+		$JS_TMP .= 'FormReset("A_PRINCIPAL_FORM");';
+		if($PP['M'] == '1'){			
+			$JS_TMP .= 'if($("#Table_A_row").val() >= 1){';
+				$JS_TMP .= '$.ajax({url: "'.$LINK_BACK.'/Ver_Licitacion/",data: JSON.stringify({"CEI_ID":$("#Table_A_row").val()})}).done(function (response){';
+					$JS_TMP .= '$("#A_PRINCIPAL_FORM #ID_LICITACION").val(response.ID);';
+					$JS_TMP .= '$("#A_PRINCIPAL_FORM #APERTURA").val(response.APERTURA);';
+					$JS_TMP .= '$("#A_PRINCIPAL_FORM #EXPEDIENTE").val(response.EXPEDIENTE);';
+					$JS_TMP .= '$("#A_PRINCIPAL_FORM #OBJETO").val(response.OBJETO);';
+					$JS_TMP .= '$("#A_PRINCIPAL_FORM #TRAMITE").val(response.TRAMITE);';
+				$JS_TMP .= '});';
+			$JS_TMP .= '}';
+		}
+		$JS_TMP .= '$("#MODAL_A_PRINCIPAL #AUTOFOCUS").val("APERTURA");';
+		$JS_TMP .= 'MODAL_A_PRINCIPAL_INSTANCE.show();';		
+	$JS_TMP .= '}';	
+
+	$JS_TMP .= 'function MODAL_A_PRINCIPAL_Procesar(){';
+		$JS_TMP .= 'if($("#A_PRINCIPAL_FORM")[0].reportValidity()==false){return;}';
+		$JS_TMP .= 'FormErrorReset("A_PRINCIPAL_FORM");';
+		$JS_TMP .= '$.ajax({url: "'.$LINK_BACK.'/Procesar_Licitacion/",data: JSON.stringify(FormDataPicker("A_PRINCIPAL_FORM"))}).done(function (response){';
+			$JS_TMP .= 'if(response.RESULTADO == "OK"){';
+				$JS_TMP .= 'TableLoad("A");';
+				$JS_TMP .= 'MODAL_A_PRINCIPAL_INSTANCE.hide();';
+				$JS_TMP .= SF('OK');
+			$JS_TMP .= '}else{';
+				$JS_TMP .= 'if(response.MESSAGE != ""){'.SF('MSG', 'response.MESSAGE').'}';
+				$JS_TMP .= 'else{'.SF('ERROR').'}';
+			$JS_TMP .= '}';
+		$JS_TMP .= '});';
+	$JS_TMP .= '}';		
+	array_push($FUNCTIONS,$JS_TMP);
+}
+
+if(in_array('Display_A_Lock', $TABLE_FUNCTION)){
+	unset($JS_TMP);
+	$JS_TMP['SEND'] 				= 'CEI_ID';
+	$JS_TMP['RESPONSE_ID']			= 'ID_LICITACION';
+	$JS_TMP['RESPONSE_STATUS']		= '';
+	$JS_TMP['RESPONSE_MESSAGE']		= "bloquear/desbloquear el expediente ' + response.EXPEDIENTE";
+	$JS_TMP['TARGET_CHECK']			= $LINK_BACK.'/Ver_Licitacion/';
+	$JS_TMP['TARGET_SUBMIT']		= "'".$LINK_BACK."/Procesar_Licitacion_Status'";
+	$JS_TMP['TARGET_SUBMIT_DATA']	= '{"CEI_ID": response.ID}';
+	array_push($FUNCTIONS,SF_Lock('A',$JS_TMP));
+}
+?>

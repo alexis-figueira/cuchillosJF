@@ -1,0 +1,85 @@
+<?php
+$TABS['A'] =  array('ICON' => '<i class="fa-solid fa-user"></i>', 'TITLE' => 'Empleados');
+
+$TABLE['A']['COLUMNAS']			= array(
+	array('COLUMNA' => 'Nombre y Apellido', 'DB' => 'AGENTE'),
+	array('COLUMNA' => 'CUIL'),
+	array('COLUMNA' => 'Contrato', 'DB' => 'GRUPO'),
+	array('COLUMNA' => 'Estado', 'DB' => 'DISPONIBLE')
+);
+$TABLE['A']['AJAX_URL'] 		= $LINK_BACK.'/Listado_Empleados';
+$TABLE['A']['HERRAMIENTAS'] 	= array('ALTA' => 'A','EDIT' => 'M','LOCK' => 'B', 'QUICK_SEARCH' => 'C', 'REFRESH' => 'C');
+$TABLE['A']['SETTING'] 			= array('ORDENAR' => "TRUE", 'ORDENAR_COL' => 1,'ORDENAR_METHOD' => 'ASC', 'DOBLE_CLICK' => 'Display_A_Principal');
+$TABLE['A']['QUICK_SEARCH']		= "Buscar Nombre o Cuil";
+
+$MAIN = CreateMain($TABS, $TABLE);
+
+
+if(in_array('Display_A_Principal', $TABLE_FUNCTION)){
+	unset($TMP);
+	$TMP['MODAL']['ID']			= 'A_PRINCIPAL';
+	$TMP['MODAL']['TITLE']		= 'Empleados';
+	$TMP['MODAL']['SIZE']		= '';
+	
+	$TMP['FOOTER']['SUBMIT'] 	= array('ID' => 'Guardar');
+	$TMP['FOOTER']['CLOSE']		= array('ID' => 'Cerrar');
+	
+	$TMP['BODY'] = '<input type="hidden" id="AUTOFOCUS">';
+	$TMP['BODY'] .= '<form id="'.$TMP['MODAL']['ID'].'_FORM" autocomplete="off">';		
+		$TMP['BODY'] .= CreateFormInput(array('ID' => 'id_agente', 'TIPO' => 'hidden', 'VALIDATE' => 'CES', 'VALUE' => 0));
+		$TMP['BODY'] .= CreateFormInput(array('ID' => 'agente', 'TIPO' => 'text', 'VALIDATE' => 'CTS', 'REQUIRED' => TRUE, 'MAXLENGTH' => 255, 'LABEL' => 'Nombre y Apellido Completo'));
+		$TMP['BODY'] .= CreateFormInput(array('ID' => 'cuil', 'TIPO' => 'number', 'VALIDATE' => 'CPC', 'REQUIRED' => TRUE));
+		$TMP['BODY'] .= CreateFormInput(array('ID' => 'grupo', 'TIPO' => 'select', 'VALIDATE' => 'CTS','OPTIONS' => $CFG_VIANDAS_EMPLEADOS_GRUPOS, 'REQUIRED' => TRUE, 'LABEL' => 'Tipo de contrato'));
+		
+	$TMP['BODY'] .= '</form>';
+	array_push($MODALS,CreateModal($TMP['MODAL'], $TMP['BODY'], $TMP['FOOTER']));
+	array_push($VARS,"const MODAL_".$TMP['MODAL']['ID']."_INSTANCE = bootstrap.Modal.getOrCreateInstance('#MODAL_".$TMP['MODAL']['ID']."');");
+	array_push($VARS,"const MODAL_".$TMP['MODAL']['ID']." = document.getElementById('MODAL_".$TMP['MODAL']['ID']."');");	
+	unset($JS_TMP);
+	
+	$JS_TMP = 'function Display_A_Principal(){';
+		$JS_TMP .= 'FormErrorReset("A_PRINCIPAL_FORM");';
+		$JS_TMP .= 'FormReset("A_PRINCIPAL_FORM");';
+		if($PP['M'] == '1'){			
+			$JS_TMP .= 'if($("#Table_A_row").val() >= 1){';
+				$JS_TMP .= '$.ajax({url: "'.$LINK_BACK.'/Ver_Empleado/",data: JSON.stringify({"CES_ID":$("#Table_A_row").val()})}).done(function (response){';
+					$JS_TMP .= '$("#A_PRINCIPAL_FORM #ID_AGENTE").val(response.ID_AGENTE);';
+					$JS_TMP .= '$("#A_PRINCIPAL_FORM #AGENTE").val(response.AGENTE);';
+					$JS_TMP .= '$("#A_PRINCIPAL_FORM #CUIL").val(response.CUIL);';
+					$JS_TMP .= '$("#A_PRINCIPAL_FORM #GRUPO").val(response.GRUPO);';
+				$JS_TMP .= '});';
+			$JS_TMP .= '}';
+		}
+		$JS_TMP .= '$("#MODAL_A_PRINCIPAL #AUTOFOCUS").val("AGENTE");';
+		$JS_TMP .= 'MODAL_A_PRINCIPAL_INSTANCE.show();';		
+	$JS_TMP .= '}';	
+
+	$JS_TMP .= 'function MODAL_A_PRINCIPAL_Procesar(){';
+		$JS_TMP .= 'if($("#A_PRINCIPAL_FORM")[0].reportValidity()==false){return;}';
+		$JS_TMP .= 'FormErrorReset("A_PRINCIPAL_FORM");';
+		$JS_TMP .= '$.ajax({url: "'.$LINK_BACK.'/Procesar_Empleados/",data: JSON.stringify(FormDataPicker("A_PRINCIPAL_FORM"))}).done(function (response){';
+			$JS_TMP .= 'if(response.RESULTADO == "OK"){';
+				$JS_TMP .= 'TableLoad("A");';
+				$JS_TMP .= 'MODAL_A_PRINCIPAL_INSTANCE.hide();';
+				$JS_TMP .= SF('OK');
+			$JS_TMP .= '}else{';
+				$JS_TMP .= 'if(response.MESSAGE != ""){'.SF('MSG', 'response.MESSAGE').'}';
+				$JS_TMP .= 'else{'.SF('ERROR').'}';
+			$JS_TMP .= '}';
+		$JS_TMP .= '});';
+	$JS_TMP .= '}';		
+	array_push($FUNCTIONS,$JS_TMP);
+}
+
+if(in_array('Display_A_Lock', $TABLE_FUNCTION)){
+	unset($JS_TMP);
+	$JS_TMP['SEND'] 				= 'CES_ID';
+	$JS_TMP['RESPONSE_ID']			= 'ID_AGENTE';
+	$JS_TMP['RESPONSE_STATUS']		= '';
+	$JS_TMP['RESPONSE_MESSAGE']		= "bloquear/desbloquear el agente ' + response.AGENTE + '. Esta accion ANULA LOS PEDIDOS PENDIENTES'";
+	$JS_TMP['TARGET_CHECK']			= $LINK_BACK.'/Ver_Empleado/';
+	$JS_TMP['TARGET_SUBMIT']		= "'".$LINK_BACK."/Procesar_Empleados_Status'";
+	$JS_TMP['TARGET_SUBMIT_DATA']	= '{"CES_ID": response.ID_AGENTE}';
+	array_push($FUNCTIONS,SF_Lock('A',$JS_TMP));
+}
+?>

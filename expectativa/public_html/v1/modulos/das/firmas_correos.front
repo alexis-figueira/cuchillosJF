@@ -1,0 +1,77 @@
+<?php
+
+$MAIN = '<div class="card border-dark mx-auto" style="max-width: 910px">';
+	$MAIN .= '<div class="card-header card-main  gradient_card rounded-2 text-light" id="card-main" style="--bs-bg-opacity: .95;">';
+		$MAIN .= '<div class="d-grid gap-2 d-flex justify-content-center">';
+			$MAIN .= '<ul class="nav nav-pills tabs-buttons">';					
+				$MAIN .= '<li class="nav-item">';
+					$MAIN .= '<button class="nav-link text-light mx-1 active" type="button" role="tab" aria-controls="Firmas" aria-selected="true">';
+						$MAIN .= '<div class="d-inline-flex"><i class="fa-solid fa-signature"></i></div>';
+						$MAIN .= '<div class="d-inline-block"><span class="d-none d-md-block text-center card_header_btn">Firmas</span></div>';									
+					$MAIN .= '</button>';
+				$MAIN .= '</li>';
+			$MAIN .= '</ul>';
+		$MAIN .= '</div>';
+	$MAIN .= '</div>';
+	$MAIN .= '<div class="card text-center border border-0">';
+		$MAIN .= '<div class="card-body mt-3 mb-4 px-4 py-2">';
+			$MAIN .= '<div class="tab-content tabs-body">';
+				$MAIN .= '<form id="FIRMA_FORM" autocomplete="off">';
+					$MAIN .= '<div class="form-floating mb-3">';
+						$MAIN .= '<input type="text" class="form-control FormEnter" id="NOMBRE" placeholder="NOMBRE" maxlength="255" autofocus>';
+						$MAIN .= '<label for="NOMBRE">Nombre y Apellido (No Obligatorio)</label>';
+					$MAIN .= '</div>';
+					$MAIN .= '<div class="form-floating mb-3">';
+						$MAIN .= '<input type="text" class="form-control FormEnter" id="SECTOR" placeholder="SECTOR" maxlength="255" required>';
+						$MAIN .= '<label for="SECTOR">Sector</label>';
+					$MAIN .= '</div>';
+					$MAIN .= '<div class="form-floating mb-3">';
+						$MAIN .= '<input type="text" class="form-control FormEnter" id="OFICINA" placeholder="OFICINA" maxlength="255" value="Alsina 1825 - XXX Piso - Of: XXX - CABA" required>';
+						$MAIN .= '<label for="OFICINA">Oficina</label>';
+					$MAIN .= '</div>';
+					$MAIN .= '<div class="form-floating mb-3">';
+						$MAIN .= '<input type="text" class="form-control FormEnter" id="CONTACTO" placeholder="CONTACTO" maxlength="255" value="Teléfono: 0810-222-0317" disabled readonly required>';
+						$MAIN .= '<label for="CONTACTO">Contacto</label>';
+					$MAIN .= '</div>';
+				$MAIN .= '</form>';
+				$MAIN .= '<button type="button" class="btn btn-sm btn-footer btn-modal-footer btn-outline-success" onClick="Firma_Procesar()">Guardar</button>';
+			$MAIN .= '</div>';
+		$MAIN .= '</div>';
+	$MAIN .= '</div>';
+$MAIN .= '</div>';
+
+$MAIN .= '<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">';
+	$MAIN .= '<div class="modal-dialog modal-lg modal-dialog-centered">';
+		$MAIN .= '<div class="modal-content">';
+			$MAIN .= '<div class="modal-header">';
+				$MAIN .= '<h1 class="modal-title fs-5" id="staticBackdropLabel">Firma Generada</h1>';
+				$MAIN .= '<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>';
+			$MAIN .= '</div>';
+			$MAIN .= '<div class="modal-body">';
+				$MAIN .= '<img src="" id="ModalFirma" alt="Firma"/>';
+			$MAIN .= '</div>';
+			$MAIN .= '<div class="modal-footer">';
+				$MAIN .= '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>';
+			$MAIN .= '</div>';
+		$MAIN .= '</div>';
+	$MAIN .= '</div>';
+$MAIN .= '</div>';
+
+array_push($VARS,"const MODAL_FIRMA_INSTANCE = bootstrap.Modal.getOrCreateInstance('#staticBackdrop');");
+
+$JS_TMP = 'function Firma_Procesar(){';
+	$JS_TMP .= 'if($("#FIRMA_FORM")[0].reportValidity()==false){return;}';
+	$JS_TMP .= 'FormErrorReset("FIRMA_FORM");';
+	$JS_TMP .= '$.ajax({url: "'.$LINK_BACK.'/Procesar_Firma/",data: JSON.stringify({"CtS_NOMBRE":$("#FIRMA_FORM #NOMBRE").val(), "CtS_SECTOR":$("#FIRMA_FORM #SECTOR").val(), "CtS_OFICINA":$("#FIRMA_FORM #OFICINA").val(), "CtS_CONTACTO":$("#FIRMA_FORM #CONTACTO").val()})}).done(function (response){';
+		$JS_TMP .= 'if(response.RESULTADO == "OK"){';
+			$JS_TMP .= '$("#ModalFirma").attr("src","data:image/png;base64,"+response.FIRMA);';
+			$JS_TMP .= 'MODAL_FIRMA_INSTANCE.show();';
+			//$JS_TMP .= 'Swal.fire({html: \'<img src="data:image/png;base64,"+response.FIRMA+\'" alt="firma"/>\'});';			
+		$JS_TMP .= '}else{';				
+			$JS_TMP .= 'if(response.MESSAGE != ""){'.SF('MSG', 'response.MESSAGE').'}';
+			$JS_TMP .= 'else{'.SF('ERROR').'}';
+		$JS_TMP .= '}';
+	$JS_TMP .= '});';
+$JS_TMP .= '}';
+array_push($FUNCTIONS,$JS_TMP);
+?>

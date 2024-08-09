@@ -1,0 +1,21 @@
+<?php
+$ZXSD_SIO['HOST'] = 'sio.das.gob.ar';
+$ZXSD_SIO['USER'] = 'Movi';
+$ZXSD_SIO['PASS'] = 'zna8OZpBPvpqocAs';
+
+$ZXS_SIO['P'] = '`dass_base`'; 			
+
+$DBT_SIO = array(
+	"AFILIACION"		=>	$ZXS_SIO['P'].".`padron__afiliacion`",
+	"DATOS"				=>	$ZXS_SIO['P'].".`padron__datos`",
+	"PADRON"			=>	$ZXS_SIO['P'].".`padron__padron`",
+);
+
+try{
+	$GLOBALS['QWE_SIO'] = new PDO("mysql:host=".$ZXSD_SIO['HOST'].";charset=utf8mb4", $ZXSD_SIO['USER'], $ZXSD_SIO['PASS'], [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC]);
+}catch(PDOException $e){
+	echo $e->getMessage();
+	echo "Sitio en mantenimiento.";exit;
+}
+
+?>

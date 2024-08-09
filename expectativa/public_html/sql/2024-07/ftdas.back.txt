@@ -1,0 +1,62 @@
+2024-07-22 17:28:01 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `troquel`, `detalle`, `laboratorio`, `precio` FROM `desa__alexis`.`v_ftdas__general` ORDER BY `troquel` DESC LIMIT 0 ,100
+2024-07-22 17:28:01 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`v_ftdas__general`
+2024-07-26 13:12:05 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `troquel`, `detalle`, `laboratorio`, `precio` FROM `desa__alexis`.`v_ftdas__general` ORDER BY `troquel` DESC LIMIT 0 ,100
+2024-07-26 13:12:05 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`v_ftdas__general`
+2024-07-26 16:23:44 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `troquel`, `detalle`, `laboratorio`, `precio` FROM `desa__alexis`.`v_ftdas__general` ORDER BY `troquel` DESC LIMIT 0 ,100
+2024-07-26 16:23:44 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`v_ftdas__general`
+2024-07-26 16:23:46 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `troquel`, `detalle`, `laboratorio`, `precio` FROM `desa__alexis`.`v_ftdas__mayores` ORDER BY `troquel` DESC LIMIT 0 ,100
+2024-07-26 16:23:46 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`v_ftdas__mayores`
+2024-07-26 16:23:54 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `troquel`, `detalle`, `laboratorio`, `precio` FROM `desa__alexis`.`v_ftdas__general` ORDER BY `troquel` DESC LIMIT 0 ,100
+2024-07-26 16:23:54 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`v_ftdas__general`
+2024-07-29 12:15:38 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `troquel`, `detalle`, `laboratorio`, `precio` FROM `desa__alexis`.`v_ftdas__general` ORDER BY `troquel` DESC LIMIT 0 ,100
+2024-07-29 12:15:38 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`v_ftdas__general`
+2024-07-29 12:16:15 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `troquel`, `detalle`, `laboratorio`, `precio` FROM `desa__alexis`.`v_ftdas__mayores` ORDER BY `troquel` DESC LIMIT 0 ,100
+2024-07-29 12:16:15 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`v_ftdas__mayores`
+2024-07-29 12:16:32 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `troquel`, `detalle`, `laboratorio`, `precio` FROM `desa__alexis`.`v_ftdas__general` ORDER BY `troquel` DESC LIMIT 0 ,100
+2024-07-29 12:16:32 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`v_ftdas__general`
+2024-07-31 11:20:23 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `troquel`, `detalle`, `laboratorio`, `precio` FROM `desa__alexis`.`v_ftdas__general` ORDER BY `troquel` DESC LIMIT 0 ,100
+2024-07-31 11:20:23 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`v_ftdas__general`
+2024-07-31 11:20:24 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `troquel`, `detalle`, `laboratorio`, `precio` FROM `desa__alexis`.`v_ftdas__mayores` ORDER BY `troquel` DESC LIMIT 0 ,100
+2024-07-31 11:20:24 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`v_ftdas__mayores`
+2024-07-31 11:20:27 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `troquel`, `detalle`, `laboratorio`, `precio` FROM `desa__alexis`.`v_ftdas__general` ORDER BY `troquel` DESC LIMIT 0 ,100
+2024-07-31 11:20:27 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`v_ftdas__general`
+2024-07-31 11:20:29 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `troquel`, `detalle`, `laboratorio`, `precio` FROM `desa__alexis`.`v_ftdas__mayores` ORDER BY `troquel` DESC LIMIT 0 ,100
+2024-07-31 11:20:29 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`v_ftdas__mayores`
+2024-07-31 11:59:35 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `troquel`, `detalle`, `laboratorio`, `precio` FROM `desa__alexis`.`v_ftdas__general` ORDER BY `troquel` DESC LIMIT 0 ,100
+2024-07-31 11:59:35 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`v_ftdas__general`
+2024-07-31 11:59:54 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `troquel` FROM `desa__alexis`.`v_ftdas__general` WHERE `troquel` ='9960682'
+2024-07-31 11:59:54 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_precio`,`precio`, `fecha` FROM `desa__alexis`.`alfabeta__precios` WHERE `troquel` = '9960682' ORDER BY `fecha` DESC LIMIT 0 ,100
+2024-07-31 11:59:54 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`alfabeta__precios` WHERE `troquel` = '9960682'
+2024-07-31 12:00:18 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `troquel` FROM `desa__alexis`.`v_ftdas__general` WHERE `troquel` ='9960682'
+2024-07-31 12:00:18 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_precio`,`precio`, `fecha` FROM `desa__alexis`.`alfabeta__precios` WHERE `troquel` = '9960682' ORDER BY `fecha` DESC LIMIT 0 ,100
+2024-07-31 12:00:18 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`alfabeta__precios` WHERE `troquel` = '9960682'
+2024-07-31 12:00:21 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `troquel` FROM `desa__alexis`.`v_ftdas__general` WHERE `troquel` ='9960633'
+2024-07-31 12:00:21 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_precio`,`precio`, `fecha` FROM `desa__alexis`.`alfabeta__precios` WHERE `troquel` = '9960633' ORDER BY `fecha` DESC LIMIT 0 ,100
+2024-07-31 12:00:21 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`alfabeta__precios` WHERE `troquel` = '9960633'
+2024-07-31 12:00:24 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `troquel` FROM `desa__alexis`.`v_ftdas__general` WHERE `troquel` ='9960633'
+2024-07-31 12:00:24 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_precio`,`precio`, `fecha` FROM `desa__alexis`.`alfabeta__precios` WHERE `troquel` = '9960633' ORDER BY `fecha` DESC LIMIT 0 ,100
+2024-07-31 12:00:24 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`alfabeta__precios` WHERE `troquel` = '9960633'
+2024-07-31 12:00:34 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `troquel`, `detalle`, `laboratorio`, `precio` FROM `desa__alexis`.`v_ftdas__mayores` ORDER BY `troquel` DESC LIMIT 0 ,100
+2024-07-31 12:00:34 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`v_ftdas__mayores`
+2024-07-31 12:00:37 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `troquel`, `detalle`, `laboratorio`, `precio` FROM `desa__alexis`.`v_ftdas__general` ORDER BY `troquel` DESC LIMIT 0 ,100
+2024-07-31 12:00:37 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`v_ftdas__general`
+2024-07-31 12:00:38 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `troquel` FROM `desa__alexis`.`v_ftdas__general` WHERE `troquel` ='9960631'
+2024-07-31 12:00:38 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_precio`,`precio`, `fecha` FROM `desa__alexis`.`alfabeta__precios` WHERE `troquel` = '9960631' ORDER BY `fecha` DESC LIMIT 0 ,100
+2024-07-31 12:00:38 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`alfabeta__precios` WHERE `troquel` = '9960631'
+2024-07-31 12:00:40 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `troquel`, `detalle`, `laboratorio`, `precio` FROM `desa__alexis`.`v_ftdas__mayores` ORDER BY `troquel` DESC LIMIT 0 ,100
+2024-07-31 12:00:40 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`v_ftdas__mayores`
+2024-07-31 12:00:44 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `troquel`, `detalle`, `laboratorio`, `precio` FROM `desa__alexis`.`v_ftdas__general` ORDER BY `troquel` DESC LIMIT 0 ,100
+2024-07-31 12:00:44 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`v_ftdas__general`
+2024-07-31 12:04:14 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `troquel`, `detalle`, `laboratorio`, `precio` FROM `desa__alexis`.`v_ftdas__general` ORDER BY `troquel` DESC LIMIT 0 ,100
+2024-07-31 12:04:14 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`v_ftdas__general`
+2024-07-31 12:07:59 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `troquel` FROM `desa__alexis`.`v_ftdas__general` WHERE `troquel` ='9960535'
+2024-07-31 12:07:59 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_precio`,`precio`, `fecha` FROM `desa__alexis`.`alfabeta__precios` WHERE `troquel` = '9960535' ORDER BY `fecha` DESC LIMIT 0 ,100
+2024-07-31 12:07:59 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`alfabeta__precios` WHERE `troquel` = '9960535'
+2024-07-31 12:08:08 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `troquel` FROM `desa__alexis`.`v_ftdas__general` WHERE `troquel` ='9960535'
+2024-07-31 12:08:08 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_precio`,`precio`, `fecha` FROM `desa__alexis`.`alfabeta__precios` WHERE `troquel` = '9960535' ORDER BY `fecha` DESC LIMIT 0 ,100
+2024-07-31 12:08:08 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`alfabeta__precios` WHERE `troquel` = '9960535'
+2024-07-31 12:14:01 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `troquel` FROM `desa__alexis`.`v_ftdas__general` WHERE `troquel` ='9960682'
+2024-07-31 12:14:01 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_precio`,`precio`, `fecha` FROM `desa__alexis`.`alfabeta__precios` WHERE `troquel` = '9960682' ORDER BY `fecha` DESC LIMIT 0 ,100
+2024-07-31 12:14:01 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`alfabeta__precios` WHERE `troquel` = '9960682'
+2024-07-31 12:23:36 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `troquel`, `detalle`, `laboratorio`, `precio` FROM `desa__alexis`.`v_ftdas__general` ORDER BY `troquel` DESC LIMIT 0 ,100
+2024-07-31 12:23:36 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`v_ftdas__general`

@@ -1,0 +1,180 @@
+<?php
+
+$TABS['A'] =  array('ICON' => '<i class="fa-solid fa-prescription-bottle-medical"></i>', 'TITLE' => 'General');
+$TABS['B'] =  array('ICON' => '<i class="fa-solid fa-prescription-bottle-medical"></i>', 'TITLE' => 'Mayores');
+
+$TABLE['A']['COLUMNAS']			= array(
+	array('COLUMNA' => 'Troquel'),
+	array('COLUMNA' => 'Laboratorio'),
+	array('COLUMNA' => 'Medicamento'),
+	array('COLUMNA' => 'Precio'),
+	array('COLUMNA' => 'Precio Das', 'DB' => 'DAS')
+);
+$TABLE['A']['AJAX_URL'] 		= $LINK_BACK.'/Listado_Vademecum_General';
+$TABLE['A']['HERRAMIENTAS'] 	= array('ALTA' => 'A', 'INFO' => 'C','QUICK_SEARCH' => 'C', 'REFRESH' => 'C');
+$TABLE['A']['SETTING'] 			= array('ORDENAR' => "TRUE", 'ORDENAR_COL' => 1,'ORDENAR_METHOD' => 'DESC', 'DOBLE_CLICK' => 'Display_A_Info');
+$TABLE['A']['QUICK_SEARCH']		= "Buscar Troquel o Laboratorio o Medicamento";
+
+$TABLE['I']['COLUMNAS']			= array(
+	array('COLUMNA' => 'Fecha'),
+	array('COLUMNA' => 'Precio'),
+	array('COLUMNA' => 'Precio Das', 'DB' => 'DAS')
+);
+$TABLE['I']['AJAX_URL'] 		= $LINK_BACK.'/Listado_Precios_General';
+$TABLE['I']['HERRAMIENTAS'] 	= array('QUICK_SEARCH' => 'C');
+$TABLE['I']['SETTING'] 			= array('ORDENAR' => TRUE, 'ORDENAR_COL' => 1,'ORDENAR_METHOD' => 'DESC');
+$TABLE['I']['QUICK_SEARCH']		= "Buscar Fecha";
+
+$TABLE['B']['COLUMNAS']			= array(
+	array('COLUMNA' => 'Troquel'),
+	array('COLUMNA' => 'Laboratorio'),
+	array('COLUMNA' => 'Medicamento'),
+	array('COLUMNA' => 'Precio'),
+	array('COLUMNA' => 'Precio Das', 'DB' => 'DAS')
+);
+$TABLE['B']['AJAX_URL'] 		= $LINK_BACK.'/Listado_Vademecum_Mayores';
+$TABLE['B']['HERRAMIENTAS'] 	= array('ALTA' => 'A', 'QUICK_SEARCH' => 'C', 'REFRESH' => 'C');
+$TABLE['B']['SETTING'] 			= array('ORDENAR' => "TRUE", 'ORDENAR_COL' => 1,'ORDENAR_METHOD' => 'DESC');
+$TABLE['B']['QUICK_SEARCH']		= "Buscar Troquel o Laboratorio o Medicamento";
+
+$MAIN = CreateMain($TABS, $TABLE);
+
+
+if(in_array('Display_A_Principal', $TABLE_FUNCTION)){
+	unset($TMP);
+	$TMP['MODAL']['ID']			= 'A_PRINCIPAL';
+	$TMP['MODAL']['TITLE']		= 'Subir Vademecum';
+	$TMP['MODAL']['SIZE']		= 'LG';
+	
+	$TMP['FOOTER']['SUBMIT'] 	= array('ID' => 'Guardar');
+	$TMP['FOOTER']['CLOSE']		= array('ID' => 'Cerrar');
+	
+	$TMP['BODY'] = '<input type="hidden" id="AUTOFOCUS">';
+	$TMP['BODY'] .= '<form id="'.$TMP['MODAL']['ID'].'_FORM" autocomplete="off">';
+		$TMP['BODY'] .= '<div class="alert alert-danger fw-bold" role="alert">';
+			$TMP['BODY'] .= '<ul>';
+				$TMP['BODY'] .= '<li>El proceso solo controla la columna A (TROQUEL)!</li>';
+				$TMP['BODY'] .= '<li>De ser necesario, unificar archivos antes de procesar!</li>';
+				$TMP['BODY'] .= '<li>El proceso da de baja todos los troqueles no encontrados!</li>';
+			$TMP['BODY'] .= '</ul>';
+		$TMP['BODY'] .= '</div>';
+		$TMP['BODY'] .= CreateFormInput(array('ID' => 'archivo', 'TIPO' => 'file', 'VALIDATE' => 'CBN', 'REQUIRED' => TRUE));
+	$TMP['BODY'] .= '</form>';
+	array_push($MODALS,CreateModal($TMP['MODAL'], $TMP['BODY'], $TMP['FOOTER']));
+	array_push($VARS,"const MODAL_".$TMP['MODAL']['ID']."_INSTANCE = bootstrap.Modal.getOrCreateInstance('#MODAL_".$TMP['MODAL']['ID']."');");
+	array_push($VARS,"const MODAL_".$TMP['MODAL']['ID']." = document.getElementById('MODAL_".$TMP['MODAL']['ID']."');");	
+	unset($JS_TMP);
+	
+	$JS_TMP = 'function Display_A_Principal(){';
+		$JS_TMP .= 'FormErrorReset("A_PRINCIPAL_FORM");';
+		$JS_TMP .= 'FormReset("A_PRINCIPAL_FORM");';
+		$JS_TMP .= '$("#MODAL_A_PRINCIPAL #AUTOFOCUS").val("ARCHIVO");';
+		$JS_TMP .= 'MODAL_A_PRINCIPAL_INSTANCE.show();';		
+	$JS_TMP .= '}';	
+
+	$JS_TMP .= 'function MODAL_A_PRINCIPAL_Procesar(){';
+		$JS_TMP .= 'if($("#A_PRINCIPAL_FORM")[0].reportValidity()==false){return;}';
+		$JS_TMP .= 'FormErrorReset("A_PRINCIPAL_FORM");';		
+		$JS_TMP .= '$.ajax({url: "'.$LINK_BACK.'/Procesar_Vademecum_General/",data: JSON.stringify(FormDataPicker("A_PRINCIPAL_FORM"))}).done(function (response){';
+			$JS_TMP .= 'if(response.RESULTADO == "OK"){';
+				$JS_TMP .= 'TableLoad("A");';
+				$JS_TMP .= 'MODAL_A_PRINCIPAL_INSTANCE.hide();';
+				$JS_TMP .= SF('OK');
+			$JS_TMP .= '}else{';
+				$JS_TMP .= 'if(response.MESSAGE != ""){'.SF('MSG', 'response.MESSAGE').'}';
+				$JS_TMP .= 'else{'.SF('ERROR').'}';
+			$JS_TMP .= '}';
+		$JS_TMP .= '});';
+	$JS_TMP .= '}';
+	
+	$JS_TMP .= CreateFormUpload('ARCHIVO','A_PRINCIPAL_FORM', 'EXCEL');
+	array_push($FUNCTIONS,$JS_TMP);
+}
+
+if(in_array('Display_A_Info', $TABLE_FUNCTION)){
+	unset($TMP);
+	$TMP['MODAL']['ID']					= 'INFO';
+	$TMP['MODAL']['TITLE']				= 'Listado Precios';
+	$TMP['MODAL']['SIZE']				= 'LG';
+	
+	$TMP['FOOTER']['CLOSE']	= array('ID' => 'Cerrar');
+	
+	$TMP['FOOTER_TOOLS'] = CreateTableTools('INFO', $TABLE['I'], FALSE);
+	$TMP['BODY'] = CreateTable('INFO', $TABLE['I']);
+	$TMP['FOOTER'] = '<div class="row align-items-center w-100">';
+		$TMP['FOOTER'] .= '<div class="col-lg-3 text-start  d-none d-lg-block	text-white" id="Table_'.$TMP['MODAL']['ID'].'_Pagination"></div>';						
+		$TMP['FOOTER'] .= '<div class="col-lg-6 col-12 text-center text-white" id="Table_'.$TMP['MODAL']['ID'].'_Tools">';
+			$TMP['FOOTER'] .= $TMP['FOOTER_TOOLS'];
+		$TMP['FOOTER'] .= '</div>';
+		$TMP['FOOTER'] .= '<div class="col-lg-3 text-end d-none d-lg-block" id="Table_'.$TMP['MODAL']['ID'].'_Resultados"></div>';
+	$TMP['FOOTER'] .= '</div>';
+	array_push($MODALS,CreateModal($TMP['MODAL'], $TMP['BODY'], $TMP['FOOTER']));
+	array_push($VARS,"const MODAL_".$TMP['MODAL']['ID']."_INSTANCE = bootstrap.Modal.getOrCreateInstance('#MODAL_".$TMP['MODAL']['ID']."');");
+	array_push($VARS,"const MODAL_".$TMP['MODAL']['ID']." = document.getElementById('MODAL_".$TMP['MODAL']['ID']."');");
+	
+	$JS_TMP = 'function Display_A_Info(){';
+		$JS_TMP .= 'if($("#Table_A_row").val() >= 1){';
+			$JS_TMP .= '$("#MODAL_INFO #TITLE_INFO").html("Listado Movimientos: "+$("#Row_A_" + $("#Table_A_row").val()).find("td").eq(0).html());';
+			$JS_TMP .= '$("#Table_INFO_advanced").val($("#Table_A_row").val());';
+			$JS_TMP .= 'TableLoad("INFO");';
+			$JS_TMP .= 'MODAL_INFO_INSTANCE.show();';			
+		$JS_TMP .= '}else{';
+			$JS_TMP .= SF('ERROR');
+		$JS_TMP .= '}';
+	$JS_TMP .= '}';
+	array_push($FUNCTIONS,$JS_TMP);
+	unset($JS_TMP);
+}
+
+if(in_array('Display_B_Principal', $TABLE_FUNCTION)){
+	unset($TMP);
+	$TMP['MODAL']['ID']			= 'B_PRINCIPAL';
+	$TMP['MODAL']['TITLE']		= 'Subir Vademecum';
+	$TMP['MODAL']['SIZE']		= 'LG';
+	
+	$TMP['FOOTER']['SUBMIT'] 	= array('ID' => 'Guardar');
+	$TMP['FOOTER']['CLOSE']		= array('ID' => 'Cerrar');
+	
+	$TMP['BODY'] = '<input type="hidden" id="AUTOFOCUS">';
+	$TMP['BODY'] .= '<form id="'.$TMP['MODAL']['ID'].'_FORM" autocomplete="off">';
+		$TMP['BODY'] .= '<div class="alert alert-danger fw-bold" role="alert">';
+			$TMP['BODY'] .= '<ul>';
+				$TMP['BODY'] .= '<li>El proceso solo controla la columna A (TROQUEL)!</li>';
+				$TMP['BODY'] .= '<li>De ser necesario, unificar archivos antes de procesar!</li>';
+				$TMP['BODY'] .= '<li>El proceso da de baja todos los troqueles no encontrados!</li>';
+			$TMP['BODY'] .= '</ul>';
+		$TMP['BODY'] .= '</div>';
+		$TMP['BODY'] .= CreateFormInput(array('ID' => 'archivo', 'TIPO' => 'file', 'VALIDATE' => 'CBN', 'REQUIRED' => TRUE));
+	$TMP['BODY'] .= '</form>';
+	array_push($MODALS,CreateModal($TMP['MODAL'], $TMP['BODY'], $TMP['FOOTER']));
+	array_push($VARS,"const MODAL_".$TMP['MODAL']['ID']."_INSTANCE = bootstrap.Modal.getOrCreateInstance('#MODAL_".$TMP['MODAL']['ID']."');");
+	array_push($VARS,"const MODAL_".$TMP['MODAL']['ID']." = document.getElementById('MODAL_".$TMP['MODAL']['ID']."');");	
+	unset($JS_TMP);
+	
+	$JS_TMP = 'function Display_B_Principal(){';
+		$JS_TMP .= 'FormErrorReset("B_PRINCIPAL_FORM");';
+		$JS_TMP .= 'FormReset("B_PRINCIPAL_FORM");';
+		$JS_TMP .= '$("#MODAL_B_PRINCIPAL #AUTOFOCUS").val("ARCHIVO");';
+		$JS_TMP .= 'MODAL_B_PRINCIPAL_INSTANCE.show();';		
+	$JS_TMP .= '}';	
+
+	$JS_TMP .= 'function MODAL_B_PRINCIPAL_Procesar(){';
+		$JS_TMP .= 'if($("#B_PRINCIPAL_FORM")[0].reportValidity()==false){return;}';
+		$JS_TMP .= 'FormErrorReset("B_PRINCIPAL_FORM");';		
+		$JS_TMP .= '$.ajax({url: "'.$LINK_BACK.'/Procesar_Vademecum_Mayores/",data: JSON.stringify(FormDataPicker("B_PRINCIPAL_FORM"))}).done(function (response){';
+			$JS_TMP .= 'if(response.RESULTADO == "OK"){';
+				$JS_TMP .= 'TableLoad("B");';
+				$JS_TMP .= 'MODAL_B_PRINCIPAL_INSTANCE.hide();';
+				$JS_TMP .= SF('OK');
+			$JS_TMP .= '}else{';
+				$JS_TMP .= 'if(response.MESSAGE != ""){'.SF('MSG', 'response.MESSAGE').'}';
+				$JS_TMP .= 'else{'.SF('ERROR').'}';
+			$JS_TMP .= '}';
+		$JS_TMP .= '});';
+	$JS_TMP .= '}';
+	
+	$JS_TMP .= CreateFormUpload('ARCHIVO','B_PRINCIPAL_FORM', 'EXCEL');
+	array_push($FUNCTIONS,$JS_TMP);
+}
+
+?>

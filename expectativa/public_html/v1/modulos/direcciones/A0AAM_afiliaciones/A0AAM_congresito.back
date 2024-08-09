@@ -1,0 +1,108 @@
+<?php
+if($ROUTE_OPC == 'DL_Menu'){
+	$RETURN =array();
+	if($PP['C'] != 1){EJE($RETURN);}
+	if(CIJE('CFA_FECHA') === TRUE){EJE($RETURN);}
+	$Que = QuerySelect("SELECT `id_menu`, `tipo`, `menu` FROM ".$DBT['VIANDAS_MENU']." WHERE `fecha` = '".$sJ['CFA_FECHA']."' AND `estado` = 1");
+	while($Row = QueryFetch($Que)){
+		$TMP = [];
+		$TMP['ID']		= $Row['id_menu'];
+		$TMP['VALUE']	= '<input type="radio" class="btn-check" name="MENU" id="Menu_'.$Row['id_menu'].'" value="'.$Row['id_menu'].'" validate="CEI"><label class="btn btn-outline-secondary text-wrap w-100 mb-2" for="Menu_'.$Row['id_menu'].'"><em><b>'.$Row['tipo'].'</b></em> - '.$Row['menu'].'</label>';;
+		array_push($RETURN, $TMP);
+	}
+	EJE($RETURN);
+}
+elseif($ROUTE_OPC == 'Listado_Activos'){
+	$RETURN['COUNT'] = 0;
+	$RETURN['TOTAL'] = 0;
+	$RETURN['PAGINAS'] = 1;
+	$RETURN['ROWS'] = [];
+	/*
+	if($PP['C'] != 1){EJE($RETURN);}
+	$ARRAY_ORDER = array(1 => '`fecha` {METHOD}', 2 => '`tipo` {METHOD}', 3 => '`menu` {METHOD}');
+	$FORM = LISTADO_QUERY($ARRAY_ORDER);
+	$SEARCH = "WHERE VE.`cuil` = '".$C_USER['CUIL']."'";
+	$Que = QuerySelect("SELECT VP.`id_pedido`, VM.`fecha`,  VE.`agente`, VM.`tipo`, VM.`menu`, VP.`estado` FROM ".$DBT['VIANDAS_PEDIDOS']." VP LEFT JOIN ".$DBT['VIANDAS_MENU']." VM ON VM.id_menu=VP.id_menu LEFT JOIN ".$DBT['VIANDAS_EMPLEADOS']." VE ON VE.id_agente=VP.id_empleado ".$SEARCH." ORDER BY ".$FORM['ORDENAR']." LIMIT ".$FORM['LIMIT']." ,".$FORM['ROWS']);
+	while($Row = QueryFetch($Que)){
+		$RETURN['COUNT']++;
+		$TMP = [];
+		$TMP['ID'] 						= $Row['id_pedido'];
+		$TMP['DATA']['FECHA'] 			= Fecha_Formato($Row['fecha']);
+		$TMP['DATA']['TIPO'] 			= $Row['tipo'];
+		$TMP['DATA']['MENU'] 			= $Row['menu'];
+		//if($Row['estado'] >= 1){$TMP['DATA']['ESTADO'] = '<i class="fa-solid fa-circle-check link-success" title="DISPONIBLE"></i>';}
+		//if($Row['estado'] == 0){$TMP['DATA']['ESTADO'] = '<i class="fa-solid fa-circle-xmark link-danger" title="ANULADO"></i>';}
+		if($Row['estado'] == 4){$TMP['DATA']['ESTADO'] = '<i class="fa-solid fa-circle-xmark link-danger" title="NO RETIRADO"></i>';}	
+		if($Row['estado'] == 3){$TMP['DATA']['ESTADO'] = '<i class="fa-solid fa-circle-check link-success" title="RETIRADO"></i>';}	
+		if($Row['estado'] == 2){$TMP['DATA']['ESTADO'] = '<i class="fa-solid fa-circle-check link-success" title="ENCARGADO"></i>';}	
+		if($Row['estado'] == 1){$TMP['DATA']['ESTADO'] = '<i class="fa-solid fa-circle-check link-success" title="DISPONIBLE"></i>';}
+		if($Row['estado'] == 0){$TMP['DATA']['ESTADO'] = '<i class="fa-solid fa-circle-xmark link-danger" title="ANULADO"></i>';}	
+		array_push($RETURN['ROWS'], $TMP);
+		unset($TMP);
+	}
+	$Que = QuerySelect("SELECT COUNT(*) AS 'total' FROM ".$DBT['VIANDAS_PEDIDOS']." VP LEFT JOIN ".$DBT['VIANDAS_MENU']." VM ON VM.id_menu=VP.id_menu LEFT JOIN ".$DBT['VIANDAS_EMPLEADOS']." VE ON VE.id_agente=VP.id_empleado ".$SEARCH);
+	while($Row = QueryFetch($Que)){	
+		$RETURN['TOTAL'] = $Row['total'];
+		$RETURN['PAGINAS'] = ceil($RETURN['TOTAL']/$FORM['ROWS']);
+	}
+	*/
+	EJE($RETURN);
+}
+elseif($ROUTE_OPC == 'Procesar_Pedido'){
+
+	if($PP['A'] == 0){RJRE();}
+	if(CIJE('CFA_FECHA') === TRUE){RJRE();};
+	if(CIJE('CEI_MENU') === TRUE){RJRE();};
+	if(CIJE('CIB_CONFIRMAR') === TRUE){RJRE();};
+
+	$Que = QuerySelect("SELECT `id_agente` FROM ".$DBT['VIANDAS_EMPLEADOS']." WHERE `cuil` = '".$C_USER['CUIL']."' AND `disponible` = 1");
+	if(QueryNumRows($Que) < 1){RJRE('El agente no esta autorizado');}else{while($Row = QueryFetch($Que)){$ID_AGENTE = $Row['id_agente'];}}
+
+	$Que = QuerySelect("SELECT `id_menu`,`fecha` FROM ".$DBT['VIANDAS_MENU']." WHERE `id_menu` = '".$sJ['CEI_MENU']."' AND `estado` = 1");
+	if(QueryNumRows($Que) < 1){RJRE('El menu no esta disponible');}
+	while($Row = QueryFetch($Que)){
+		if($Row['fecha'] != $sJ['CFA_FECHA']){RJRE();}
+	}
+
+	$Que = QuerySelect("SELECT VP.`id_pedido`, VM.`id_menu`, VM.`menu` FROM ".$DBT['VIANDAS_PEDIDOS']." VP LEFT JOIN ".$DBT['VIANDAS_MENU']." VM ON VP.id_menu=VM.id_menu WHERE VP.id_empleado = '".$ID_AGENTE."' AND VM.fecha = '".$sJ['CFA_FECHA']."' AND VP.estado >= 1");
+	if(QueryNumRows($Que) > 0){
+		while($Row = QueryFetch($Que)){
+			if($sJ['CIB_CONFIRMAR'] == '1'){
+				QueryUpdate("UPDATE ".$DBT['VIANDAS_PEDIDOS']." SET `reg_fecha`=NOW(),`reg_usuario`='".$C_USER['ID']."',`estado`='0' WHERE `id_pedido`= '".$Row['id_pedido']."'");
+			}else{
+				if($Row['id_menu'] == $sJ['CEI_MENU']){RJRO();}
+				$RETURN['RESULTADO'] = 'DUP';$RETURN['MESSAGE'] = $Row['menu'];EJE($RETURN);
+			}
+		}		
+	}
+	
+	$Que = QueryInsert("INSERT INTO ".$DBT['VIANDAS_PEDIDOS']."(`id_empleado`, `id_menu`, `reg_fecha`, `reg_usuario`, `estado`) VALUES ('".$ID_AGENTE."', '".$sJ['CEI_MENU']."', NOW(), '".$C_USER['ID']."', '1')");
+	
+	RJRO();
+}
+elseif($ROUTE_OPC == 'Procesar_Pedido_Status'){
+	if($PP['B'] == 0){RJRE();}
+	if(CIJE('CEI_ID') === TRUE){RJRE();};
+	
+	$Que = QuerySelect("SELECT `id_empleado` FROM ".$DBT['VIANDAS_PEDIDOS']." VP LEFT JOIN ".$DBT['VIANDAS_EMPLEADOS']." VE ON VP.`id_empleado` = VE.`id_agente` WHERE `id_pedido` = '".$sJ['CEI_ID']."' AND VE.`cuil` = '".$C_USER['CUIL']."' AND VP.`estado` = 1");
+	if(QueryNumRows($Que) < 1){RJRE();}
+	while($Row = QueryFetch($Que)){
+		$Que = QueryUpdate("UPDATE ".$DBT['VIANDAS_PEDIDOS']." SET `estado` = '0', `reg_fecha` = NOW(), `reg_usuario` = '".$C_USER['ID']."' WHERE `id_pedido` = '".$sJ['CEI_ID']."'");
+	}
+	RJRO();
+}
+elseif($ROUTE_OPC == 'Ver_Pedido'){
+	$RETURN['ID_PEDIDO'] = 0;
+	if($PP['C'] != 1){EJE($RETURN);}
+	if(CIJE('CEI_ID') === TRUE){$sJ['CEI_ID'] = 0;};
+	$Que = QuerySelect("SELECT VP.`id_pedido`, CONCAT(VM.`tipo`,' - ',VM.`menu`) as `menu` FROM ".$DBT['VIANDAS_PEDIDOS']." VP LEFT JOIN ".$DBT['VIANDAS_MENU']." VM ON VM.id_menu=VP.id_menu WHERE VP.`id_pedido` = '".$sJ['CEI_ID']."' AND VP.`estado` = '1'");	
+	while($Row = QueryFetch($Que)){
+		$RETURN['ID_PEDIDO'] 	= $Row['id_pedido'];
+		$RETURN['MENU'] 		= $Row['menu'];
+	}
+	EJE($RETURN);
+}
+else{
+	EE("NO_SE_PUEDE_PROCESAR_LA_SOLICITUD");
+}
+?>

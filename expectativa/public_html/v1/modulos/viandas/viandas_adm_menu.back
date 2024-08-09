@@ -1,0 +1,200 @@
+<?php
+if($ROUTE_OPC == 'DL_Categorias'){
+	$RETURN =array();
+	if($PP['C'] != 1){EJE($RETURN);}
+	$Que = QuerySelect("SELECT `id_tipo`,`tipo` FROM ".$DBT['VIANDAS_TIPOS']." WHERE `disponible` = '1' ORDER BY `tipo` ASC");
+	while($Row = QueryFetch($Que)){
+		$TMP = [];
+		$TMP['ID']		= $Row['id_tipo'];
+		$TMP['VALUE']	= $Row['tipo'];
+		array_push($RETURN, $TMP);
+	}
+	EJE($RETURN);
+}
+elseif($ROUTE_OPC == 'Listado_Menu'){
+	$RETURN['COUNT'] = 0;
+	$RETURN['TOTAL'] = 0;
+	$RETURN['PAGINAS'] = 1;
+	$RETURN['ROWS'] = [];
+	if($PP['C'] != 1){EJE($RETURN);}
+	$ARRAY_ORDER = array(1 => '`fecha` {METHOD}', 2 => '`tipo` {METHOD}', 3 => '`menu` {METHOD}', 4 => '`precio` {METHOD}', 5 => '`estado` {METHOD}');
+	$FORM = LISTADO_QUERY($ARRAY_ORDER);
+	if($FORM['SEARCH'] != NULL){ $SEARCH = "WHERE `tipo` = '".$FORM['SEARCH']."'";}else{$SEARCH = "";}
+	$Que = QuerySelect("SELECT `id_menu`, `fecha`, `tipo`, `menu`, `precio`,`estado` FROM ".$DBT['VIANDAS_MENU'].$SEARCH." ORDER BY ".$FORM['ORDENAR']." LIMIT ".$FORM['LIMIT']." ,".$FORM['ROWS']);
+	while($Row = QueryFetch($Que)){
+		$RETURN['COUNT']++;
+		$TMP = [];
+		$TMP['ID'] 						= $Row['id_menu'];
+		$TMP['DATA']['FECHA'] 			= Fecha_Formato($Row['fecha']);
+		$TMP['DATA']['TIPO'] 			= $Row['tipo'];
+		$TMP['DATA']['MENU'] 			= $Row['menu'];
+		$TMP['DATA']['PRECIO'] 			= Numero_Formato($Row['precio']);
+		if($Row['estado'] >= 1){$TMP['DATA']['DISPONIBLE'] = '<i class="fa-solid fa-circle-check link-success" title="DISPONIBLE"></i>';}
+		if($Row['estado'] == 0){$TMP['DATA']['DISPONIBLE'] = '<i class="fa-solid fa-circle-check link-danger" title="BLOQUEADO"></i>';}		
+		array_push($RETURN['ROWS'], $TMP);
+		unset($TMP);
+	}
+	$Que = QuerySelect("SELECT COUNT(*) AS 'total' FROM ".$DBT['VIANDAS_MENU'].$SEARCH);
+	while($Row = QueryFetch($Que)){	
+		$RETURN['TOTAL'] = $Row['total'];
+		$RETURN['PAGINAS'] = ceil($RETURN['TOTAL']/$FORM['ROWS']);
+	}
+	EJE($RETURN);
+}
+elseif($ROUTE_OPC == 'Listado_Tipos'){
+	$RETURN['COUNT'] = 0;
+	$RETURN['TOTAL'] = 0;
+	$RETURN['PAGINAS'] = 1;
+	$RETURN['ROWS'] = [];
+	if($PP['E'] != 1){EJE($RETURN);}
+	$ARRAY_ORDER = array(1 => '`tipo` {METHOD}', 2 => '`disponible` {METHOD}');
+	$FORM = LISTADO_QUERY($ARRAY_ORDER);
+	if($FORM['SEARCH'] != NULL){ $SEARCH = "WHERE `tipo` = '".$FORM['SEARCH']."'";}else{$SEARCH = "";}
+	$Que = QuerySelect("SELECT `id_tipo`, `tipo`, `disponible` FROM ".$DBT['VIANDAS_TIPOS'].$SEARCH." ORDER BY ".$FORM['ORDENAR']." LIMIT ".$FORM['LIMIT']." ,".$FORM['ROWS']);
+	while($Row = QueryFetch($Que)){
+		$RETURN['COUNT']++;
+		$TMP = [];
+		$TMP['ID'] 						= $Row['id_tipo'];
+		$TMP['DATA']['TIPO'] 			= $Row['tipo'];
+		if($Row['disponible'] == 1){$TMP['DATA']['DISPONIBLE'] = '<i class="fa-solid fa-circle-check link-success" title="DISPONIBLE"></i>';}
+		if($Row['disponible'] == 0){$TMP['DATA']['DISPONIBLE'] = '<i class="fa-solid fa-circle-check link-danger" title="BLOQUEADO"></i>';}		
+		array_push($RETURN['ROWS'], $TMP);
+		unset($TMP);
+	}
+	$Que = QuerySelect("SELECT COUNT(*) AS 'total' FROM ".$DBT['VIANDAS_TIPOS'].$SEARCH);
+	while($Row = QueryFetch($Que)){	
+		$RETURN['TOTAL'] = $Row['total'];
+		$RETURN['PAGINAS'] = ceil($RETURN['TOTAL']/$FORM['ROWS']);
+	}
+	EJE($RETURN);
+}
+elseif($ROUTE_OPC == 'Procesar_Menu'){
+	if($PP['A'] == 0){RJRE();}
+	if(CIJE('CFA_FECHA') === TRUE){RJRE();};
+	if(CIJE('CDA_PRECIO') === TRUE){RJRE();};
+	
+	$MENUS = '';
+	$Que = QuerySelect("SELECT `id_tipo`,`tipo` FROM ".$DBT['VIANDAS_TIPOS']." WHERE `disponible` = '1'");
+	if(QueryNumRows($Que) < 1){RJRE();}
+	while($Row = QueryFetch($Que)){
+		if(CIJE('CTS_'.$Row['tipo']) === TRUE){RJRE();};
+		if($MENUS != ''){$MENUS .= ', ';}
+		$MENUS .= "('".$sJ['CFA_FECHA']."', '".$Row['tipo']."', '".$sJ['CTS_'.$Row['tipo']]."', '".$sJ['CDA_PRECIO']."', NOW(), '".$C_USER['ID']."', '1')";
+	}
+	
+	$Que = QuerySelect("SELECT `id_menu` FROM ".$DBT['VIANDAS_MENU']." WHERE `fecha` = '".$sJ['CFA_FECHA']."'");
+	if(QueryNumRows($Que) > 0){RJRE('El menu del dia ya se encuentra cargado');}
+	
+	$Que = QueryInsert("INSERT INTO ".$DBT['VIANDAS_MENU']."(`fecha`, `tipo`, `menu`, `precio`, `reg_fecha`, `reg_usuario`, `estado`) VALUES ".$MENUS);
+	RJRO();
+}
+elseif($ROUTE_OPC == 'Procesar_Menu_Editar'){
+	if($PP['M'] == 0){RJRE();}
+	if(CIJE('CES_ID_MENU') === TRUE){RJRE();};
+	if(CIJE('CFA_FECHA') === TRUE){RJRE();};
+	if(CIJE('CTS_TIPO') === TRUE){RJRE();};
+	if(CIJE('CTS_MENU') === TRUE){RJRE();};
+	if(CIJE('CDA_PRECIO') === TRUE){RJRE();};
+	
+	if($sJ['CES_ID_MENU'] == 0){RJRE();};
+	
+	$Que = QuerySelect("SELECT `id_menu`,`fecha`,`tipo`,`menu`,`precio`,`estado` FROM ".$DBT['VIANDAS_MENU']." WHERE `id_menu` = '".$sJ['CES_ID_MENU']."'");
+	if(QueryNumRows($Que) < 1){RJRE();}
+	while($Row = QueryFetch($Que)){
+		if($sJ['CFA_FECHA'] != $Row['fecha']){RJRE();}
+		if($sJ['CTS_TIPO'] != $Row['tipo']){RJRE();}
+		
+		if($Row['estado'] >= 2){RJRE("El menu ya no se puede modificar");}
+		
+		if($Row['menu'] != $sJ['CTS_MENU']){QueryUpdate("UPDATE ".$DBT['VIANDAS_MENU']." SET `menu` = '".$sJ['CTS_MENU']."', `reg_fecha` = NOW(), `reg_usuario` = '".$C_USER['ID']."' WHERE `id_menu` = '".$sJ['CES_ID_MENU']."'");}			
+		if($Row['precio'] != $sJ['CDA_PRECIO']){QueryUpdate("UPDATE ".$DBT['VIANDAS_MENU']." SET `precio` = '".$sJ['CDA_PRECIO']."', `reg_fecha` = NOW(), `reg_usuario` = '".$C_USER['ID']."' WHERE `id_menu` = '".$sJ['CES_ID_MENU']."'");}			
+	}
+	RJRO();
+}
+
+elseif($ROUTE_OPC == 'Procesar_Menu_Status'){
+	if($PP['B'] == 0){RJRE();}
+	if(CIJE('CES_ID') === TRUE){RJRE();};
+	
+	$Que = QuerySelect("SELECT `id_menu`, `estado` FROM ".$DBT['VIANDAS_MENU']." WHERE `id_menu` = '".$sJ['CES_ID']."'");
+	if(QueryNumRows($Que) < 1){RJRE();}
+	while($Row = QueryFetch($Que)){
+		if($Row['estado'] >= 2){RJRE("El menu ya no se puede modificar");}			
+		if($Row['estado'] == 1){
+			$Que2 = QuerySelect("SELECT `id_menu`, `estado` FROM ".$DBT['VIANDAS_PEDIDOS']." WHERE `id_menu` = '".$sJ['CES_ID']."' AND `estado` = '1'");
+			if(QueryNumRows($Que2) > 0){RJRE("Primero tenes que anular los pedidos de la fecha");}
+			$Que = QueryUpdate("UPDATE ".$DBT['VIANDAS_MENU']." SET `estado` = '0', `reg_fecha` = NOW(), `reg_usuario` = '".$C_USER['ID']."' WHERE `id_menu` = '".$sJ['CES_ID']."'");
+		}
+		if($Row['estado'] == 0){
+			$Que = QueryUpdate("UPDATE ".$DBT['VIANDAS_MENU']." SET `estado` = '1', `reg_fecha` = NOW(), `reg_usuario` = '".$C_USER['ID']."' WHERE `id_menu` = '".$sJ['CES_ID']."'");
+		}
+	}
+	RJRO();
+}
+elseif($ROUTE_OPC == 'Procesar_Tipo'){
+	if($PP['E'] == 0 && $PP['E'] == 0){RJRE();}
+	if(CIJE('CES_ID_TIPO') === TRUE){RJRE();};
+	if(CIJE('CTS_TIPO') === TRUE){RJRE();};
+	$sJ['CTS_TIPO'] = str_replace("/","",$sJ['CTS_TIPO']);
+
+	$Que = QuerySelect("SELECT `id_tipo` FROM ".$DBT['VIANDAS_TIPOS']." WHERE `tipo` = '".$sJ['CTS_TIPO']."'");
+	if(QueryNumRows($Que) > 0){while($Row = QueryFetch($Que)){if($Row['id_tipo'] != $sJ['CES_ID_TIPO']){RJRE('La categoria ya se encuentra registrada');}}}
+	
+	if($sJ['CES_ID_TIPO'] == 0){
+		$Que = QueryInsert("INSERT INTO ".$DBT['VIANDAS_TIPOS']."(`tipo`, `reg_fecha`, `reg_usuario`) VALUES ('".$sJ['CTS_TIPO']."', NOW(), '".$C_USER['ID']."')");
+	}else{
+		$Que = QuerySelect("SELECT `id_tipo`, `tipo` FROM ".$DBT['VIANDAS_TIPOS']." WHERE `id_tipo` = '".$sJ['CES_ID_TIPO']."'");
+		if(QueryNumRows($Que) < 1){RJRE();}
+		while($Row = QueryFetch($Que)){
+			if($Row['tipo'] != $sJ['CTS_TIPO']){QueryUpdate("UPDATE ".$DBT['VIANDAS_TIPOS']." SET `tipo` = '".$sJ['CTS_TIPO']."', `reg_fecha` = NOW(), `reg_usuario` = '".$C_USER['ID']."' WHERE `id_tipo` = '".$sJ['CES_ID_TIPO']."'");}			
+		}
+	}
+	RJRO();
+}
+elseif($ROUTE_OPC == 'Procesar_Tipo_Status'){
+	if($PP['E'] == 0){RJRE();}
+	if(CIJE('CES_ID') === TRUE){RJRE();};
+	
+	$Que = QuerySelect("SELECT `id_tipo`, `disponible` FROM ".$DBT['VIANDAS_TIPOS']." WHERE `id_tipo` = '".$sJ['CES_ID']."'");
+	if(QueryNumRows($Que) < 1){RJRE();}
+	while($Row = QueryFetch($Que)){
+		if($Row['disponible'] == 1){
+			$Que = QueryUpdate("UPDATE ".$DBT['VIANDAS_TIPOS']." SET `disponible` = '0', `reg_fecha` = NOW(), `reg_usuario` = '".$C_USER['ID']."' WHERE `id_tipo` = '".$sJ['CES_ID']."'");
+		}
+		if($Row['disponible'] == 0){
+			$Que = QueryUpdate("UPDATE ".$DBT['VIANDAS_TIPOS']." SET `disponible` = '1', `reg_fecha` = NOW(), `reg_usuario` = '".$C_USER['ID']."' WHERE `id_tipo` = '".$sJ['CES_ID']."'");
+		}
+	}
+	RJRO();
+}
+elseif($ROUTE_OPC == 'Ver_Menu'){
+	$RETURN['ID_MENU'] = 0;
+	if($PP['C'] != 1){EJE($RETURN);}
+	if(CIJE('CES_ID') === TRUE){$sJ['CES_ID'] = 0;};
+	$Que = QuerySelect("SELECT `id_menu`,`fecha`,`tipo`,`menu`,`precio`,`estado` FROM ".$DBT['VIANDAS_MENU']." WHERE `id_menu` = '".$sJ['CES_ID']."'");	
+	while($Row = QueryFetch($Que)){
+		$RETURN['ID_MENU'] 		= $Row['id_menu'];
+		$RETURN['TIPO'] 		= $Row['tipo'];
+		$RETURN['FECHA'] 		= $Row['fecha'];
+		$RETURN['MENU'] 		= $Row['menu'];
+		$RETURN['PRECIO'] 		= $Row['precio'];
+		$RETURN['ESTADO'] 		= $Row['estado'];
+	}
+	EJE($RETURN);
+}
+elseif($ROUTE_OPC == 'Ver_Tipo'){
+	$RETURN['ID_AGENTE'] = 0;
+	if($PP['E'] != 1){EJE($RETURN);}
+	if(CIJE('CES_ID') === TRUE){$sJ['CES_ID'] = 0;};
+	$Que = QuerySelect("SELECT `id_tipo`, `tipo`, `disponible` FROM ".$DBT['VIANDAS_TIPOS']." WHERE `id_tipo` = '".$sJ['CES_ID']."'");	
+	while($Row = QueryFetch($Que)){
+		$RETURN['ID_TIPO'] 	= $Row['id_tipo'];
+		$RETURN['TIPO'] 		= $Row['tipo'];
+		$RETURN['DISPONIBLE'] 	= $Row['disponible'];
+	}
+	EJE($RETURN);
+}
+else{
+	EE("NO_SE_PUEDE_PROCESAR_LA_SOLICITUD");
+}
+?>

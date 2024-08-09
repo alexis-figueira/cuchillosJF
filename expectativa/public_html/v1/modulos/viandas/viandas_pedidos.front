@@ -1,0 +1,102 @@
+<?php
+$TABS['A'] =  array('ICON' => '<i class="fa-solid fa-burger"></i>', 'TITLE' => 'Pedidos');
+
+$TABLE['A']['COLUMNAS']			= array(
+	array('COLUMNA' => 'Fecha'),
+	array('COLUMNA' => 'Tipo',),
+	array('COLUMNA' => 'Menu'),
+	array('COLUMNA' => 'Estado',),
+);
+$TABLE['A']['AJAX_URL'] 		= $LINK_BACK.'/Listado_Pedidos';
+$TABLE['A']['HERRAMIENTAS'] 	= array('ALTA' => 'A','LOCK2' => 'B', 'REFRESH' => 'C');
+$TABLE['A']['SETTING'] 			= array('ORDENAR' => "TRUE", 'ORDENAR_COL' => 1,'ORDENAR_METHOD' => 'ASC', 'DOBLE_CLICK' => 'Display_A_Lock');
+
+
+$MAIN = CreateMain($TABS, $TABLE);
+
+
+if(in_array('Display_A_Principal', $TABLE_FUNCTION)){
+	unset($TMP);
+	$TMP['MODAL']['ID']			= 'A_PRINCIPAL';
+	$TMP['MODAL']['TITLE']		= 'Tomar Pedido';
+	$TMP['MODAL']['SIZE']		= 'LG';
+	
+	$TMP['FOOTER']['SUBMIT'] 	= array('ID' => 'Guardar');
+	$TMP['FOOTER']['CLOSE']		= array('ID' => 'Cerrar');
+	
+	$TMP['BODY'] = '<input type="hidden" id="AUTOFOCUS">';
+	$TMP['BODY'] .= '<form id="'.$TMP['MODAL']['ID'].'_FORM" autocomplete="off">';
+		$TMP['BODY'] .= '<div class="alert alert-danger text-center fw-bold" role="alert">A partir del 1 de junio las viandas se descontarán sean o no retiradas</div>';
+		$TMP['BODY'] .= CreateFormInput(array('ID' => 'fecha', 'TIPO' => 'date', 'VALIDATE' => 'CFA', 'REQUIRED' => TRUE, 'MIN' => Fecha_Agregar(date("Y-m-d"),2,'dias','Y-m-d')));
+		$TMP['BODY'] .= CreateFormInput(array('ID' => 'confirmar', 'TIPO' => 'hidden', 'VALIDATE' => 'CIB', 'VALUE' => 0));		
+		$TMP['BODY'] .= '<div id="Menu"></div>';
+	$TMP['BODY'] .= '</form>';
+	array_push($MODALS,CreateModal($TMP['MODAL'], $TMP['BODY'], $TMP['FOOTER']));
+	array_push($VARS,"const MODAL_".$TMP['MODAL']['ID']."_INSTANCE = bootstrap.Modal.getOrCreateInstance('#MODAL_".$TMP['MODAL']['ID']."');");
+	array_push($VARS,"const MODAL_".$TMP['MODAL']['ID']." = document.getElementById('MODAL_".$TMP['MODAL']['ID']."');");	
+	unset($JS_TMP);
+	
+	$JS_TMP = 'function Display_A_Principal(){';
+		$JS_TMP .= 'FormErrorReset("A_PRINCIPAL_FORM");';
+		$JS_TMP .= 'FormReset("A_PRINCIPAL_FORM");';
+		$JS_TMP .= '$("#A_PRINCIPAL_FORM #Menu").empty();';
+		$JS_TMP .= '$("#A_PRINCIPAL_FORM #DLlist_AGENTE").empty();';
+		$JS_TMP .= '$("#MODAL_A_PRINCIPAL #AUTOFOCUS").val("AGENTE");';
+		$JS_TMP .= 'MODAL_A_PRINCIPAL_INSTANCE.show();';		
+	$JS_TMP .= '}';	
+
+	$JS_TMP .= 'function MODAL_A_PRINCIPAL_Procesar(){';
+		$JS_TMP .= 'if($("#A_PRINCIPAL_FORM")[0].reportValidity()==false){return;}';
+		$JS_TMP .= 'FormErrorReset("A_PRINCIPAL_FORM");';
+		$JS_TMP .= '$.ajax({url: "'.$LINK_BACK.'/Procesar_Pedido/",data: JSON.stringify(FormDataPicker("A_PRINCIPAL_FORM"))}).done(function (response){';
+			$JS_TMP .= 'if(response.RESULTADO == "OK"){';
+				$JS_TMP .= 'TableLoad("A");';
+				$JS_TMP .= 'MODAL_A_PRINCIPAL_INSTANCE.hide();';
+				$JS_TMP .= SF('OK');
+			$JS_TMP .= '}else{';
+				$JS_TMP .= 'if(response.RESULTADO == "DUP"){';
+					$JS_TMP .= 'MODAL_A_PRINCIPAL_INSTANCE.hide();';
+					$JS_TMP .= 'Swal.fire({';
+						$JS_TMP .= 'icon: "warning",';
+						$JS_TMP .= 'text: "Ya tenemos registrado el pedido " + response.MESSAGE + " ¿Desea reemplazarlo?",';
+						$JS_TMP .= 'showCancelButton: true,';
+						$JS_TMP .= 'confirmButtonText: "Confirmar",';
+						$JS_TMP .= 'cancelButtonText: "Cancelar"';
+					$JS_TMP .= '}).then((result) => {';
+						$JS_TMP .= 'if (result.isConfirmed) {';
+							$JS_TMP .= '$("#A_PRINCIPAL_FORM #CONFIRMAR").val(1);';
+							$JS_TMP .= 'MODAL_A_PRINCIPAL_Procesar();';
+						$JS_TMP .= '}';
+					$JS_TMP .= '})';
+				$JS_TMP .= '}';
+				$JS_TMP .= 'else if(response.MESSAGE != ""){'.SF('MSG', 'response.MESSAGE').'}';
+				$JS_TMP .= 'else{'.SF('ERROR').'}';
+			$JS_TMP .= '}';
+		$JS_TMP .= '});';
+	$JS_TMP .= '}';	
+
+	$JS_TMP .= '$("#A_PRINCIPAL_FORM #FECHA").change(function(){';
+		$JS_TMP .= '$.ajax({url: "'.$LINK_BACK.'/DL_Menu/",data: JSON.stringify({"CFA_FECHA":$("#A_PRINCIPAL_FORM #FECHA").val()})}).done(function (response){';
+			$JS_TMP .= '$("#A_PRINCIPAL_FORM #Menu").empty();';
+			$JS_TMP .= '$.each(response, function(key, value){';
+				$JS_TMP .= '$("#A_PRINCIPAL_FORM #Menu").append(value.VALUE);';
+			$JS_TMP .= '});';
+			$JS_TMP .= 'if(response.length == 0){$("#A_PRINCIPAL_FORM #Menu").append(\'<label class="btn btn-outline-secondary text-wrap w-100 mb-2" for="Menu_Empty">No hay menu disponible para este dia</label>\')}';
+		$JS_TMP .= '});';
+	$JS_TMP .= '});';
+
+	array_push($FUNCTIONS,$JS_TMP);
+}
+
+if(in_array('Display_A_Lock', $TABLE_FUNCTION)){
+	unset($JS_TMP);
+	$JS_TMP['SEND'] 				= 'CEI_ID';
+	$JS_TMP['RESPONSE_ID']			= 'ID_PEDIDO';
+	$JS_TMP['RESPONSE_STATUS']		= '';
+	$JS_TMP['RESPONSE_MESSAGE']		= "cancelar el pedido ' + response.MENU";
+	$JS_TMP['TARGET_CHECK']			= $LINK_BACK.'/Ver_Pedido/';
+	$JS_TMP['TARGET_SUBMIT']		= "'".$LINK_BACK."/Procesar_Pedido_Status'";
+	$JS_TMP['TARGET_SUBMIT_DATA']	= '{"CEI_ID": response.ID_PEDIDO}';
+	array_push($FUNCTIONS,SF_Lock('A',$JS_TMP));
+}
+?>

@@ -1,0 +1,28 @@
+<?php
+$TABS['A'] =  array('ICON' => '<i class="fa-solid fa-users"></i>', 'TITLE' => 'Padron Sio');
+
+$TABLE['A']['COLUMNAS']			= array(
+	array('COLUMNA' => 'Sincronizacion'),
+	array('COLUMNA' => 'Usuario')
+);
+$TABLE['A']['AJAX_URL'] 		= $LINK_BACK.'/Listado_Sincronizaciones';
+$TABLE['A']['HERRAMIENTAS'] 	= array('NUBE' => 'A', 'REFRESH' => 'C');
+$TABLE['A']['SETTING'] 			= array('ORDENAR' => "TRUE", 'ORDENAR_COL' => 1,'ORDENAR_METHOD' => 'DESC', 'DOBLE_CLICK' => 'Display_A_Principal');
+
+$MAIN = CreateMain($TABS, $TABLE);
+
+if(in_array('Display_A_Sync', $TABLE_FUNCTION)){
+	$JS_TMP = 'function Display_A_Sync(){';
+		$JS_TMP .= '$.ajax({url: "'.$LINK_BACK.'/Procesar_Sync_Portal/"}).done(function (response){';
+			$JS_TMP .= 'if(response.RESULTADO == "OK"){';
+				$JS_TMP .= 'TableLoad("A");';
+				$JS_TMP .= SF('OK');
+			$JS_TMP .= '}else{';
+				$JS_TMP .= 'if(response.MESSAGE != ""){'.SF('MSG', 'response.MESSAGE').'}';
+				$JS_TMP .= 'else{'.SF('ERROR').'}';
+			$JS_TMP .= '}';
+		$JS_TMP .= '});';
+	$JS_TMP .= '}';
+	array_push($FUNCTIONS,$JS_TMP);
+}
+?>

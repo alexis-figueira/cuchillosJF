@@ -1,0 +1,100 @@
+<?php
+if($ROUTE_OPC == 'Procesar_Firma'){
+	if($PP['C'] == 0){RJRE();}
+	/*if(CIJE('CtS_NOMBRE') === TRUE){RJRE("El Nombre y Apellido es obligatorio!");};*/
+	if(CIJE('CtS_SECTOR') === TRUE){RJRE("El Sector es obligatorio!");};
+	if(CIJE('CtS_OFICINA') === TRUE){RJRE("La Oficina es obligatoria!");};
+	if(CIJE('CtS_CONTACTO') === TRUE){RJRE("El Contacto es obligatorio!");};
+	
+	//TAMAÑO TEXTO
+	$TT['NOMBRE'] = 12;
+	$TT['SECTOR'] = 12;
+	$TT['OFICINA'] = 10;
+	$TT['CONTACTO'] = 10;
+	
+	//FUENTE TEXTO
+	$FT['NOMBRE'] = "../public/custom-css/Roboto-Bold.ttf";
+	$FT['SECTOR'] = "../public/custom-css/Roboto-Bold.ttf";
+	$FT['OFICINA'] = "../public/custom-css/Roboto-Regular.ttf";
+	$FT['CONTACTO'] = "../public/custom-css/Roboto-Regular.ttf";
+	
+	$ANCHO = 0;	
+	function CalcularDesborde($INPUT, $LINEA){
+		$CAJA_TEXTO = imagettfbbox($GLOBALS['TT'][$LINEA], 0, $GLOBALS['FT'][$LINEA], $GLOBALS['sJ'][$INPUT]);
+		$CALCULAR_TEXTO = $CAJA_TEXTO[4] - $CAJA_TEXTO[0];
+		if($CALCULAR_TEXTO >= 450){return TRUE;}
+		return $CALCULAR_TEXTO;
+	}
+	$ALTO_FIRMA = 95;
+	$POS['SECTOR'] = 40;
+	$POS['OFICINA'] = 63;
+	$POS['CONTACTO'] = 86;
+	
+	if(CIJE('CtS_NOMBRE') === FALSE){
+		if(CalcularDesborde('CtS_NOMBRE', 'NOMBRE') === TRUE){RJRE("El Nombre y Apellido debe ser mas corto!");}
+		$ALTO_FIRMA = 120;
+		$POS['NOMBRE'] = 46;
+		$POS['SECTOR'] = 70;
+		$POS['OFICINA'] = 90;
+		$POS['CONTACTO'] = 111;
+		if(CalcularDesborde('CtS_NOMBRE', 'NOMBRE') > $ANCHO){$ANCHO = CalcularDesborde('CtS_NOMBRE', 'NOMBRE');}
+	}
+	
+	if(CalcularDesborde('CtS_SECTOR', 'SECTOR') === TRUE){RJRE("El Sector debe ser mas corto!");}
+	if(CalcularDesborde('CtS_OFICINA', 'OFICINA') === TRUE){RJRE("La Oficina debe ser mas corta!!");}
+	if(CalcularDesborde('CtS_CONTACTO', 'CONTACTO') === TRUE){RJRE("El Contacto debe ser mas corto!");}
+	if(CalcularDesborde('CtS_SECTOR', 'NOMBRE') > $ANCHO){$ANCHO = CalcularDesborde('CtS_SECTOR', 'NOMBRE');}
+	if(CalcularDesborde('CtS_OFICINA', 'SECTOR') > $ANCHO){$ANCHO = CalcularDesborde('CtS_OFICINA', 'SECTOR');}
+	if(CalcularDesborde('CtS_CONTACTO', 'CONTACTO') > $ANCHO){$ANCHO = CalcularDesborde('CtS_CONTACTO', 'CONTACTO');}
+	
+	if(CIJE('CtS_NOMBRE') === FALSE){
+		$ANCHO += 134;
+	}else{
+		$ANCHO += 104;
+	}
+	$ANCHO += 30;
+	
+	$IMAGEN_FIRMA = imagecreatetruecolor($ANCHO, $ALTO_FIRMA);	
+    $FONDO = imagecolorallocate($IMAGEN_FIRMA, 255, 255, 255); // Blanco
+	
+	//COLOR TEXTO
+	$CT['NOMBRE'] = imagecolorallocate($IMAGEN_FIRMA, 0, 176, 155); // Verde Das
+	$CT['SECTOR'] = imagecolorallocate($IMAGEN_FIRMA, 0, 176, 155); // Verde Das
+	$CT['OFICINA'] = imagecolorallocate($IMAGEN_FIRMA, 0, 0, 0); // Negro    
+    $CT['CONTACTO'] = imagecolorallocate($IMAGEN_FIRMA, 98, 99, 102); // Gris Das
+	
+    // Rellenar el fondo
+    imagefilledrectangle($IMAGEN_FIRMA, 0, 0, $ANCHO, $ALTO_FIRMA, $FONDO);
+	
+	// Agregar la firma (cargar la imagen y superponerla)
+	if(CIJE('CtS_NOMBRE') === FALSE){
+		$LOGO = imagecreatefrompng("../public/custom-img/FirmaDasPersonal.png");
+	}else{
+		$LOGO = imagecreatefrompng("../public/custom-img/FirmaDasSector.png");
+	}
+    imagecopy($IMAGEN_FIRMA, $LOGO, 5, 5, 0, 0, imagesx($LOGO), imagesy($LOGO));
+
+	if(CIJE('CtS_NOMBRE') === FALSE){
+		imagettftext($IMAGEN_FIRMA, $TT['NOMBRE'], 0, 150, $POS['NOMBRE'], $CT['NOMBRE'], $FT['NOMBRE'], $sJ['CtS_NOMBRE']);
+	}
+    imagettftext($IMAGEN_FIRMA, $TT['SECTOR'], 0, 150, $POS['SECTOR'], $CT['SECTOR'], $FT['SECTOR'], $sJ['CtS_SECTOR']);
+    imagettftext($IMAGEN_FIRMA, $TT['OFICINA'], 0, 150, $POS['OFICINA'], $CT['OFICINA'], $FT['OFICINA'], $sJ['CtS_OFICINA']);
+    imagettftext($IMAGEN_FIRMA, $TT['CONTACTO'], 0, 150, $POS['CONTACTO'], $CT['CONTACTO'], $FT['CONTACTO'], $sJ['CtS_CONTACTO']);
+	
+	ob_start();
+	imagepng($IMAGEN_FIRMA);
+	$ENVIAR = ob_get_clean();
+	ob_end_clean();
+	
+	$RETURN['RESULTADO'] = 'OK';
+	$RETURN['FIRMA'] = base64_encode($ENVIAR);
+	EJE($RETURN);
+	
+    // Liberar memoria
+    imagedestroy($IMAGEN_FIRMA);
+    imagedestroy($LOGO);
+}
+else{
+	EE("NO_SE_PUEDE_PROCESAR_LA_SOLICITUD");
+}
+?>

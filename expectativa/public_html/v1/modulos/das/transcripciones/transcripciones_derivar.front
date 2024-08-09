@@ -1,0 +1,107 @@
+<?php
+$TABS['A'] =  array('ICON' => '<i class="fa-solid fa-reply-all"></i>', 'TITLE' => 'Pendientes');
+$TABS['B'] =  array('ICON' => '<i class="fa-solid fa-arrow-rotate-left"></i>', 'TITLE' => 'Derivadas');
+
+$TABLE['A']['COLUMNAS']			= array(
+	array('COLUMNA' => 'Check'),
+	array('COLUMNA' => 'Nro'),
+	array('COLUMNA' => 'Nombre y Apellido', 'DB' => 'AFILIADO'),
+	array('COLUMNA' => 'DNI'),
+	array('COLUMNA' => 'Correo'),
+	array('COLUMNA' => 'Ingreso', 'DB' => 'FECHA')
+);
+$TABLE['A']['AJAX_URL'] 		= $LINK_BACK.'/Listado_Transcripciones_Pendientes';
+$TABLE['A']['HERRAMIENTAS'] 	= array('DERIVAR' => 'A', 'REFRESH' => 'C');
+$TABLE['A']['SETTING'] 			= array('ORDENAR' => "TRUE", 'ORDENAR_COL' => 6,'ORDENAR_METHOD' => 'DESC');
+
+$TABLE['B']['COLUMNAS']			= array(
+	array('COLUMNA' => 'Nro'),
+	array('COLUMNA' => 'Nombre y Apellido', 'DB' => 'AFILIADO'),
+	array('COLUMNA' => 'DNI'),
+	array('COLUMNA' => 'Correo'),
+	array('COLUMNA' => 'Ingreso', 'DB' => 'FECHA'),
+	array('COLUMNA' => 'Derivado a', 'DB' => 'DERIVADO_USUARIO'),
+	array('COLUMNA' => 'Derivado el', 'DB' => 'DERIVADO_FECHA'),
+);
+$TABLE['B']['AJAX_URL'] 		= $LINK_BACK.'/Listado_Transcripciones_Derivadas';
+$TABLE['B']['HERRAMIENTAS'] 	= array('REFRESH' => 'C');
+$TABLE['B']['SETTING'] 			= array('ORDENAR' => "TRUE", 'ORDENAR_COL' => 6,'ORDENAR_METHOD' => 'DESC');
+
+$SUBTABS['P'] =  'Profesionales';
+$SUBTABLE['P']['COLUMNAS']			= array(
+	array('COLUMNA' => 'Usuario'),
+	array('COLUMNA' => 'Nombre'),
+	array('COLUMNA' => 'Apellido')
+);
+$SUBTABLE['P']['AJAX_URL'] 		= $LINK_BACK.'/Listado_Medicos_Transcripciones';
+$SUBTABLE['P']['HERRAMIENTAS'] 	= array();
+$SUBTABLE['P']['SETTING'] 		= array();
+
+$MAIN = CreateMain($TABS, $TABLE);
+
+if(in_array('Display_A_Derivar', $TABLE_FUNCTION)){
+	unset($TMP);
+	$TMP['MODAL']['ID']			= 'PROFESIONALES';
+	$TMP['MODAL']['TITLE']		= 'Derivar';
+	$TMP['MODAL']['SIZE']		= 'LG';
+	
+	$TMP['FOOTER']['SUBMIT']	= array('ID' => 'Derivar');
+	$TMP['FOOTER']['CLOSE']		= array('ID' => 'Cerrar');
+	
+	$TMP['BODY'] = CreateMainModal($SUBTABS, $SUBTABLE);
+	
+	array_push($MODALS,CreateModal($TMP['MODAL'], $TMP['BODY'], $TMP['FOOTER']));
+	array_push($VARS,"const MODAL_".$TMP['MODAL']['ID']."_INSTANCE = bootstrap.Modal.getOrCreateInstance('#MODAL_".$TMP['MODAL']['ID']."');");
+	array_push($VARS,"const MODAL_".$TMP['MODAL']['ID']." = document.getElementById('MODAL_".$TMP['MODAL']['ID']."');");	
+	unset($JS_TMP);
+	
+	$JS_TMP = 'var DERIVAR = "";';
+	
+	$JS_TMP .= 'function Display_A_Derivar(){';
+		$JS_TMP .= 'DERIVAR = "";';
+		$JS_TMP .= '$.each($("#TableA tbody input[type=\"checkbox\"]"), function(key, value){';
+			$JS_TMP .= 'if($(this).is(":checked")){';
+				$JS_TMP .= 'if(DERIVAR != ""){DERIVAR += "_";};';
+				$JS_TMP .= 'DERIVAR += this.id;';
+			$JS_TMP .= '}';
+		$JS_TMP .= '});';
+		$JS_TMP .= 'if(DERIVAR.length === 0){'.SF('MSG', '"Primero es necesario seleccionar al menos una transcripcion!"').'return;}';
+		$JS_TMP .= 'TableLoad("P");';
+		$JS_TMP .= 'MODAL_PROFESIONALES_INSTANCE.show();';
+	$JS_TMP .= '}';
+	
+	$JS_TMP .= 'function MODAL_PROFESIONALES_Procesar(){';
+		$JS_TMP .= 'if(DERIVAR.length === 0){'.SF('MSG', '"Primero es necesario seleccionar al menos una transcripcion!"').'return;}';
+		$JS_TMP .= 'if($("#Table_P_row").val() == 0){'.SF('MSG', '"Primero es necesario seleccionar un profesional!"').'return;}';
+		
+		$JS_TMP .= '$.ajax({url: "'.$LINK_BACK.'/Procesar_Derivacion/",data: JSON.stringify({"CTS_DERIVADOS":DERIVAR, "CES_PROFESIONAL":$("#Table_P_row").val()})}).done(function (response){';
+			$JS_TMP .= 'if(response.RESULTADO == "OK"){';
+				$JS_TMP .= 'if(response.MESSAGE != "" && response.MESSAGE != undefined){'.SF('MSG', 'response.MESSAGE').'}';
+				$JS_TMP .= 'else{'.SF('OK').'}';
+				$JS_TMP .= "TableLoad('A');";
+				$JS_TMP .= '$("#Check_All").prop("checked", false);';
+			$JS_TMP .= '}else{';
+				$JS_TMP .= 'if(response.MESSAGE != ""){'.SF('MSG', 'response.MESSAGE').'}';
+				$JS_TMP .= 'else{'.SF('ERROR').'}';				
+			$JS_TMP .= '}';
+		$JS_TMP .= '});';
+		$JS_TMP .= 'MODAL_PROFESIONALES_INSTANCE.hide();';
+	$JS_TMP .= '}';
+	
+	array_push($FUNCTIONS,$JS_TMP);
+}
+
+$JS_TMP = "$(document).ready(function(){";
+	$JS_TMP .= "$('#TableA thead th:first').html('<input class=\"form-check-input\" type=\"checkbox\" id=\"Check_All\">').removeAttr('onClick');";
+$JS_TMP .= "});";
+$JS_TMP .= "$(document).on('change', '#Check_All', function(){";
+	$JS_TMP .= "const isChecked = $(this).is(':checked');";
+	$JS_TMP .= "const selector = '#TableA input[type=\"checkbox\"]';";
+	$JS_TMP .= "if(isChecked){";
+		$JS_TMP .= "$(selector).prop('checked', true);";
+	$JS_TMP .= "}else{";
+		$JS_TMP .= "$(selector).prop('checked', false);";
+	$JS_TMP .= "}";
+$JS_TMP .= "});";
+array_push($FUNCTIONS,$JS_TMP);
+?>

@@ -1,0 +1,62 @@
+<?php
+if($ROUTE_OPC == 'Listado_Medicamentos'){
+	$RETURN['COUNT'] = 0;
+	$RETURN['TOTAL'] = 0;
+	$RETURN['PAGINAS'] = 1;
+	$RETURN['ROWS'] = [];
+	if($PP['C'] != 1){EJE($RETURN);}
+	$ARRAY_ORDER = array(1 => '`troquel` {METHOD}', 2 => '`laboratorio` {METHOD}', 3 => '`detalle` {METHOD}', 4 => '`precio` {METHOD}', 5 => '`baja` {METHOD}');
+	$FORM = LISTADO_QUERY($ARRAY_ORDER);
+	if($FORM['SEARCH'] != NULL){ $SEARCH = "WHERE `troquel` = '".$FORM['SEARCH']."' or `laboratorio` LIKE '%".$FORM['SEARCH']."%' or `detalle` LIKE '%".$FORM['SEARCH']."%'";}else{EJE($RETURN);}
+	$Que = QuerySelect("SELECT `troquel`, `detalle`, `laboratorio`, `precio`, `baja` FROM ".$DBT['V_ALFABETA_TOQUELES'].$SEARCH." ORDER BY ".$FORM['ORDENAR']." LIMIT ".$FORM['LIMIT']." ,".$FORM['ROWS']);
+	while($Row = QueryFetch($Que)){
+		$RETURN['COUNT']++;
+		$TMP = [];
+		$TMP['ID'] 						= $Row['troquel'];
+		$TMP['DATA']['TROQUEL'] 		= $Row['troquel'];
+		$TMP['DATA']['MEDICAMENTO'] 	= $Row['detalle'];
+		$TMP['DATA']['LABORATORIO'] 	= $Row['laboratorio'];
+		$TMP['DATA']['PRECIO'] 			= Numero_Formato($Row['precio']);
+		if($Row['baja'] == 0){$TMP['DATA']['ESTADO'] = '<i class="fa-solid fa-circle-check link-success" title="VIGENTE"></i>';}
+		if($Row['baja'] == 1){$TMP['DATA']['ESTADO'] = '<i class="fa-solid fa-circle-xmark link-danger" title="NO DISPONIBLE"></i>';}		
+		array_push($RETURN['ROWS'], $TMP);
+		unset($TMP);
+	}
+	$Que = QuerySelect("SELECT COUNT(*) AS 'total' FROM ".$DBT['V_ALFABETA_TOQUELES'].$SEARCH);
+	while($Row = QueryFetch($Que)){	
+		$RETURN['TOTAL'] = $Row['total'];
+		$RETURN['PAGINAS'] = ceil($RETURN['TOTAL']/$FORM['ROWS']);
+	}
+	EJE($RETURN);
+}
+elseif($ROUTE_OPC == 'Listado_Precios'){
+	$RETURN['COUNT'] = 0;
+	$RETURN['TOTAL'] = 0;
+	$RETURN['PAGINAS'] = 1;
+	$RETURN['ROWS'] = [];	
+	if($PP['C'] != 1){EJE($RETURN);}
+	if(CIJE('CtU_ADVANCE') === TRUE){EJE($RETURN);}
+	$ARRAY_ORDER = array(1 => '`fecha` {METHOD}', 2 => '`precio` {METHOD}');
+	$FORM = LISTADO_QUERY($ARRAY_ORDER);
+	if($FORM['SEARCH'] != NULL){ $SEARCH = " WHERE `troquel` = '".$sJ['CtU_ADVANCE']."' AND `fecha` = str_to_date('".str_replace("-","/",$FORM['SEARCH'])."', '%d/%m/%Y')";}else{$SEARCH =" WHERE `troquel` = '".$sJ['CtU_ADVANCE']."'";}
+	$Que = QuerySelect("SELECT `id_precio`,`precio`, `fecha` FROM ".$DBT['ALFABETA_PRECIOS'].$SEARCH." ORDER BY ".$FORM['ORDENAR']." LIMIT ".$FORM['LIMIT']." ,".$FORM['ROWS']);
+	while($Row = QueryFetch($Que)){
+		$RETURN['COUNT']++;
+		$TMP = [];
+		$TMP['ID'] 						= $Row['id_precio'];
+		$TMP['DATA']['FECHA'] 			= Fecha_Formato($Row['fecha']);
+		$TMP['DATA']['PRECIO'] 			= Numero_Formato($Row['precio']);
+		array_push($RETURN['ROWS'], $TMP);
+		unset($TMP);
+	}
+	$Que = QuerySelect("SELECT COUNT(*) AS 'total' FROM ".$DBT['ALFABETA_PRECIOS'].$SEARCH);
+	while($Row = QueryFetch($Que)){	
+		$RETURN['TOTAL'] = $Row['total'];
+		$RETURN['PAGINAS'] = ceil($RETURN['TOTAL']/$FORM['ROWS']);
+	}
+	EJE($RETURN);
+}
+else{
+	EE("NO_SE_PUEDE_PROCESAR_LA_SOLICITUD");
+}
+?>

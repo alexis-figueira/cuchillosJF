@@ -1,0 +1,253 @@
+<?php
+$TABS['A'] =  array('ICON' => '<i class="fa-solid fa-clipboard-list"></i>', 'TITLE' => 'Pendientes');
+$TABS['B'] =  array('ICON' => '<i class="fa-solid fa-clipboard-check"></i>', 'TITLE' => 'Autorizadas');
+
+$TABLE['A']['COLUMNAS']			= array(
+	array('COLUMNA' => 'Nro'),
+	array('COLUMNA' => 'Nombre y Apellido', 'DB' => 'AFILIADO'),
+	array('COLUMNA' => 'DNI'),
+	array('COLUMNA' => 'Correo'),
+	array('COLUMNA' => 'Ingreso', 'DB' => 'FECHA_PEDIDO'),
+	array('COLUMNA' => 'Derivado', 'DB' => 'FECHA_DERIVADO'),
+);
+$TABLE['A']['AJAX_URL'] 		= $LINK_BACK.'/Listado_MisTranscripciones_Pendientes';
+$TABLE['A']['HERRAMIENTAS'] 	= array('VER' => 'C', 'DESDERIVAR' => 'A', 'QUICK_SEARCH' => 'C', 'REFRESH' => 'C');
+$TABLE['A']['SETTING'] 			= array('ORDENAR' => "TRUE", 'ORDENAR_COL' => 1,'ORDENAR_METHOD' => 'DESC', 'DOBLE_CLICK' => 'Display_A_Ver');
+$TABLE['A']['QUICK_SEARCH']		= "Buscar Apellido o DNI o CUIL";
+
+$TABLE['B']['COLUMNAS']			= array(
+	array('COLUMNA' => 'Nro'),
+	array('COLUMNA' => 'Nombre y Apellido', 'DB' => 'AFILIADO'),
+	array('COLUMNA' => 'DNI'),
+	array('COLUMNA' => 'Correo'),
+	array('COLUMNA' => 'Ingreso', 'DB' => 'FECHA_PEDIDO'),
+	array('COLUMNA' => 'Autorizado', 'DB' => 'FECHA_AUTORIZADO'),
+);
+$TABLE['B']['AJAX_URL'] 		= $LINK_BACK.'/Listado_MisTranscripciones_Autorizadas';
+$TABLE['B']['HERRAMIENTAS'] 	= array('VER' => 'C', 'QUICK_SEARCH' => 'C', 'REFRESH' => 'C');
+$TABLE['B']['SETTING'] 			= array('ORDENAR' => "TRUE", 'ORDENAR_COL' => 1,'ORDENAR_METHOD' => 'DESC', 'DOBLE_CLICK' => 'Display_B_Ver');
+$TABLE['B']['QUICK_SEARCH']		= "Buscar Apellido o DNI o CUIL";
+
+$SUBTABS['TP'] =  'Pendiente';
+$SUBTABLE['TP']['COLUMNAS']			= array(
+	array('COLUMNA' => 'Medicamento'),
+	array('COLUMNA' => 'Cantidad')
+);
+$SUBTABLE['TP']['AJAX_URL'] 		= $LINK_BACK.'/Listado_Transcripcion_Medicamentos';
+$SUBTABLE['TP']['HERRAMIENTAS'] 	= array('ALTA' => 'A', 'REFRESH' => 'C');
+$SUBTABLE['TP']['SETTING'] 			= array('ORDENAR' => "TRUE", 'ORDENAR_COL' => 1,'ORDENAR_METHOD' => 'DESC', 'DOBLE_CLICK' => 'Display_R_Ver_Receta');
+$SUBTABLE['TP']['QUICK_SEARCH']		= "Buscar Nro o Fecha";
+
+$SUBTABS['TA'] =  'Autorizados';
+$SUBTABLE['TA']['COLUMNAS']			= array(
+	array('COLUMNA' => 'Fecha'),
+	array('COLUMNA' => 'Medicamento'),
+	array('COLUMNA' => 'Cantidad')
+);
+$SUBTABLE['TA']['AJAX_URL'] 		= $LINK_BACK.'/Listado_Transcripciones_Autorizadas';
+$SUBTABLE['TA']['HERRAMIENTAS'] 	= array('REFRESH' => 'C');
+$SUBTABLE['TA']['SETTING'] 			= array('ORDENAR' => "TRUE", 'ORDENAR_COL' => 1,'ORDENAR_METHOD' => 'DESC');
+$SUBTABLE['TA']['QUICK_SEARCH']		= "Buscar Nro o Fecha";
+$MAIN = CreateMain($TABS, $TABLE);
+
+
+if(in_array('Display_A_Ver', $TABLE_FUNCTION)){
+	unset($TMP);
+	$TMP['MODAL']['ID']			= 'TRANSCRIPCIONES';
+	$TMP['MODAL']['TITLE']		= 'Recetas';
+	$TMP['MODAL']['SIZE']		= 'XL';
+	
+	$TMP['FOOTER']['CLOSE']		= array('ID' => 'Cerrar');
+	
+	$TMP['BODY'] = CreateMainModal($SUBTABS, $SUBTABLE);
+	
+	array_push($MODALS,CreateModal($TMP['MODAL'], $TMP['BODY'], $TMP['FOOTER']));
+	array_push($VARS,"const MODAL_".$TMP['MODAL']['ID']."_INSTANCE = bootstrap.Modal.getOrCreateInstance('#MODAL_".$TMP['MODAL']['ID']."');");
+	array_push($VARS,"const MODAL_".$TMP['MODAL']['ID']." = document.getElementById('MODAL_".$TMP['MODAL']['ID']."');");	
+	unset($JS_TMP);
+	
+	$JS_TMP = 'var DERIVAR = "";';
+	
+	$JS_TMP .= 'function Display_A_Ver(){';
+		$JS_TMP .= '$("#Table_TP_advanced").val($("#Table_A_row").val());';
+		$JS_TMP .= '$("#Table_TA_advanced").val($("#Row_A_" + $("#Table_A_row").val()).find("td").eq(2).html());';
+		$JS_TMP .= 'TableLoad("TP");';
+		$JS_TMP .= 'TableLoad("TA");';
+		$JS_TMP .= 'MODAL_TRANSCRIPCIONES_INSTANCE.show();';
+	$JS_TMP .= '}';	
+	array_push($FUNCTIONS,$JS_TMP);
+}
+
+if(in_array('Display_A_Desderivar', $TABLE_FUNCTION)){
+	
+	$JS_TMP .= 'function Display_A_Desderivar(){';
+		$JS_TMP .= 'if($("#Table_A_row").val() <1){return;}';
+		$JS_TMP .= '$.ajax({url: "'.$LINK_BACK.'/Procesar_Desderivacion/",data: JSON.stringify({"CEB_TRANSCRIPCION":$("#Table_A_row").val()})}).done(function (response){';
+			$JS_TMP .= 'if(response.RESULTADO == "OK"){';
+				$JS_TMP .= 'TableLoad("A");';
+			$JS_TMP .= '}else{';
+				$JS_TMP .= 'if(response.MESSAGE != ""){'.SF('MSG', 'response.MESSAGE').'}';
+				$JS_TMP .= 'else{'.SF('ERROR').'}';
+			$JS_TMP .= '}';
+		$JS_TMP .= '});';
+		
+	$JS_TMP .= '}';	
+	array_push($FUNCTIONS,$JS_TMP);
+}
+
+if(in_array('Display_B_Ver', $TABLE_FUNCTION)){
+	unset($TMP);
+	$TMP['MODAL']['ID']			= 'VER_TRANSCRIPCION';
+	$TMP['MODAL']['TITLE']		= 'Ver Transcripcion';
+	$TMP['MODAL']['SIZE']		= 'XL';
+	
+	$TMP['FOOTER']['SUBMIT']	= array('ID' => 'Ver Receta');	
+	$TMP['FOOTER']['CLOSE']		= array('ID' => 'Cerrar');
+	
+	$TMP['BODY'] = '<form id="VER_TRANSCRIPCION" autocomplete="off">';
+		for($A=1; $A<=2;$A++){		
+			$TMP['BODY'] .= '<div class="row justify-content-center mb-2">';
+				$TMP['BODY'] .= '<div class="col-10"><input type="text" class="form-control" id="VER_TROQUEL_'.$A.'" disabled readonly></div>';//ID_TROQUEL
+				$TMP['BODY'] .= '<div class="col-2"><input type="number" id="VER_CANTIDAD_'.$A.'" class="form-control" value="1" disabled readonly></div>';//CANTIDAD TROQUEL
+			$TMP['BODY'] .= '</div>';
+		}
+		$TMP['BODY'] .= '<hr>';
+		$TMP['BODY'] .= CreateFormInput(array('ID' => 'receta', 'TIPO' => 'hidden', 'VALIDATE' => 'CTS'));
+		$TMP['BODY'] .= CreateFormInput(array('ID' => 'dni', 'TIPO' => 'hidden', 'VALIDATE' => 'CTS'));
+		$TMP['BODY'] .= CreateFormInput(array('ID' => 'archivo', 'TIPO' => 'hidden', 'VALIDATE' => 'CTS'));
+		$TMP['BODY'] .= CreateFormInput(array('ID' => 'fecha', 'TIPO' => 'date', 'VALIDATE' => 'CFA', 'READONLY' => TRUE, 'VALUE' => date("Y-m-d")));
+		$TMP['BODY'] .= CreateFormInput(array('ID' => 'observacion', 'TIPO' => 'textarea', 'VALIDATE' => 'CTS', 'READONLY' => TRUE));
+	$TMP['BODY'] .= '</form>';
+	array_push($MODALS,CreateModal($TMP['MODAL'], $TMP['BODY'], $TMP['FOOTER']));
+	array_push($VARS,"const MODAL_".$TMP['MODAL']['ID']."_INSTANCE = bootstrap.Modal.getOrCreateInstance('#MODAL_".$TMP['MODAL']['ID']."');");
+	array_push($VARS,"const MODAL_".$TMP['MODAL']['ID']." = document.getElementById('MODAL_".$TMP['MODAL']['ID']."');");	
+	unset($JS_TMP);
+	
+	
+	$JS_TMP = 'function Display_B_Ver(){';
+		$JS_TMP .= 'if($("#Table_B_row").val() == 0){return;}';
+		$JS_TMP .= '$.ajax({url: "'.$LINK_BACK.'/Ver_Transcripcion_Procesada/",data: JSON.stringify({"CEB_TRANSCRIPCION":$("#Table_B_row").val()})}).done(function (response){';
+			$JS_TMP .= 'if(response.ID_TRANSCRIPCION != $("#Table_B_row").val()){'.SF('MSG','"El pedido no se encuentra disponible"').';}';
+				$JS_TMP .= '$("#VER_TRANSCRIPCION #VER_TROQUEL_1").val("");';
+				$JS_TMP .= '$("#VER_TRANSCRIPCION #VER_CANTIDAD_1").val("");';
+				$JS_TMP .= '$("#VER_TRANSCRIPCION #VER_TROQUEL_2").val("");';
+				$JS_TMP .= '$("#VER_TRANSCRIPCION #VER_CANTIDAD_2").val("");';
+				$JS_TMP .= 'if(response.PEDIDO_1 > 0){';
+					$JS_TMP .= '$("#VER_TRANSCRIPCION #VER_TROQUEL_1").val(response.TROQUEL_1);';
+					$JS_TMP .= '$("#VER_TRANSCRIPCION #VER_CANTIDAD_1").val(response.CANTIDAD_1);';
+				$JS_TMP .= '}';
+				$JS_TMP .= 'if(response.PEDIDO_2 > 0){';
+					$JS_TMP .= '$("#VER_TRANSCRIPCION #VER_TROQUEL_2").val(response.TROQUEL_2);';
+					$JS_TMP .= '$("#VER_TRANSCRIPCION #VER_CANTIDAD_2").val(response.CANTIDAD_2);';
+				$JS_TMP .= '}';
+				$JS_TMP .= '$("#VER_TRANSCRIPCION #RECETA").val(response.ID_RECETA);';
+				$JS_TMP .= '$("#VER_TRANSCRIPCION #DNI").val(response.DNI);';
+				$JS_TMP .= '$("#VER_TRANSCRIPCION #ARCHIVO").val(response.ARCHIVO);';
+				$JS_TMP .= '$("#VER_TRANSCRIPCION #FECHA").val(response.FECHA);';
+				$JS_TMP .= '$("#VER_TRANSCRIPCION #OBSERVACION").val(response.OBSERVACION);';
+				$JS_TMP .= 'if(response.ID_RECETA > 0){$("#MODAL_VER_TRANSCRIPCION .FormBtnSubmit").removeClass("d-none");}else{$("#MODAL_VER_TRANSCRIPCION .FormBtnSubmit").addClass("d-none");}';
+				$JS_TMP .= 'MODAL_VER_TRANSCRIPCION_INSTANCE.show();';
+		$JS_TMP .= '});';
+	$JS_TMP .= '}';
+	
+
+	$JS_TMP .= "$(document).on('click', '#MODAL_VER_TRANSCRIPCION .FormBtnSubmit', function(){";
+		$JS_TMP .= 'if($("#VER_TRANSCRIPCION #RECIBO").val() == ""){'.SF('MSG','"La transcripción no tiene generada una receta."').'}';
+		$JS_TMP .= 'else{';
+			$JS_TMP .= 'var NewTab = window.open("'.$URL['API'].'TranscripcionesTranscribir/Ver_Receta/" + $("#VER_TRANSCRIPCION #DNI").val() + "/" + $("#VER_TRANSCRIPCION #ARCHIVO").val() + ".pdf" + "?" + Math.floor(Math.random() * (99999 - 10000) + 10000) , "_blank");';
+			$JS_TMP .= 'if(NewTab){NewTab.focus();}else{'.SF('MSG','"El navegador esta bloqueando los popups"').'}';
+		$JS_TMP .= '}';
+		
+	$JS_TMP .= "});";
+	
+	array_push($FUNCTIONS,$JS_TMP);
+}
+
+if(in_array('Display_TP_Principal', $TABLE_FUNCTION)){
+	unset($TMP);
+	$TMP['MODAL']['ID']			= 'TRANSCRIBIR';
+	$TMP['MODAL']['TITLE']		= 'Transcripcion de recetas';
+	$TMP['MODAL']['SIZE']		= 'XL';
+	
+	$TMP['FOOTER']['SUBMIT']	= array('ID' => 'Generar');
+	$TMP['FOOTER']['CLOSE']		= array('ID' => 'Cerrar');
+	
+	$TMP['BODY'] = '<input type="hidden" id="AUTOFOCUS">';
+	$TMP['BODY'] .= '<form id="TRANSCRIBIR_FORM" autocomplete="off">';
+		$TMP['BODY'] .= '<input type="hidden" class="InputPickUp" id="DNI" validate="CEI" value="0">';//ID_TRANSCRIPCION
+		$TMP['BODY'] .= '<input type="hidden" class="InputPickUp" id="TRANSCRIPCION" validate="CEB" value="0">';//ID_TRANSCRIPCION
+		for($A=1; $A<=2;$A++){		
+			$TMP['BODY'] .= '<div class="row justify-content-center mb-2">';
+				$TMP['BODY'] .= '<input type="hidden" class="InputPickUp" id="PEDIDO_'.$A.'" validate="CEB" value="0">';//ID_PEDIDO
+				$TMP['BODY'] .= '<div class="col-10"><select class="form-control select2js InputPickUp" validate="CEI" id="TROQUEL_'.$A.'"><option value="" selected disabled></option></select></div>';//ID_TROQUEL
+				$TMP['BODY'] .= '<div class="col-2"><input type="number" id="CANTIDAD_'.$A.'" validate="CEI" class="form-control InputPickUp" value="1"></div>';//CANTIDAD TROQUEL
+			$TMP['BODY'] .= '</div>';
+		}
+		$TMP['BODY'] .= '<hr>';
+		$TMP['BODY'] .= CreateFormInput(array('ID' => 'fecha', 'TIPO' => 'date', 'VALIDATE' => 'CFA', 'REQUIRED' => TRUE, 'VALUE' => date("Y-m-d")));
+		$TMP['BODY'] .= CreateFormInput(array('ID' => 'diagnostico', 'TIPO' => 'text', 'MAXLENGTH' => 255, 'VALIDATE' => 'CTS', 'VALUE' => 'SM'));
+		$TMP['BODY'] .= CreateFormInput(array('ID' => 'observacion', 'TIPO' => 'textarea', 'MAXLENGTH' => 255, 'VALIDATE' => 'CTS'));
+	$TMP['BODY'] .= '</form>';
+	array_push($MODALS,CreateModal($TMP['MODAL'], $TMP['BODY'], $TMP['FOOTER']));
+	array_push($VARS,"const MODAL_".$TMP['MODAL']['ID']."_INSTANCE = bootstrap.Modal.getOrCreateInstance('#MODAL_".$TMP['MODAL']['ID']."');");
+	array_push($VARS,"const MODAL_".$TMP['MODAL']['ID']." = document.getElementById('MODAL_".$TMP['MODAL']['ID']."');");	
+	unset($JS_TMP);
+	
+	$JS_TMP = 'function Display_TP_Principal(){';
+		$JS_TMP .= "$('#MODAL_TRANSCRIBIR .modal-body').css('overflow-x','hidden');";
+		$JS_TMP .= 'if($("#Table_A_row").val() == 0){return;}';
+		$JS_TMP .= 'MODAL_TRANSCRIPCIONES_INSTANCE.hide();';
+		$JS_TMP .= '$.ajax({url: "'.$LINK_BACK.'/Ver_Transcripcion/",data: JSON.stringify({"CEB_TRANSCRIPCION":$("#Table_A_row").val()})}).done(function (response){';			
+			$JS_TMP .= 'if(response.ID_TRANSCRIPCION != $("#Table_A_row").val()){'.SF('MSG','"El pedido no se encuentra disponible"').';}';
+			$JS_TMP .= 'else if(response.ESTADO != "1"){'.SF('MSG','"El pedido ya fue procesado"').';}';
+			$JS_TMP .= 'else{';
+				$JS_TMP .= '$("#TRANSCRIBIR_FORM #FECHA").val("'.date("Y-m-d").'");';
+				$JS_TMP .= '$("#TRANSCRIBIR_FORM #OBSERVACION").val("");';
+				$JS_TMP .= '$("#TRANSCRIBIR_FORM #DNI").val(response.DNI);';
+				$JS_TMP .= '$("#TRANSCRIBIR_FORM #TRANSCRIPCION").val(response.ID_TRANSCRIPCION);';
+				$JS_TMP .= '$("#TRANSCRIBIR_FORM #PEDIDO_1").val(0);';
+				$JS_TMP .= '$("#TRANSCRIBIR_FORM #TROQUEL_1").val("");';
+				$JS_TMP .= '$("#TRANSCRIBIR_FORM #CANTIDAD_1").val(1);';
+				$JS_TMP .= '$("#TRANSCRIBIR_FORM #PEDIDO_2").val(0);';
+				$JS_TMP .= '$("#TRANSCRIBIR_FORM #TROQUEL_2").val("");';
+				$JS_TMP .= '$("#TRANSCRIBIR_FORM #CANTIDAD_2").val(1);';
+				$JS_TMP .= 'inicializarSelect2("#TROQUEL_1, #TROQUEL_2", "#MODAL_TRANSCRIBIR","'.$LINK_BACK.'/DL_Medicamentos/","Ingrese el nombre del medicamento", 1);';
+				$JS_TMP .= 'if(response.PEDIDO_1 > 0){';
+					$JS_TMP .= '$("#TRANSCRIBIR_FORM #PEDIDO_1").val(response.PEDIDO_1);';
+					$JS_TMP .= 'let newOption = new Option(response.TROQUEL_1, response.ID_TROQUEL_1, true, true);';
+					$JS_TMP .= '$("#TRANSCRIBIR_FORM #TROQUEL_1").append(newOption).trigger("change");';
+					$JS_TMP .= '$("#TRANSCRIBIR_FORM #CANTIDAD_1").val(response.CANTIDAD_1);';
+				$JS_TMP .= '}';	
+				$JS_TMP .= 'if(response.PEDIDO_2 > 0){';
+					$JS_TMP .= '$("#TRANSCRIBIR_FORM #PEDIDO_2").val(response.PEDIDO_2);';
+					$JS_TMP .= 'let newOption = new Option(response.TROQUEL_2, response.ID_TROQUEL_2, true, true);';
+					$JS_TMP .= '$("#TRANSCRIBIR_FORM #TROQUEL_2").append(newOption).trigger("change");';
+					$JS_TMP .= '$("#TRANSCRIBIR_FORM #CANTIDAD_2").val(response.CANTIDAD_2);';
+				$JS_TMP .= '}';	
+				$JS_TMP .= 'MODAL_TRANSCRIBIR_INSTANCE.show();';
+			$JS_TMP .= '}';
+		$JS_TMP .= '});';
+	$JS_TMP .= '}';
+	
+	$JS_TMP .= 'function MODAL_TRANSCRIBIR_Procesar(){';
+		$JS_TMP .= '$.ajax({url: "'.$LINK_BACK.'/Procesar_Receta/",data: JSON.stringify(FormDataPicker("TRANSCRIBIR_FORM"))}).done(function (response){';
+			$JS_TMP .= 'if(response.RESULTADO == "OK"){';
+				$JS_TMP .= '$("#PEDIDO_1, #PEDIDO_2").val("0");';
+				$JS_TMP .= '$("#TROQUEL_1, #TROQUEL_2").val("").trigger("change");';
+				$JS_TMP .= '$("#CANTIDAD_1, #CANTIDAD_2").val("1");';
+				$JS_TMP .= '$("#FECHA").val("'.date("Y-m-d").'");';
+				$JS_TMP .= '$("#OBSERVACION").val("");';
+				$JS_TMP .= 'TableLoad("A");';
+				$JS_TMP .= 'if(response.MESSAGE != ""){$.ajax({url: "'.$LINK_BACK.'/Procesar_Envio/",data: JSON.stringify({"CEB_TRANSCRIPCION":response.MESSAGE}),beforeSend: function() {},complete: function() {},error: function() {}});}';
+				$JS_TMP .= 'MODAL_TRANSCRIBIR_INSTANCE.hide();';
+				$JS_TMP .= SF('OK');
+			$JS_TMP .= '}else{';
+				$JS_TMP .= 'if(response.MESSAGE != ""){'.SF('MSG', 'response.MESSAGE').'}';
+				$JS_TMP .= 'else{'.SF('ERROR').'}';
+			$JS_TMP .= '}';
+		$JS_TMP .= '});';
+	$JS_TMP .= '}';
+	
+	array_push($FUNCTIONS,$JS_TMP);
+}
+?>

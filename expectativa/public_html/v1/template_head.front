@@ -1,0 +1,26 @@
+	<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title><?php echo $SITE['TITULO'];?></title>
+	<link rel="icon" href="/public/custom-img/favicon.png">
+	<meta name="description" content="<?php echo $SITE['DESCRIPCION'];?>">
+	<meta name="author" content="<?php echo $SITE['AUTOR'];?>">
+	<!-- Roboto Fonts -->
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+	<!-- CSS Bootstrap -->
+	<link rel="stylesheet" href="/public/bootstrap/css/bootstrap.min.css?<?php echo $CFG_CACHE;?>">
+	<!-- CSS Select2 -->
+	<link rel="stylesheet" href="/public/select2/select2.min.css?<?php echo $CFG_CACHE;?>" />
+	<!-- CSS Select2 Bootstrap -->
+	<link rel="stylesheet" href="/public/select2/select2-bootstrap-5-theme.min.css?<?php echo $CFG_CACHE;?>" />
+	<!-- CSS FontAwesome -->
+	<link rel="stylesheet" href="/public/fontawesome/css/all.min.css?<?php echo $CFG_CACHE;?>">	
+	<!-- CSS Template -->
+	<link rel="stylesheet" href="/public/custom-css/template.css?<?php echo $CFG_CACHE;?>">
+	<!-- jQuery JavaScript -->
+	<script src="/public/jquery/jquery.min.js?<?php echo $CFG_CACHE;?>"></script>
+	<!-- JS SweetAlert -->
+	<script src="/public/sweetalert2/js/sweetalert2@11.js?<?php echo $CFG_CACHE;?>"></script>
+	<!-- JS Script -->
+	<script src="/public/custom-js/default.js?<?php echo $CFG_CACHE;?>"></script>	

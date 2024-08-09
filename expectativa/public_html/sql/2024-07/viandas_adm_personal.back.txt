@@ -1,0 +1,156 @@
+2024-07-22 13:04:33 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`,`agente`,`cuil`, `grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados` ORDER BY `agente` ASC LIMIT 0 ,100
+2024-07-22 13:04:33 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__empleados`
+2024-07-22 17:09:22 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`,`agente`,`cuil`, `grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados` ORDER BY `agente` ASC LIMIT 0 ,100
+2024-07-22 17:09:22 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__empleados`
+2024-07-22 17:09:38 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`,`agente`,`cuil`, `grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados` ORDER BY `agente` ASC LIMIT 0 ,100
+2024-07-22 17:09:38 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__empleados`
+2024-07-22 17:16:54 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`,`agente`,`cuil`, `grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados` ORDER BY `agente` ASC LIMIT 0 ,100
+2024-07-22 17:16:54 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__empleados`
+2024-07-22 17:18:22 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`,`agente`,`cuil`, `grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados` ORDER BY `agente` ASC LIMIT 0 ,100
+2024-07-22 17:18:22 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__empleados`
+2024-07-22 17:22:16 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`,`agente`,`cuil`, `grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados` ORDER BY `agente` ASC LIMIT 0 ,100
+2024-07-22 17:22:16 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__empleados`
+2024-07-22 17:22:21 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`,`agente`,`cuil`, `grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados` ORDER BY `agente` ASC LIMIT 0 ,100
+2024-07-22 17:22:21 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__empleados`
+2024-07-22 17:25:16 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`,`agente`,`cuil`, `grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados` ORDER BY `agente` ASC LIMIT 0 ,100
+2024-07-22 17:25:16 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__empleados`
+2024-07-22 17:26:45 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`,`agente`,`cuil`, `grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados` ORDER BY `agente` ASC LIMIT 0 ,100
+2024-07-22 17:26:45 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__empleados`
+2024-07-22 17:27:40 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`,`agente`,`cuil`, `grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados` ORDER BY `agente` ASC LIMIT 0 ,100
+2024-07-22 17:27:40 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__empleados`
+2024-07-22 17:27:45 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`,`agente`,`cuil`, `grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados` ORDER BY `agente` ASC LIMIT 0 ,100
+2024-07-22 17:27:45 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__empleados`
+2024-07-22 17:28:15 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`,`agente`,`cuil`, `grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados` ORDER BY `agente` ASC LIMIT 0 ,100
+2024-07-22 17:28:15 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__empleados`
+2024-07-22 17:28:35 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`,`agente`,`cuil`, `grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados` ORDER BY `agente` ASC LIMIT 0 ,100
+2024-07-22 17:28:35 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__empleados`
+2024-07-22 17:28:46 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`,`agente`,`cuil`, `grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados` ORDER BY `agente` ASC LIMIT 0 ,100
+2024-07-22 17:28:46 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__empleados`
+2024-07-22 17:28:51 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`,`agente`,`cuil`, `grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados` ORDER BY `agente` ASC LIMIT 0 ,100
+2024-07-22 17:28:51 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__empleados`
+2024-07-22 17:29:06 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`,`agente`,`cuil`, `grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados` ORDER BY `agente` ASC LIMIT 0 ,100
+2024-07-22 17:29:06 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__empleados`
+2024-07-22 17:29:45 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`,`agente`,`cuil`, `grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados` ORDER BY `agente` ASC LIMIT 0 ,100
+2024-07-22 17:29:45 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__empleados`
+2024-07-22 17:29:51 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`,`agente`,`cuil`, `grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados` ORDER BY `agente` ASC LIMIT 0 ,100
+2024-07-22 17:29:51 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__empleados`
+2024-07-22 17:29:54 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`,`agente`,`cuil`, `grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados` ORDER BY `agente` ASC LIMIT 0 ,100
+2024-07-22 17:29:54 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__empleados`
+2024-07-22 17:37:00 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`,`agente`,`cuil`, `grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados` ORDER BY `agente` ASC LIMIT 0 ,100
+2024-07-22 17:37:00 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__empleados`
+2024-07-22 17:37:05 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`,`agente`,`cuil`, `grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados` ORDER BY `agente` ASC LIMIT 0 ,100
+2024-07-22 17:37:05 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__empleados`
+2024-07-22 17:37:27 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`,`agente`,`cuil`, `grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados` ORDER BY `agente` ASC LIMIT 0 ,100
+2024-07-22 17:37:27 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__empleados`
+2024-07-24 12:15:01 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`,`agente`,`cuil`, `grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados` ORDER BY `agente` ASC LIMIT 0 ,100
+2024-07-24 12:15:01 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__empleados`
+2024-07-24 13:14:40 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`,`agente`,`cuil`, `grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados` ORDER BY `agente` ASC LIMIT 0 ,100
+2024-07-24 13:14:40 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__empleados`
+2024-07-24 13:17:40 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`,`agente`,`cuil`, `grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados` ORDER BY `agente` ASC LIMIT 0 ,100
+2024-07-24 13:17:40 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__empleados`
+2024-07-24 13:17:40 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`,`agente`,`cuil`, `grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados` ORDER BY `agente` ASC LIMIT 0 ,100
+2024-07-24 13:17:40 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__empleados`
+2024-07-24 13:22:10 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`,`agente`,`cuil`, `grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados` ORDER BY `agente` ASC LIMIT 0 ,100
+2024-07-24 13:22:10 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__empleados`
+2024-07-24 13:23:48 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`,`agente`,`cuil`, `grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados` ORDER BY `agente` ASC LIMIT 0 ,100
+2024-07-24 13:23:48 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__empleados`
+2024-07-24 13:29:17 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`,`agente`,`cuil`, `grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados` ORDER BY `agente` ASC LIMIT 0 ,100
+2024-07-24 13:29:17 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__empleados`
+2024-07-24 13:29:21 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`,`agente`,`cuil`, `grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados` ORDER BY `agente` ASC LIMIT 0 ,100
+2024-07-24 13:29:21 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__empleados`
+2024-07-24 13:31:01 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`,`agente`,`cuil`, `grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados` ORDER BY `agente` ASC LIMIT 0 ,100
+2024-07-24 13:31:01 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__empleados`
+2024-07-24 13:57:41 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`,`agente`,`cuil`, `grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados` ORDER BY `agente` ASC LIMIT 0 ,100
+2024-07-24 13:57:41 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__empleados`
+2024-07-24 13:57:42 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`, `agente`, `cuil`,`grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados` WHERE `id_agente` = '19'
+2024-07-24 14:08:04 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`, `agente`, `cuil`,`grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados` WHERE `id_agente` = '19'
+2024-07-24 14:08:08 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`, `agente`, `cuil`,`grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados` WHERE `id_agente` = '19'
+2024-07-24 14:08:58 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`,`agente`,`cuil`, `grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados` ORDER BY `agente` ASC LIMIT 0 ,100
+2024-07-24 14:08:58 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__empleados`
+2024-07-24 14:09:02 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`,`agente`,`cuil`, `grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados` ORDER BY `agente` ASC LIMIT 0 ,100
+2024-07-24 14:09:02 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__empleados`
+2024-07-24 15:25:10 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`,`agente`,`cuil`, `grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados` ORDER BY `agente` ASC LIMIT 0 ,100
+2024-07-24 15:25:10 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__empleados`
+2024-07-24 15:25:14 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`,`agente`,`cuil`, `grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados` ORDER BY `agente` ASC LIMIT 0 ,100
+2024-07-24 15:25:14 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__empleados`
+2024-07-24 15:25:17 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`,`agente`,`cuil`, `grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados` ORDER BY `agente` ASC LIMIT 0 ,100
+2024-07-24 15:25:17 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__empleados`
+2024-07-24 15:25:48 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`,`agente`,`cuil`, `grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados` ORDER BY `agente` ASC LIMIT 0 ,100
+2024-07-24 15:25:48 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__empleados`
+2024-07-24 15:26:04 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`,`agente`,`cuil`, `grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados` ORDER BY `agente` ASC LIMIT 0 ,100
+2024-07-24 15:26:04 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__empleados`
+2024-07-24 15:26:08 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`,`agente`,`cuil`, `grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados` ORDER BY `agente` ASC LIMIT 0 ,100
+2024-07-24 15:26:08 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__empleados`
+2024-07-24 15:38:01 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`,`agente`,`cuil`, `grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados` ORDER BY `agente` ASC LIMIT 0 ,100
+2024-07-24 15:38:01 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__empleados`
+2024-07-24 15:38:31 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`,`agente`,`cuil`, `grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados` ORDER BY `agente` ASC LIMIT 0 ,100
+2024-07-24 15:38:31 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__empleados`
+2024-07-24 15:38:45 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`,`agente`,`cuil`, `grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados` ORDER BY `agente` ASC LIMIT 0 ,100
+2024-07-24 15:38:45 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__empleados`
+2024-07-24 15:38:51 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`, `agente`, `cuil`,`grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados` WHERE `id_agente` = '10'
+2024-07-24 15:45:02 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`,`agente`,`cuil`, `grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados` ORDER BY `agente` ASC LIMIT 0 ,100
+2024-07-24 15:45:02 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__empleados`
+2024-07-24 15:48:32 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`,`agente`,`cuil`, `grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados` ORDER BY `agente` ASC LIMIT 0 ,100
+2024-07-24 15:48:32 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__empleados`
+2024-07-24 15:48:37 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`,`agente`,`cuil`, `grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados`WHERE `agente` LIKE '%FIGUEIRA%' OR `cuil` = 'FIGUEIRA' ORDER BY `agente` ASC LIMIT 0 ,100
+2024-07-24 15:48:37 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__empleados`WHERE `agente` LIKE '%FIGUEIRA%' OR `cuil` = 'FIGUEIRA'
+2024-07-24 15:48:37 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`,`agente`,`cuil`, `grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados`WHERE `agente` LIKE '%FIGUEIRA%' OR `cuil` = 'FIGUEIRA' ORDER BY `agente` ASC LIMIT 0 ,100
+2024-07-24 15:48:37 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__empleados`WHERE `agente` LIKE '%FIGUEIRA%' OR `cuil` = 'FIGUEIRA'
+2024-07-24 15:49:52 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`,`agente`,`cuil`, `grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados` ORDER BY `agente` ASC LIMIT 0 ,100
+2024-07-24 15:49:52 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__empleados`
+2024-07-24 15:50:02 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`,`agente`,`cuil`, `grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados`WHERE `agente` LIKE '%FIGUEIRA%' OR `cuil` = 'FIGUEIRA' ORDER BY `agente` ASC LIMIT 0 ,100
+2024-07-24 15:50:02 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__empleados`WHERE `agente` LIKE '%FIGUEIRA%' OR `cuil` = 'FIGUEIRA'
+2024-07-24 15:50:02 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`,`agente`,`cuil`, `grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados`WHERE `agente` LIKE '%FIGUEIRA%' OR `cuil` = 'FIGUEIRA' ORDER BY `agente` ASC LIMIT 0 ,100
+2024-07-24 15:50:02 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__empleados`WHERE `agente` LIKE '%FIGUEIRA%' OR `cuil` = 'FIGUEIRA'
+2024-07-25 14:51:30 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`,`agente`,`cuil`, `grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados` ORDER BY `agente` ASC LIMIT 0 ,100
+2024-07-25 14:51:30 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__empleados`
+2024-07-25 14:53:58 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`,`agente`,`cuil`, `grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados` ORDER BY `agente` ASC LIMIT 0 ,100
+2024-07-25 14:53:58 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__empleados`
+2024-07-25 14:54:15 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`,`agente`,`cuil`, `grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados` ORDER BY `agente` ASC LIMIT 0 ,100
+2024-07-25 14:54:15 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__empleados`
+2024-07-25 14:57:58 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`,`agente`,`cuil`, `grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados`WHERE `agente` LIKE '%FIGUEIRA%' OR `cuil` = 'FIGUEIRA' ORDER BY `agente` ASC LIMIT 0 ,100
+2024-07-25 14:57:58 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__empleados`WHERE `agente` LIKE '%FIGUEIRA%' OR `cuil` = 'FIGUEIRA'
+2024-07-25 14:57:58 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`,`agente`,`cuil`, `grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados`WHERE `agente` LIKE '%FIGUEIRA%' OR `cuil` = 'FIGUEIRA' ORDER BY `agente` ASC LIMIT 0 ,100
+2024-07-25 14:57:58 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__empleados`WHERE `agente` LIKE '%FIGUEIRA%' OR `cuil` = 'FIGUEIRA'
+2024-07-25 14:58:08 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`,`agente`,`cuil`, `grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados` ORDER BY `agente` DESC LIMIT 0 ,100
+2024-07-25 14:58:08 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__empleados`
+2024-07-25 16:02:22 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`,`agente`,`cuil`, `grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados` ORDER BY `agente` ASC LIMIT 0 ,100
+2024-07-25 16:02:22 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__empleados`
+2024-07-26 13:11:44 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`,`agente`,`cuil`, `grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados` ORDER BY `agente` ASC LIMIT 0 ,100
+2024-07-26 13:11:44 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__empleados`
+2024-07-29 11:25:09 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`,`agente`,`cuil`, `grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados` ORDER BY `agente` ASC LIMIT 0 ,100
+2024-07-29 11:25:09 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__empleados`
+2024-07-29 12:54:51 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`,`agente`,`cuil`, `grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados` ORDER BY `agente` ASC LIMIT 0 ,100
+2024-07-29 12:54:51 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__empleados`
+2024-07-29 12:55:11 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`,`agente`,`cuil`, `grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados` ORDER BY `agente` ASC LIMIT 0 ,100
+2024-07-29 12:55:11 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__empleados`
+2024-07-29 16:32:37 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`,`agente`,`cuil`, `grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados` ORDER BY `agente` ASC LIMIT 0 ,100
+2024-07-29 16:32:37 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__empleados`
+2024-07-29 16:38:18 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`,`agente`,`cuil`, `grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados` ORDER BY `agente` ASC LIMIT 0 ,100
+2024-07-29 16:38:18 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__empleados`
+2024-07-29 16:38:19 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`, `agente`, `cuil`,`grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados` WHERE `id_agente` = '2'
+2024-07-29 17:08:13 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`,`agente`,`cuil`, `grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados` ORDER BY `agente` ASC LIMIT 0 ,100
+2024-07-29 17:08:13 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__empleados`
+2024-07-29 17:08:16 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`,`agente`,`cuil`, `grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados`WHERE `agente` LIKE '%FIGUEIRA%' OR `cuil` = 'FIGUEIRA' ORDER BY `agente` ASC LIMIT 0 ,100
+2024-07-29 17:08:16 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__empleados`WHERE `agente` LIKE '%FIGUEIRA%' OR `cuil` = 'FIGUEIRA'
+2024-07-29 17:08:16 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`,`agente`,`cuil`, `grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados`WHERE `agente` LIKE '%FIGUEIRA%' OR `cuil` = 'FIGUEIRA' ORDER BY `agente` ASC LIMIT 0 ,100
+2024-07-29 17:08:16 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__empleados`WHERE `agente` LIKE '%FIGUEIRA%' OR `cuil` = 'FIGUEIRA'
+2024-07-29 17:08:24 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`,`agente`,`cuil`, `grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados` ORDER BY `agente` ASC LIMIT 0 ,100
+2024-07-29 17:08:24 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__empleados`
+2024-07-29 17:08:28 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`,`agente`,`cuil`, `grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados`WHERE `agente` LIKE '%ABALLAY%' OR `cuil` = 'ABALLAY' ORDER BY `agente` ASC LIMIT 0 ,100
+2024-07-29 17:08:28 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`,`agente`,`cuil`, `grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados`WHERE `agente` LIKE '%ABALLAY%' OR `cuil` = 'ABALLAY' ORDER BY `agente` ASC LIMIT 0 ,100
+2024-07-29 17:08:28 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__empleados`WHERE `agente` LIKE '%ABALLAY%' OR `cuil` = 'ABALLAY'
+2024-07-29 17:08:28 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__empleados`WHERE `agente` LIKE '%ABALLAY%' OR `cuil` = 'ABALLAY'
+2024-07-29 17:14:26 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`,`agente`,`cuil`, `grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados` ORDER BY `agente` ASC LIMIT 0 ,100
+2024-07-29 17:14:26 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__empleados`
+2024-07-29 17:14:26 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`, `agente`, `cuil`,`grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados` WHERE `id_agente` = '19'
+2024-07-29 17:38:37 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`,`agente`,`cuil`, `grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados` ORDER BY `agente` ASC LIMIT 0 ,100
+2024-07-29 17:38:37 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__empleados`
+2024-07-29 17:38:38 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`, `agente`, `cuil`,`grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados` WHERE `id_agente` = '5'
+2024-07-29 17:38:51 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`, `agente`, `cuil`,`grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados` WHERE `id_agente` = '14'
+2024-07-29 18:01:51 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`,`agente`,`cuil`, `grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados` ORDER BY `agente` ASC LIMIT 0 ,100
+2024-07-29 18:01:51 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__empleados`
+2024-07-30 14:01:29 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`,`agente`,`cuil`, `grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados` ORDER BY `agente` ASC LIMIT 0 ,100
+2024-07-30 14:01:29 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__empleados`
+2024-07-30 14:01:31 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente`, `agente`, `cuil`,`grupo`, `disponible` FROM `desa__alexis`.`viandas__empleados` WHERE `id_agente` = '17'
+2024-07-30 14:06:46 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `id_agente` FROM `desa__alexis`.`viandas__empleados` WHERE `cuil` = '27238650440'

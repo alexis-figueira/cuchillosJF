@@ -1,0 +1,48 @@
+<?php
+require_once './app.sys';
+header("Access-Control-Allow-Origin: ".$URL['SYS']);
+header("Access-Control-Allow-Credentials: true");
+header("Access-Control-Allow-Methods: POST, GET");
+header("Access-Control-Allow-Header: content-type");
+
+session_name($CFG_SESSION['NAME']);
+session_start($CFG_SESSION['CONFIG']);
+session_write_close();
+
+require_once './sanitize.sys';
+if(!array_key_exists('B_USER',$_SESSION)){ echo "SIN_AUTENTICAR";exit;}
+if(!array_key_exists('B_PERMISOS',$_SESSION)){ echo "SIN_ACCESO";exit;}
+$C_USER = SANITIZE_JSON($_SESSION['B_USER']);
+$C_PERMISOS = SANITIZE_JSON($_SESSION['B_PERMISOS']);
+if($C_USER == ''){echo "SIN_AUTENTICAR";exit;}
+if($C_PERMISOS == ''){echo "SIN_ACCESO";exit;}
+
+require_once './config.sys';
+require_once './function.sys';
+require_once './function.back';
+require_once './db_connect.sys';
+require_once './routes.sys';
+
+if($ROUTE_FILE == '' or $PP['C'] == FALSE){
+	echo "NO_SE_PUEDE_PROCESAR_LA_SOLICITUD";exit;
+}
+$ROUTE_FILE = "./modulos/".$ROUTE_FILE.".back";
+if(!file_exists($ROUTE_FILE)){echo "NO_SE_PUEDE_PROCESAR_LA_SOLICITUD";exit;}
+header('Content-Type: application/json');
+
+require_once "../vendor/autoload.php";
+
+
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Reader\Csv;
+use PhpOffice\PhpSpreadsheet\Worksheet;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
+use PhpOffice\PhpSpreadsheet\Style\Style;
+use PhpOffice\PhpSpreadsheet\Shared\Date; 
+
+
+require_once $ROUTE_FILE;
+?>

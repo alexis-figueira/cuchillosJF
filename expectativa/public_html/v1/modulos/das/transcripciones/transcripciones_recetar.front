@@ -1,0 +1,134 @@
+<?php
+$TABS['A'] =  array('ICON' => '<i class="fa-regular fa-user"></i>', 'TITLE' => 'Afiliado');
+
+$TABLE['A']['COLUMNAS']			= array(
+	array('COLUMNA' => 'Apellido y Nombre', 'DB' => 'AFILIADO'),
+	array('COLUMNA' => 'DNI'),
+	array('COLUMNA' => 'Cuil'),
+	array('COLUMNA' => 'Fecha Nacimiento', 'DB' => 'NACIMIENTO'),
+	array('COLUMNA' => 'Sexo')
+);
+$TABLE['A']['AJAX_URL'] 		= $LINK_BACK.'/Listado_Afiliado';
+$TABLE['A']['HERRAMIENTAS'] 	= array('VER' => 'C', 'QUICK_SEARCH' => 'C', 'REFRESH' => 'C');
+$TABLE['A']['SETTING'] 			= array('ORDENAR' => "TRUE", 'ORDENAR_COL' => 1,'ORDENAR_METHOD' => 'DESC', 'DOBLE_CLICK' => 'Display_A_Ver');
+$TABLE['A']['QUICK_SEARCH']		= "Buscar Apellido o DNI o CUIL";
+
+$SUBTABS['R'] =  'Recetas';
+$SUBTABLE['R']['COLUMNAS']			= array(
+	array('COLUMNA' => 'Nro'),
+	array('COLUMNA' => 'Fecha'),
+	array('COLUMNA' => 'Observaciones')
+);
+$SUBTABLE['R']['AJAX_URL'] 		= $LINK_BACK.'/Listado_Recetas_Cuil';
+$SUBTABLE['R']['HERRAMIENTAS'] 	= array('ALTA' => 'A', 'RECETAS' => 'C','QUICK_SEARCH' => 'C', 'REFRESH' => 'C');
+$SUBTABLE['R']['SETTING'] 		= array('ORDENAR' => "TRUE", 'ORDENAR_COL' => 1,'ORDENAR_METHOD' => 'DESC', 'DOBLE_CLICK' => 'Display_R_Ver_Receta');
+$SUBTABLE['R']['QUICK_SEARCH']	= "Buscar Nro o Fecha";
+
+$MAIN = CreateMain($TABS, $TABLE);
+
+
+if(in_array('Display_A_Ver', $TABLE_FUNCTION)){
+	unset($TMP);
+	$TMP['MODAL']['ID']			= 'RESUMEN_RECETAS';
+	$TMP['MODAL']['TITLE']		= 'Resumen Recetas';
+	$TMP['MODAL']['SIZE']		= 'XL';
+	
+	$TMP['FOOTER']['CLOSE']		= array('ID' => 'Cerrar');
+	
+	$TMP['FOOTER_TOOLS'] = CreateTableTools('INFO', $SUBTABLE['R'], FALSE);
+	$TMP['BODY'] = CreateMainModal($SUBTABS, $SUBTABLE);
+	
+	array_push($MODALS,CreateModal($TMP['MODAL'], $TMP['BODY'], $TMP['FOOTER']));
+	array_push($VARS,"const MODAL_".$TMP['MODAL']['ID']."_INSTANCE = bootstrap.Modal.getOrCreateInstance('#MODAL_".$TMP['MODAL']['ID']."');");
+	array_push($VARS,"const MODAL_".$TMP['MODAL']['ID']." = document.getElementById('MODAL_".$TMP['MODAL']['ID']."');");	
+	unset($JS_TMP);
+	
+	$JS_TMP = 'function Display_A_Ver(){';
+		$JS_TMP .= 'if($("#Table_A_row").val() == 0){return;}';
+		$JS_TMP .= '$("#Table_R_advanced").val($("#Table_A_row").val());';
+		$JS_TMP .= 'TableLoad("R");';
+		$JS_TMP .= 'MODAL_RESUMEN_RECETAS_INSTANCE.show();';
+	$JS_TMP .= '}';	
+	array_push($FUNCTIONS,$JS_TMP);
+}
+
+if(in_array('Display_R_Principal', $TABLE_FUNCTION)){
+	unset($TMP);
+	$TMP['MODAL']['ID']			= 'TRANSCRIBIR';
+	$TMP['MODAL']['TITLE']		= 'Transcripcion de recetas';
+	$TMP['MODAL']['SIZE']		= 'XL';
+	
+	$TMP['FOOTER']['SUBMIT']	= array('ID' => 'Generar');
+	$TMP['FOOTER']['CLOSE']		= array('ID' => 'Cerrar');
+	
+	$TMP['BODY'] = '<input type="hidden" id="AUTOFOCUS">';
+	$TMP['BODY'] .= '<form id="TRANSCRIBIR_FORM" autocomplete="off">';
+		$TMP['BODY'] .= '<input type="hidden" class="InputPickUp" id="DNI" validate="CEI" value="0">';//ID_TRANSCRIPCION
+		$TMP['BODY'] .= '<input type="hidden" class="InputPickUp" id="TRANSCRIPCION" validate="CEB" value="0">';//ID_TRANSCRIPCION
+		for($A=1; $A<=2;$A++){		
+			$TMP['BODY'] .= '<div class="row justify-content-center mb-2">';
+				$TMP['BODY'] .= '<input type="hidden" class="InputPickUp" id="PEDIDO_'.$A.'" validate="CEB" value="0">';//ID_PEDIDO
+				$TMP['BODY'] .= '<div class="col-10"><select class="form-control select2js InputPickUp" validate="CEI" id="TROQUEL_'.$A.'"><option value="" selected disabled></option></select></div>';//ID_TROQUEL
+				$TMP['BODY'] .= '<div class="col-2"><input type="number" id="CANTIDAD_'.$A.'" validate="CEI" class="form-control InputPickUp" value="1"></div>';//CANTIDAD TROQUEL
+			$TMP['BODY'] .= '</div>';
+		}
+		$TMP['BODY'] .= '<hr>';
+		$TMP['BODY'] .= CreateFormInput(array('ID' => 'fecha', 'TIPO' => 'date', 'VALIDATE' => 'CFA', 'REQUIRED' => TRUE, 'VALUE' => date("Y-m-d")));
+		$TMP['BODY'] .= CreateFormInput(array('ID' => 'diagnostico', 'TIPO' => 'text', 'MAXLENGTH' => 255, 'VALIDATE' => 'CTS', 'VALUE' => 'SM'));
+		$TMP['BODY'] .= CreateFormInput(array('ID' => 'observacion', 'TIPO' => 'textarea', 'VALIDATE' => 'CTS'));
+	$TMP['BODY'] .= '</form>';
+	array_push($MODALS,CreateModal($TMP['MODAL'], $TMP['BODY'], $TMP['FOOTER']));
+	array_push($VARS,"const MODAL_".$TMP['MODAL']['ID']."_INSTANCE = bootstrap.Modal.getOrCreateInstance('#MODAL_".$TMP['MODAL']['ID']."');");
+	array_push($VARS,"const MODAL_".$TMP['MODAL']['ID']." = document.getElementById('MODAL_".$TMP['MODAL']['ID']."');");	
+	unset($JS_TMP);
+	
+	$JS_TMP = 'function Display_R_Principal(){';
+		$JS_TMP .= 'if($("#Table_A_row").val() == 0){return;}';
+		$JS_TMP .= '$("#TRANSCRIBIR_FORM #DNI").val($("#Table_A_row").val());';
+		$JS_TMP .= 'inicializarSelect2("#TROQUEL_1, #TROQUEL_2", "#MODAL_TRANSCRIBIR","'.$LINK_BACK.'/DL_Medicamentos/","Ingrese el nombre del medicamento", 1);';
+		$JS_TMP .= '$("#MODAL_TRANSCRIBIR").on("shown.bs.modal",function(e){$("#MODAL_TRANSCRIBIR #TROQUEL_1").select2("open");});';
+		$JS_TMP .= 'MODAL_RESUMEN_RECETAS_INSTANCE.hide();';
+		$JS_TMP .= 'MODAL_TRANSCRIBIR_INSTANCE.show();';		
+	$JS_TMP .= '}';
+	
+	$JS_TMP .= 'function MODAL_TRANSCRIBIR_Procesar(){';
+		$JS_TMP .= '$.ajax({url: "'.$LINK_BACK.'/Procesar_Receta/",data: JSON.stringify(FormDataPicker("TRANSCRIBIR_FORM"))}).done(function (response){';
+			$JS_TMP .= 'if(response.RESULTADO == "OK"){';
+				$JS_TMP .= '$("#TROQUEL_1, #TROQUEL_2").val("").trigger("change");';
+				$JS_TMP .= '$("#CANTIDAD_1, #CANTIDAD_2").val("1");';
+				$JS_TMP .= '$("#PEDIDO_1, #PEDIDO_2").val("0");';
+				$JS_TMP .= '$("#FECHA").val("'.date("Y-m-d").'");';
+				$JS_TMP .= '$("#OBSERVACION").val("");';
+				$JS_TMP .= 'TableLoad("R");';
+				$JS_TMP .= 'if(response.MESSAGE != ""){$.ajax({url: "'.$LINK_BACK.'/Procesar_Envio/",data: JSON.stringify({"CEB_TRANSCRIPCION":response.MESSAGE}),beforeSend: function() {},complete: function() {},error: function() {}});}';
+				$JS_TMP .= 'MODAL_TRANSCRIBIR_INSTANCE.hide();';
+				$JS_TMP .= SF('OK');
+			$JS_TMP .= '}else{';
+				$JS_TMP .= 'if(response.MESSAGE != ""){'.SF('MSG', 'response.MESSAGE').'}';
+				$JS_TMP .= 'else{'.SF('ERROR').'}';
+			$JS_TMP .= '}';
+		$JS_TMP .= '});';
+	$JS_TMP .= '}';	
+	array_push($FUNCTIONS,$JS_TMP);
+}
+
+if(in_array('Display_R_Ver_Receta', $TABLE_FUNCTION)){
+	$JS_TMP = 'function Display_R_Ver_Receta(){';
+		$JS_TMP .= 'if($("#Table_R_row").val() == 0){return;}';	
+		$JS_TMP .= '$.ajax({url: "'.$LINK_BACK.'/Ver_Receta_Datos/",data: JSON.stringify({"CEB_RECETA":$("#Table_R_row").val()})}).done(function (response){';
+			$JS_TMP .= 'if(response.ID_RECETA != 0){';
+				$JS_TMP .= 'var NewTab = window.open("'.$URL['API'].'TranscripcionesRecetar/Ver_Receta/" + response.DNI + "/" + response.ARCHIVO + ".pdf" + "?" + Math.floor(Math.random() * (99999 - 10000) + 10000) , "_blank");';
+				$JS_TMP .= 'if(NewTab){NewTab.focus();}else{'.SF('MSG','"El navegador esta bloqueando los popups"').'}';
+			$JS_TMP .= '}';
+		$JS_TMP .= '});';		
+	$JS_TMP .= '}';	
+	array_push($FUNCTIONS,$JS_TMP);
+}
+
+$JS_TMP = "$(document).ready(function(){";
+	$JS_TMP .= "$('#MODAL_TRANSCRIBIR .modal-body').css('overflow-x','hidden');";
+	$JS_TMP .= "if($('#Table_A_search').val() == ''){Display_A_QuickSearch();}";
+$JS_TMP .= "});";
+array_push($FUNCTIONS,$JS_TMP);
+
+?>

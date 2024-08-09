@@ -1,0 +1,7 @@
+	<div id="spinner-container" class="position-fixed top-50 start-50 translate-middle d-none"><div class="LoadingSpinner"></div></div>
+	<div id="overlay" class="position-fixed top-0 start-0 w-100 h-100 bg-dark opacity-50 d-none"></div>
+
+	<!-- JS Bootstrap -->
+	<script src="/public/bootstrap/js/bootstrap.bundle.min.js?<?php echo $CFG_CACHE;?>"></script>
+	<!-- JS Select2 -->
+	<script src="/public/select2/select2.min.js?<?php echo $CFG_CACHE;?>"></script>

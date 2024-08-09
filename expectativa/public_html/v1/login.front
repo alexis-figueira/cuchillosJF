@@ -1,0 +1,147 @@
+<?php
+$MSG_Login = "";
+$MSG_Expire = "";
+$C_USER['ID'] = '';
+$C_USER['NAME'] = '';
+$C_USER['CUIL'] = '';
+$C_USER['PASS_EXPIRE'] = '';
+$C_USER['HASH'] = '';
+$C_PERMISOS = array();
+
+if(!array_key_exists($CFG_SESSION['LASTLOGIN'],$sC)){$sC[$CFG_SESSION['LASTLOGIN']] = '';}
+if(!array_key_exists($CFG_SESSION['LASTHASH'],$sC)){$sC[$CFG_SESSION['LASTHASH']] = '';}
+if(!array_key_exists('CTS_USUARIO',$sP)){$sP['CTS_USUARIO'] = '';}
+if(!array_key_exists('CtS_PASS',$sP)){$sP['CtS_PASS'] = '';}
+if(!array_key_exists('CTS_ACTION',$sP)){$sP['CTS_ACTION'] = '';}
+if(!array_key_exists('CtU_TOKEN',$sP)){$sP['CtU_TOKEN'] = '';}
+if(!array_key_exists('CtS_PASS_NEW',$sP)){$sP['CtS_PASS_NEW'] = '';}
+if(!array_key_exists('CtS_PASS_DUP',$sP)){$sP['CtS_PASS_DUP'] = '';}
+
+function LogOut(){
+	global $CFG_SESSION;
+	Cookie($CFG_SESSION['LASTHASH'], "", time()-30);
+	session_name($CFG_SESSION['NAME']);
+	session_start($CFG_SESSION['CONFIG']);
+	session_unset();
+	session_destroy();
+}
+
+if($ROUTE_ACT == "Salir"){
+	LogOut();
+	header("Location: ".$URL['SYS']);exit;
+}
+
+if($sP['CTS_USUARIO'] != '' && $sP['CtS_PASS'] != '' && $sP['CTS_ACTION'] != '' && $sP['CtU_TOKEN'] != ''){
+	$Where = "";
+	//if(Captcha($sP['CtU_TOKEN'], $sP['CTS_ACTION']) === FALSE){$MSG_Login = "No pasaste el captcha";}
+	//else{
+		
+		$AD_CONNECT = ldap_connect($CFG_AD['HOST']);
+		ldap_set_option($AD_CONNECT, LDAP_OPT_PROTOCOL_VERSION, 3);
+		ldap_set_option($AD_CONNECT, LDAP_OPT_REFERRALS, 0);
+		if($AD_CONNECT){
+			$AD_AUTHENTICATION = @ldap_bind($AD_CONNECT, $sP['CTS_USUARIO']."@".$CFG_AD['DOMAIN'], $sP['CtS_PASS']);
+			
+
+			if(!$AD_AUTHENTICATION){
+				if (!defined('LDAP_OPT_DIAGNOSTIC_MESSAGE')) define('LDAP_OPT_DIAGNOSTIC_MESSAGE', 0x0032);
+				if (ldap_get_option($AD_CONNECT, LDAP_OPT_DIAGNOSTIC_MESSAGE, $AD_ERROR_EXTENDED)) {
+					
+					$ADD_ERROR = explode(',', $AD_ERROR_EXTENDED)[2];
+					$ADD_ERROR = explode(' ', $ADD_ERROR)[2];
+					$ADD_ERROR = intval($ADD_ERROR);
+					if ($ADD_ERROR === 553 || $ADD_ERROR === 773) {
+						$MSG_Login = "La contraseña de la PC expiro.";LogOut();
+					}elseif($ADD_ERROR === 775){
+						$MSG_Login = "El usuario de la PC se encuentra bloqueado.";LogOut();
+					}elseif($ADD_ERROR === 533) {
+						$MSG_Login = "El usuario de la PC no se encuentra habilitado.";LogOut();
+					}else{
+						$MSG_Login = "Usuario y/o Contraseña incorrectos";LogOut();
+					}
+				}else{
+					$MSG_Login = "Usuario y/o Contraseña incorrectos";LogOut();
+				}
+			}else{
+				$AD_QUERY = ldap_search($AD_CONNECT, "DC=DASLOCAL,DC=gob", 'samaccountname='.$sP['CTS_USUARIO'], array("useraccountcontrol", "pwdlastset"));
+				$AD_RESULT = ldap_get_entries($AD_CONNECT, $AD_QUERY);
+				
+				if(count($AD_RESULT) < 1){$MSG_Login = "Usuario y/o Contraseña incorrectos";LogOut();}
+				else{
+					if(AD_UAC_Decode($AD_RESULT[0]['useraccountcontrol'][0]) == FALSE){
+						$AD_TIME 		= $AD_RESULT[0]['pwdlastset'][0];
+						$AD_WINDOWSTIME	= (int)($AD_TIME / 10000000); // divide by 10 000 000 to get seconds
+						$AD_TO_UUIX 	= ($AD_WINDOWSTIME - 11644473600); // 1.1.1600 -> 1.1.1970 difference in seconds
+						
+						$LOGIN_PASSWORD_EXPIRE = Fecha_Agregar(date("Y-m-d H:s:i", strtotime(gmdate("Y-m-d H:s:i", $AD_TO_UUIX)." -3 hours")), $CFG_AD['PASS_EXPIRE'], 'dias');
+					}else{
+						$LOGIN_PASSWORD_EXPIRE = "9999-12-31 23:59:59";
+					}
+					$Where = " WHERE md5(`usuario`) = '".md5($sP['CTS_USUARIO'])."'";
+				}				
+			}
+		}	
+	//}
+}elseif($sC[$CFG_SESSION['LASTLOGIN']] != '' && $sC[$CFG_SESSION['LASTHASH']] != '' && strlen($sC[$CFG_SESSION['LASTHASH']]) == 32 && ctype_xdigit($sC[$CFG_SESSION['LASTHASH']])){
+	$Where = " WHERE md5(`usuario`) = '".md5($sC[$CFG_SESSION['LASTLOGIN']])."' AND `login_hash` = '".$sC[$CFG_SESSION['LASTHASH']]."'";
+}else{
+	$Where = "";
+}
+
+if($Where != ""){
+	$Que = QuerySelect("SELECT `id_usuario`,`usuario`,`cuil`,`password_expire`,`login_hash` ,`disponible` FROM ".$DBT['USERS'].$Where);
+	if(QueryNumRows($Que) == 0){ if($sC[$CFG_SESSION['LASTHASH']] != ''){$MSG_Login = "Tenes que volver a ingresar";}else{$MSG_Login = "El Usuario no fue habilitado en el sistema";}LogOut();}
+	else{
+		$Row = QueryFetch($Que);
+		if($Row['disponible'] == 0){$MSG_Login = "El usuario del sistema se encuentra bloqueado";LogOut();}
+		else{
+			$C_USER['ID'] = $Row['id_usuario'];
+			$C_USER['NAME'] = $Row['usuario'];
+			$C_USER['CUIL'] = $Row['cuil'];
+			$C_USER['PASS_EXPIRE'] = $Row['password_expire'];
+			if(isset($LOGIN_PASSWORD_EXPIRE) && $LOGIN_PASSWORD_EXPIRE != $Row['password_expire']){
+				$C_USER['PASS_EXPIRE'] = $LOGIN_PASSWORD_EXPIRE;
+				$Que = QueryUpdate("UPDATE ".$DBT['USERS']." SET `password_expire` = '".$LOGIN_PASSWORD_EXPIRE."' WHERE `id_usuario` = '".$C_USER['ID']."'");
+			}
+			if($Row['login_hash'] != '' && $sC[$CFG_SESSION['LASTHASH']] == $Row['login_hash']){
+				$C_USER['HASH'] = $sC[$CFG_SESSION['LASTHASH']];
+			}else{
+				$C_USER['HASH'] = md5($Row['usuario']."_".date("Ymd_His")."_".CodeRandom(10));
+			}
+			
+			$Que = QueryUpdate("UPDATE ".$DBT['USERS']." SET `login_date` = '".date("Y-m-d H:i:s")."', `login_hash` = ".($C_USER['HASH'] != '' ? "'".$C_USER['HASH']."'" : "NULL")." WHERE `id_usuario` = '".$C_USER['ID']."'");
+			if($sP['CtS_PASS'] != ''){QueryInsert("INSERT INTO ".$DBT['USERS_LOGS']."(`id_usuario`, `ip`, `fecha`) VALUES ('".$C_USER['ID']."','".ClientIP()."',NOW())");}
+			Cookie($CFG_SESSION['LASTLOGIN'], $C_USER['NAME']);
+			Cookie($CFG_SESSION['LASTHASH'], $C_USER['HASH']);
+			$Que2 = QuerySelect("SELECT `route`,`permiso` FROM ".$DBT['USERS_PERMISOS']." WHERE `id_usuario` = '".$C_USER['ID']."'");
+			while($Row2 = QueryFetch($Que2)){
+				$C_PERMISOS[$Row2['route']] = $Row2['permiso'];
+			}
+
+			session_name($CFG_SESSION['NAME']);
+			session_start($CFG_SESSION['CONFIG']);
+			if(!array_key_exists('B_USER', $_SESSION) or !array_key_exists('B_PERMISOS', $_SESSION)){$SessionWrite = TRUE;}
+			elseif($_SESSION['B_USER'] != json_encode($C_USER) or $_SESSION['B_PERMISOS'] != json_encode($C_PERMISOS)){$SessionWrite = TRUE;}
+			else{$SessionWrite = FALSE;}
+
+			if($SessionWrite == TRUE){
+				$_SESSION['B_USER'] = json_encode($C_USER);
+				$_SESSION['B_PERMISOS'] = json_encode($C_PERMISOS);
+				session_write_close();
+			}else{
+				session_abort();
+			}
+			if(date("Y-m-d H:i:s") >= $C_USER['PASS_EXPIRE']){
+				$MSG_Login = "La contraseña de la PC expiro.";LogOut();
+			}else{				
+				if($sP['CtS_PASS'] != ''){header ("Location: ".$sH['REDIRECT_URL']);}
+			}
+		}
+	}
+}
+if($C_USER['ID'] == "" or $MSG_Login != "" or $MSG_Expire != ""){
+	require_once './login_template.front';
+	exit;
+}
+
+?>

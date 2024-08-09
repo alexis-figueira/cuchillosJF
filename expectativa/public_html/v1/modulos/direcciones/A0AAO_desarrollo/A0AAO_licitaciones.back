@@ -1,0 +1,98 @@
+<?php
+require_once './db_connect_dasgobar.sys';
+if($ROUTE_OPC == 'Listado_Licitaciones'){
+	$RETURN['COUNT'] = 0;
+	$RETURN['TOTAL'] = 0;
+	$RETURN['PAGINAS'] = 1;
+	$RETURN['ROWS'] = [];
+	if($PP['C'] != 1){EJE($RETURN);}
+	$ARRAY_ORDER = array(1 => '`expediente` {METHOD}', 2 => '`apertura` {METHOD}', 3 => '`objeto` {METHOD}', 4 => '`tramite` {METHOD}', 5 => '`disponible` {METHOD}');
+	$FORM = LISTADO_QUERY($ARRAY_ORDER);
+	if($FORM['SEARCH'] != NULL){ $SEARCH = "WHERE `expediente` = '".$FORM['SEARCH']."'";}else{$SEARCH = "";}
+	$Que = QuerySelect("SELECT `id`, `apertura`, `expediente`, `objeto`, `tramite`, `disponible` FROM ".$DBT_WEBDAS['LICITACIONES'].$SEARCH." ORDER BY ".$FORM['ORDENAR']." LIMIT ".$FORM['LIMIT']." ,".$FORM['ROWS'], "QWE_WEBDAS");
+	while($Row = QueryFetch($Que)){
+		$RETURN['COUNT']++;
+		$TMP = [];
+		$TMP['ID'] 						= $Row['id'];
+		$TMP['DATA']['APERTURA'] 		= Fecha_Formato($Row['apertura']);
+		$TMP['DATA']['EXPEDIENTE'] 		= $Row['expediente'];
+		$TMP['DATA']['OBJETO'] 			= $Row['objeto'];
+		$TMP['DATA']['LINK'] 			= $Row['tramite'];
+		if($Row['disponible'] == 1){$TMP['DATA']['DISPONIBLE'] = '<i class="fa-solid fa-circle-check link-success" title="DISPONIBLE"></i>';}
+		if($Row['disponible'] == 0){$TMP['DATA']['DISPONIBLE'] = '<i class="fa-solid fa-circle-xmark link-danger" title="BLOQUEADO"></i>';}		
+		array_push($RETURN['ROWS'], $TMP);
+		unset($TMP);
+	}
+	$Que = QuerySelect("SELECT COUNT(*) AS 'total' FROM ".$DBT_WEBDAS['LICITACIONES'].$SEARCH, "QWE_WEBDAS");
+	while($Row = QueryFetch($Que)){	
+		$RETURN['TOTAL'] = $Row['total'];
+		$RETURN['PAGINAS'] = ceil($RETURN['TOTAL']/$FORM['ROWS']);
+	}
+	EJE($RETURN);
+}
+elseif($ROUTE_OPC == 'Procesar_Licitacion'){
+
+	if($PP['A'] == 0 && $PP['M'] == 0){RJRE();}
+	if(CIJE('CEI_ID_LICITACION') === TRUE){RJRE();};
+	if(CIJE('CTS_EXPEDIENTE') === TRUE){RJRE();};
+	if(CIJE('CFA_APERTURA') === TRUE){RJRE();};	
+	if(CIJE('CTS_OBJETO') === TRUE){RJRE();};
+	if(CIJE('CTS_TRAMITE') === TRUE){RJRE();};
+	if($sJ['CEI_ID_LICITACION'] == 0 && $PP['A'] != 1){RJRE("PERMISOS INSUFICIENTES");}
+	if($sJ['CEI_ID_LICITACION'] != 0 && $PP['M'] != 1){RJRE("PERMISOS INSUFICIENTES");}
+
+	$Que = QuerySelect("SELECT `id` FROM ".$DBT_WEBDAS['LICITACIONES']." WHERE `expediente` = '".$sJ['CTS_EXPEDIENTE']."'", "QWE_WEBDAS");
+	if(QueryNumRows($Que) > 0){
+		while($Row = QueryFetch($Que)){
+			if($Row['id'] != $sJ['CEI_ID_LICITACION']){RJRE("El expediente ya se encuentra registrado");}
+		}
+	}
+	if($sJ['CEI_ID_LICITACION'] == 0){
+		$Que = QueryInsert("INSERT INTO ".$DBT_WEBDAS['LICITACIONES']."(`apertura`, `expediente`, `objeto`, `tramite`, `reg_usuario`, `reg_fecha`) VALUES ('".$sJ['CFA_APERTURA']."', '".$sJ['CTS_EXPEDIENTE']."', '".$sJ['CTS_OBJETO']."', '".$sJ['CTS_TRAMITE']."', '".$C_USER['ID']."', NOW())", "QWE_WEBDAS");
+	}else{
+		$Que = QuerySelect("SELECT `id`, `apertura`, `expediente`, `objeto`, `tramite` FROM ".$DBT_WEBDAS['LICITACIONES']." WHERE `id` = '".$sJ['CEI_ID_LICITACION']."'", "QWE_WEBDAS");
+		if(QueryNumRows($Que) < 1){RJRE();}
+		while($Row = QueryFetch($Que)){
+			if($Row['expediente'] != $sJ['CTS_EXPEDIENTE']){QueryUpdate("UPDATE ".$DBT_WEBDAS['LICITACIONES']." SET `expediente` = '".$sJ['CTS_EXPEDIENTE']."', `reg_fecha` = NOW(), `reg_usuario` = '".$C_USER['ID']."' WHERE `id` = '".$sJ['CEI_ID_LICITACION']."'", "QWE_WEBDAS");}
+			if($Row['apertura'] != $sJ['CFA_APERTURA']){QueryUpdate("UPDATE ".$DBT_WEBDAS['LICITACIONES']." SET `apertura` = '".$sJ['CFA_APERTURA']."', `reg_fecha` = NOW(), `reg_usuario` = '".$C_USER['ID']."' WHERE `id` = '".$sJ['CEI_ID_LICITACION']."'", "QWE_WEBDAS");}
+			if($Row['objeto'] != $sJ['CTS_OBJETO']){QueryUpdate("UPDATE ".$DBT_WEBDAS['LICITACIONES']." SET `objeto` = '".$sJ['CTS_OBJETO']."', `reg_fecha` = NOW(), `reg_usuario` = '".$C_USER['ID']."' WHERE `id` = '".$sJ['CEI_ID_LICITACION']."'", "QWE_WEBDAS");}
+			if($Row['tramite'] != $sJ['CTS_TRAMITE']){QueryUpdate("UPDATE ".$DBT_WEBDAS['LICITACIONES']." SET `tramite` = '".$sJ['CTS_TRAMITE']."', `reg_fecha` = NOW(), `reg_usuario` = '".$C_USER['ID']."' WHERE `id` = '".$sJ['CEI_ID_LICITACION']."'", "QWE_WEBDAS");}			
+		}
+	}
+	RJRO();
+}
+elseif($ROUTE_OPC == 'Procesar_Licitacion_Status'){
+	if($PP['B'] == 0){RJRE(1);}
+	if(CIJE('CEI_ID') === TRUE){RJRE(2);};
+	
+	$Que = QuerySelect("SELECT `id`, `disponible` FROM ".$DBT_WEBDAS['LICITACIONES']." WHERE `id` = '".$sJ['CEI_ID']."'", "QWE_WEBDAS");
+	if(QueryNumRows($Que) < 1){RJRE(3);}
+	while($Row = QueryFetch($Que)){
+		if($Row['disponible'] == 1){
+			$Que = QueryUpdate("UPDATE ".$DBT_WEBDAS['LICITACIONES']." SET `disponible` = '0', `reg_fecha` = NOW(), `reg_usuario` = '".$C_USER['ID']."' WHERE `id` = '".$sJ['CEI_ID']."'", "QWE_WEBDAS");
+		}
+		if($Row['disponible'] == 0){
+			$Que = QueryUpdate("UPDATE ".$DBT_WEBDAS['LICITACIONES']." SET `disponible` = '1', `reg_fecha` = NOW(), `reg_usuario` = '".$C_USER['ID']."' WHERE `id` = '".$sJ['CEI_ID']."'", "QWE_WEBDAS");
+		}
+	}
+	RJRO();
+}
+elseif($ROUTE_OPC == 'Ver_Licitacion'){
+	$RETURN['ID'] = 0;
+	if($PP['C'] != 1){EJE($RETURN);}
+	if(CIJE('CEI_ID') === TRUE){$sJ['CEI_ID'] = 0;};
+	$Que = QuerySelect("SELECT `id`, `apertura`, `expediente`, `objeto`, `tramite`, `disponible` FROM ".$DBT_WEBDAS['LICITACIONES']." WHERE `id` = '".$sJ['CEI_ID']."'", "QWE_WEBDAS");	
+	while($Row = QueryFetch($Que)){
+		$RETURN['ID'] 			= $Row['id'];
+		$RETURN['APERTURA'] 	= $Row['apertura'];
+		$RETURN['EXPEDIENTE'] 	= $Row['expediente'];
+		$RETURN['OBJETO'] 		= $Row['objeto'];
+		$RETURN['TRAMITE'] 		= $Row['tramite'];
+		$RETURN['DISPONIBLE'] 	= $Row['disponible'];
+	}
+	EJE($RETURN);
+}
+else{
+	EE("NO_SE_PUEDE_PROCESAR_LA_SOLICITUD");
+}
+?>

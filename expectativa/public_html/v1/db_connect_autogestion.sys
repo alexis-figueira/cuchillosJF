@@ -1,0 +1,24 @@
+<?php
+$ZXSD_PORTAL['HOST'] 	= '119.8.79.105';
+$ZXSD_PORTAL['USER'] 	= 'sys_autogestion';
+$ZXSD_PORTAL['PASS'] 	= 'DFR@sbL.7m0QK08';
+
+$ZXS_PORTAL['R'] 		= '`autogestion_recetas`'; 			//BASE RECETAS
+$ZXS_PORTAL['A'] 		= '`autogestion_acceso`'; 			//BASE USER LOGIN
+$DBT_PORTAL = array(
+	"RECETAS_ARCHIVOS"			=>	$ZXS_PORTAL['R'].".`recetas__archivos`",
+	"RECETAS_FTDAS"				=>	$ZXS_PORTAL['R'].".`recetas__ftdas`",
+	"RECETAS_TRANSCRIPCION"		=>	$ZXS_PORTAL['R'].".`recetas__transcripcion`",
+	"RECETAS_TROQUEL"			=>	$ZXS_PORTAL['R'].".`recetas__troquel`",
+	"RECETAS_TROQUEL_TEMP"		=>	$ZXS_PORTAL['R'].".`recetas__troquel_temp`",
+	"PADRON"					=>	$ZXS_PORTAL['A'].".`sys__padron`",
+);
+
+try{
+	$GLOBALS['QWE_PORTAL'] = new PDO("mysql:host=".$ZXSD_PORTAL['HOST'].";charset=utf8mb4", $ZXSD_PORTAL['USER'], $ZXSD_PORTAL['PASS'], [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC]);
+}catch(PDOException $e){
+	echo $e->getMessage();
+	echo "Sitio en mantenimiento.";exit;
+}
+
+?>

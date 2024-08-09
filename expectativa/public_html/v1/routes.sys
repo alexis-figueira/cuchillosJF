@@ -1,0 +1,82 @@
+<?php
+$ROUTES_SYS = array(
+	"Sistema" 				=> array(	"Archivo" => "menu",	"PermisosDefault" => array(),	"Padre" => "Inicio",	"menu" => array("Display" => "Sistema",		"Icono" => "fa-house")),
+		"Usuarios"			=> array(	"Archivo" => "sistema/usuarios",	"PermisosDefault" => array(),	"Padre" => "Sistema",	"menu" => array("Display" => "Usuarios", 	"Icono" => "fa-user",),		"Permisos" => array('C','A','B','M')),
+	
+	"Viandas" 				=> array(	"Archivo" => "menu",	"PermisosDefault" => array("C"),	"Padre" => "Inicio",	"menu" => array("Display" => "Viandas",		"Icono" => "fa-burger")),
+		"ViandasAdm" 		=> array(	"Archivo" => "menu",	"PermisosDefault" => array(),		"Padre" => "Viandas",	"menu" => array("Display" => "Administracion",		"Icono" => "fa-gear")),
+			"ViandasPersonal" 		=> array(	"Archivo" => "viandas/viandas_adm_personal","PermisosDefault" => array(),		"Padre" => "ViandasAdm",	"menu" => array("Display" => "Personal",		"Icono" => "fa-user"),					"Permisos" => array('C','A','B','M')),
+			"ViandasMenu" 			=> array(	"Archivo" => "viandas/viandas_adm_menu",	"PermisosDefault" => array(),		"Padre" => "ViandasAdm",	"menu" => array("Display" => "Menu",			"Icono" => "fa-file-import"),			"Permisos" => array('C','A','B','M','E')),
+			"ViandasResumen" 		=> array(	"Archivo" => "viandas/viandas_adm_resumen",	"PermisosDefault" => array(),		"Padre" => "ViandasAdm",	"menu" => array("Display" => "Resumen",			"Icono" => "fa-file-contract"),			"Permisos" => array('C','A','B','M')),
+			"ViandasHaberes" 		=> array(	"Archivo" => "viandas/viandas_adm_haberes",	"PermisosDefault" => array(),		"Padre" => "ViandasAdm",	"menu" => array("Display" => "Haberes",			"Icono" => "fa-file-invoice-dollar"),	"Permisos" => array('C','A')),
+			"ViandasChamba"			=> array(	"Archivo" => "viandas/viandas_adm_chamba",	"PermisosDefault" => array(),		"Padre" => "ViandasAdm",	"menu" => array("Display" => "Reportes",		"Icono" => "fa-regular fa-file-pdf"),	"Permisos" => array('C','A','M')),
+			"ViandasBusqueda"		=> array(	"Archivo" => "viandas/viandas_adm_busqueda","PermisosDefault" => array(),		"Padre" => "ViandasAdm",	"menu" => array("Display" => "Busqueda",		"Icono" => "fa-solid fa-search"),		"Permisos" => array('C','A','M')),
+		
+		"ViandasSUM" 		=> array(	"Archivo" => "viandas/viandas_sum_pedidos",	"PermisosDefault" => array(),	"Padre" => "Viandas",	"menu" => array("Display" => "SUM",		"Icono" => "fa-file-contract"),		"Permisos" => array('C','A','B','M')),
+		"ViandasPedidos" 	=> array(	"Archivo" => "viandas/viandas_pedidos",	"PermisosDefault" => array("C","A","B","M"),	"Padre" => "Viandas",	"menu" => array("Display" => "Pedidos",	"Icono" => "fa-burger"),		"Permisos" => array('C','A','B','M')),
+	
+	"Das" 			=> array(	"Archivo" => "menu",	"PermisosDefault" => array('C'),	"Padre" => "Inicio",	"menu" => array("Display" => "Das",		"Icono" => "fa-sitemap fa-landmark-dome")),
+		//"FirmasCorreos" 		=> array(	"Archivo" => "das/firmas_correos",	"PermisosDefault" => array('C'),	"Padre" => "Das",	"menu" => array("Display" => "Firma Correo",		"Icono" => "fa-signature"),		"Permisos" => array('C')),
+		"Nomenclador" 		=> array(	"Archivo" => "menu",	"PermisosDefault" => array('C'),	"Padre" => "Das",	"menu" => array("Display" => "Nomenclador",		"Icono" => "fa-notes-medical")),
+			"Alfabeta" 			=> array(	"Archivo" => "das/nomenclador/alfabeta",	"PermisosDefault" => array('C'),	"Padre" => "Nomenclador",	"menu" => array("Display" => "Alfabeta",	"Icono" => "fa-book-medical"),		"Permisos" => array('C')),
+			"Ft_Das" 			=> array(	"Archivo" => "das/nomenclador/ftdas",		"PermisosDefault" => array('C'),	"Padre" => "Nomenclador",	"menu" => array("Display" => "Ft Das",	"Icono" => "fa-book-medical"),		"Permisos" => array('C','A')),
+		"Transcripciones" 	=> array(	"Archivo" => "menu",	"PermisosDefault" => array(''),	"Padre" => "Das",	"menu" => array("Display" => "Transcripciones",		"Icono" => "fa-file-signature")),
+			"TranscripcionesDerivar" 			=> array(	"Archivo" => "das/transcripciones/transcripciones_derivar",	"PermisosDefault" => array(),	"Padre" => "Transcripciones",	"menu" => array("Display" => "Derivar",	"Icono" => "fa-reply-all"),		"Permisos" => array('C','A')),
+			"TranscripcionesTranscribir" 		=> array(	"Archivo" => "das/transcripciones/transcripciones_transcribir",	"PermisosDefault" => array(),	"Padre" => "Transcripciones",	"menu" => array("Display" => "Transcribir",	"Icono" => "fa-file-prescription"),		"Permisos" => array('C','A')),
+			"TranscripcionesRecetar" 			=> array(	"Archivo" => "das/transcripciones/transcripciones_recetar",	"PermisosDefault" => array(),	"Padre" => "Transcripciones",	"menu" => array("Display" => "Recetar",	"Icono" => "fa-file-pen"),		"Permisos" => array('C','A')),
+	
+	"Direcciones" 			=> array(	"Archivo" => "menu",	"PermisosDefault" => array(),	"Padre" => "Inicio",	"menu" => array("Display" => "Direcciones",		"Icono" => "fa-sitemap")),
+
+		//"A0AAM_Afiliaciones" 	=> array(	"Archivo" => "menu",	"PermisosDefault" => array(),	"Padre" => "Direcciones",	"menu" => array("Display" => "Afiliaciones",		"Icono" => "fa-folder-open")),
+			//"A0AAM_Congresito" 			=> array(	"Archivo" => "direcciones/A0AAM_afiliaciones/A0AAM_congresito",	"PermisosDefault" => array(),	"Padre" => "A0AAM_Afiliaciones",	"menu" => array("Display" => "Congresito",		"Icono" => "fa-folder-open"),		"Permisos" => array('C','A','B','M')),
+		
+		"A0AAO_Desarrollo" 			=> array(	"Archivo" => "menu",	"PermisosDefault" => array(),	"Padre" => "Direcciones",	"menu" => array("Display" => "Desarrollo",		"Icono" => "fa-folder-open")),
+			"A0AAO_Anses" 			=> array(	"Archivo" => "menu",	"PermisosDefault" => array(),	"Padre" => "A0AAO_Desarrollo",	"menu" => array("Display" => "Anses",		"Icono" => "fa-person-cane")),
+				"A0AAO_Sitaci" 			=> array(	"Archivo" => "direcciones/A0AAO_desarrollo/A0AAO_anses/A0AAO_sitaci",	"PermisosDefault" => array(),	"Padre" => "A0AAO_Anses",	"menu" => array("Display" => "Sitaci",		"Icono" => "fa-person-cane"),		"Permisos" => array('C','A')),
+			"A0AAO_Nomenclador" 		=> array(	"Archivo" => "menu",	"PermisosDefault" => array(),	"Padre" => "A0AAO_Desarrollo",	"menu" => array("Display" => "Nomenclador",		"Icono" => "fa-notes-medical")),
+				"A0AAO_Alfabeta" 		=> array(	"Archivo" => "direcciones/A0AAO_desarrollo/A0AAO_nomenclador/A0AAO_alfabeta",	"PermisosDefault" => array(),	"Padre" => "A0AAO_Nomenclador",	"menu" => array("Display" => "Alfabeta Carga",	"Icono" => "fa-book-medical"),		"Permisos" => array('C','A')),				
+			"A0AAO_Cartilla" 			=> array(	"Archivo" => "menu",	"PermisosDefault" => array(),	"Padre" => "A0AAO_Desarrollo",	"menu" => array("Display" => "Cartillas",		"Icono" => "fa-hospital")),
+				"A0AAO_Cartilla_Farmacia" 			=> array(	"Archivo" => "direcciones/A0AAO_desarrollo/A0AAO_cartilla/A0AAO_cartilla_farmacia",	"PermisosDefault" => array(),	"Padre" => "A0AAO_Cartilla",	"menu" => array("Display" => "Farmacia",	"Icono" => "fa-prescription-bottle-medical"),		"Permisos" => array('C','A','B','M')),
+				"A0AAO_Cartilla_Odontologia" 			=> array(	"Archivo" => "direcciones/A0AAO_desarrollo/A0AAO_cartilla/A0AAO_cartilla_odontologia",	"PermisosDefault" => array(),	"Padre" => "A0AAO_Cartilla",	"menu" => array("Display" => "Odontologia",		"Icono" => "fa-tooth"),		"Permisos" => array('C','A','B','M')),
+				"A0AAO_Cartilla_Omint" 			=> array(	"Archivo" => "direcciones/A0AAO_desarrollo/A0AAO_cartilla/A0AAO_cartilla_omint",	"PermisosDefault" => array(),	"Padre" => "A0AAO_Cartilla",	"menu" => array("Display" => "Omint",		"Icono" => "fa-hospital"),		"Permisos" => array('C','A')),
+				"A0AAO_Cartilla_Opticas" 			=> array(	"Archivo" => "direcciones/A0AAO_desarrollo/A0AAO_cartilla/A0AAO_cartilla_opticas",	"PermisosDefault" => array(),	"Padre" => "A0AAO_Cartilla",	"menu" => array("Display" => "Opticas",		"Icono" => "fa-glasses"),		"Permisos" => array('C','A','B','M')),
+			"A0AAO_Licitaciones" 		=> array(	"Archivo" => "direcciones/A0AAO_desarrollo/A0AAO_licitaciones",	"PermisosDefault" => array(),	"Padre" => "A0AAO_Desarrollo",	"menu" => array("Display" => "Licitaciones",	"Icono" => "fa-cart-shopping"),		"Permisos" => array('C','A','B','M')),
+			"A0AAO_PadronPortal" 		=> array(	"Archivo" => "direcciones/A0AAO_desarrollo/A0AAO_padronportal",	"PermisosDefault" => array(),	"Padre" => "A0AAO_Desarrollo",	"menu" => array("Display" => "Padron",	"Icono" => "fa-users"),		"Permisos" => array('C','A')),
+	
+	"Inicio"				=> array(	"Archivo" => "menu",	"PermisosDefault" => array('C')),
+	"Perfil"				=> array(	"Archivo" => "perfil",	"PermisosDefault" => array('C')),
+	"Genericos"				=> array(	"Archivo" => "genericos",	"PermisosDefault" => array('C')),
+);
+
+$ROUTES_INFO = array("C" => "CONSULTA", "A" => "ALTA", "B" => "BAJA", "M" => "MODIFICAR", "E" => "ESPECIAL");
+
+$PP = (array) array('C' => FALSE);
+$PS = array();
+foreach($ROUTES_SYS as $K_ROUTE => $V_ROUTE){
+	$TMP = array();
+	if(array_key_exists('Permisos',$V_ROUTE)){foreach($V_ROUTE['Permisos'] as $KEY){$TMP[$KEY] = FALSE;}}
+	if(array_key_exists('PermisosDefault',$V_ROUTE)){foreach($V_ROUTE['PermisosDefault'] as $KEY){$TMP[$KEY] = TRUE;}}
+	if(!array_key_exists('C',$TMP)){$TMP['C'] = FALSE;}
+	if(array_key_exists($K_ROUTE, $C_PERMISOS)){foreach(str_split($C_PERMISOS[$K_ROUTE]) as $KEY){$TMP[$KEY] = TRUE;}}
+	if($K_ROUTE == 'ViandasPedidos'){
+		$Que = QuerySelect("SELECT `id_agente` FROM ".$DBT['VIANDAS_EMPLEADOS']." WHERE `cuil` = '".$C_USER['CUIL']."' AND `disponible` = '1'");
+		if(QueryNumRows($Que) < 1){
+			$TMP['A'] = FALSE;
+			$TMP['B'] = FALSE;
+			$TMP['M'] = FALSE;
+		}
+	}
+	if(($K_ROUTE == 'TranscripcionesRecetar' && $TMP['A'] == TRUE) OR ($K_ROUTE == 'TranscripcionesTranscribir' && $TMP['A'] == TRUE)){
+		$Que = QuerySelect("SELECT `id_usuario` FROM ".$DBT['USERS_FIRMA']." WHERE `id_usuario` = '".$C_USER['ID']."'");
+		if(QueryNumRows($Que) < 1){
+			$TMP['A'] = FALSE;
+		}
+	}
+	$PS[$K_ROUTE] = $TMP;
+	if($K_ROUTE == $ROUTE_ACT){
+		$PP = $TMP;
+		if(array_key_exists('Padre',$V_ROUTE)){$ROUTE_BACK = "/".$V_ROUTE['Padre'];}
+		if(array_key_exists('Archivo',$V_ROUTE)){$ROUTE_FILE = $V_ROUTE['Archivo'];}
+	}
+}
+?>

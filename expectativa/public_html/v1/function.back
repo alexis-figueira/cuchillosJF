@@ -1,0 +1,141 @@
+<?php
+//CHECK_ARRAY_KEY_EXIST_RECURSIVE
+function CAKER($ARRAY, $KEYS) {
+    // Si no quedan más claves por verificar, retornamos true
+    if(empty($KEYS)){return true;}
+    // Extraemos la primera clave del array de claves
+    $KEY = array_shift($KEYS);
+    // Verificamos si la clave actual existe en el array
+    if(!array_key_exists($KEY, $ARRAY)){return false;}
+    // Si la clave existe, y aún quedan claves por verificar, llamamos a la función recursivamente con el subarray correspondiente
+    return CAKER($ARRAY[$KEY], $KEYS);
+}
+
+//CHECK_INPUT_JSON_EMPTY
+function CIJE($INPUT){
+	global $sJ;
+	if(!array_key_exists($INPUT,$sJ)){return TRUE;}
+	if($sJ[$INPUT] == ''){return TRUE;}
+	return FALSE;
+}
+
+//CHECK_FILE_EXIST
+function CFE($FILE, $EXTENSION = TRUE){
+	$RETURN = array();
+	$ID = $FILE ;
+	if($EXTENSION == TRUE){
+		if(strlen($FILE) != 36 && strlen($FILE) != 37){return FALSE;}
+		$ID = substr($FILE,0,32);
+	}else{
+		if(strlen($FILE) != 32){return FALSE;}
+	}
+	
+	$Que = QuerySelect("SELECT `id_file`, `fecha`, `nombre`, `type`, `size` FROM ".$GLOBALS['DBT']['FILES']." WHERE `id_file` = '".$ID."'");
+	if(QueryNumRows($Que) < 1){return FALSE;}
+	while($Row = QueryFetch($Que)){
+		$RETURN['ID'] 		= $Row['id_file'];
+		$RETURN['FECHA'] 	= $Row['fecha'];
+		$RETURN['NOMBRE'] 	= $Row['nombre'];
+		$RETURN['TYPE'] 	= $Row['type'];
+		$RETURN['SIZE'] 	= $Row['size'];
+	}
+	$FOLDER = Return_File_Path('UPLOADS', Fecha_Formato($RETURN['FECHA'],"Y").'/'.Fecha_Formato($RETURN['FECHA'],"n").'/'.$RETURN['ID'].'.npi');
+	if(!file_exists($FOLDER)){return FALSE;}	
+	$RETURN['FILE'] 		= $FOLDER;
+	return $RETURN;
+}
+
+function EJ($datos){
+	echo json_encode(Str_Utf($datos));
+}
+
+//ECHO JSON EXIT
+function EJE($datos){
+	EJ($datos);
+	exit;
+}
+
+//ECHO EXIT
+function EE($datos){
+	header('Content-Type: text/html; charset=UTF-8');
+	echo Str_Utf($datos);
+	exit;
+}
+
+function Excel_Letra($n){
+	$n -= 1;
+	for ($r = ""; $n >= 0; $n = intval($n / 26) - 1)
+		$r = chr($n % 26 + 0x41) . $r;
+	return $r;
+}
+
+//ARMA LA BASE DE LA QUERY PARA LAS TABLAS
+function LISTADO_QUERY($ARRAY_ORDER){
+	global $sJ;
+	if(array_key_exists('CTS_METHOD',$sJ) && $sJ['CTS_METHOD'] == 'ASC'){$FORM['METHOD'] = 'ASC';}else{$FORM['METHOD'] = 'DESC';}			
+	if(array_key_exists('CEI_ORDENAR',$sJ)&& $sJ['CEI_ORDENAR'] !== FALSE && array_key_exists($sJ['CEI_ORDENAR'], $ARRAY_ORDER)){ $FORM['ORDENAR'] = $ARRAY_ORDER[$sJ['CEI_ORDENAR']];}else{$FORM['ORDENAR'] = $ARRAY_ORDER[1];}
+	$FORM['ORDENAR'] = str_replace('{METHOD}',$FORM['METHOD'],$FORM['ORDENAR']);			
+	if(array_key_exists('CEI_PAGINA',$sJ)){$FORM['PAGINA'] = $sJ['CEI_PAGINA'];}else{$FORM['PAGINA'] = 1;}
+	$FORM['ROWS'] = 100;
+	$FORM['LIMIT'] = ($FORM['PAGINA'] - 1)*$FORM['ROWS'];
+	if(array_key_exists('CTS_SEARCH',$sJ) && $sJ['CTS_SEARCH'] !== FALSE){$FORM['SEARCH'] = $sJ['CTS_SEARCH'];}else{$FORM['SEARCH'] = NULL;}
+	return $FORM;
+}
+
+//RETURN JSON RESULT ERROR
+function RJRE($MSG = ""){$RETURN['RESULTADO'] = 'DESCONOCIDO';$RETURN['MESSAGE'] = $MSG;EJE($RETURN);}
+
+//RETURN JSON RESULT OK
+function RJRO($MSG = ""){$RETURN['RESULTADO'] = 'OK';if($MSG != ""){$RETURN['MESSAGE'] = $MSG;}EJE($RETURN);}
+
+//RETURN JSON RESULT DUPLICADO
+function RJRD($MSG = ""){$RETURN['RESULTADO'] = 'DUPLICADO';$RETURN['MESSAGE'] = $MSG;EJE($RETURN);}
+
+//RETURN FILE EXTENSION
+function RFE($TYPE){
+	$TYPE = Str_Lo($TYPE);
+	if($TYPE == 'text/csv'){ return 'csv';}
+	if($TYPE == 'application/vnd.ms-excel'){ return 'xls';}
+	if($TYPE == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'){ return 'xlsx';}
+	return 'file';
+}
+
+/*function excelDateToDateTime($excelDate) {
+			// Fecha base de Excel (1900-01-01)
+			$baseDate = new DateTime('1899-12-30'); // Excel toma 1900-01-01 como día 1, pero también cuenta el 1900 como año bisiesto que no fue.
+			$baseDate->add(new DateInterval('P' . $excelDate . 'D'));
+
+			return $baseDate;
+}*/
+
+function excelDateToDateTime($excelDate) {
+    
+	if ($excelDate == '' || $excelDate == null) {
+        $excelDate = 32874 ; //fecha 1990-01-01
+    }
+	if (!is_numeric($excelDate)){
+		$excelDate = 32875 ; // fecha 1990-01-02
+	}
+
+    $days = (int)$excelDate;
+    $fraction = $excelDate - $days;
+
+    // Fecha base de Excel (1900-01-01)
+    $baseDate = new DateTime('1899-12-30');
+
+    // Agregar días
+    if ($days > 0) {
+        $baseDate->add(new DateInterval('P' . $days . 'D'));
+    }
+
+    // Agregar fracción del día si existe
+    if ($fraction > 0) {
+        $secondsInADay = 24 * 60 * 60;
+        $seconds = $fraction * $secondsInADay;
+        $baseDate->add(new DateInterval('PT' . round($seconds) . 'S'));
+    }
+
+    return $baseDate;
+}
+
+?>
