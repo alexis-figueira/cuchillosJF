@@ -1,0 +1,412 @@
+<?php
+if($ROUTE_OPC == 'DL_Provincia'){
+	$RETURN['items'] =array();
+	if(CIJE('CTS_SEARCH') === TRUE){EJE($RETURN);}
+	$COUNT = 0;
+	$Que = QuerySelect("SELECT DISTINCT(`provincia`) FROM ".$DBT['OMINT_PRESTADORES']." WHERE `provincia` LIKE '%".$sJ['CTS_SEARCH']."%' ORDER BY `provincia` ASC LIMIT 0,50");
+	if(QueryNumRows($Que) > 0){
+		while($Row = QueryFetch($Que)){
+			unset($TMP);
+			$COUNT ++ ;
+			$TMP = array("ID" => $COUNT, "VALUE"=> $Row['provincia']); 
+			array_push($RETURN['items'], $TMP);
+		}
+	}
+	EJE($RETURN);
+}
+
+if($ROUTE_OPC == 'DL_Localidad'){
+	$RETURN['items'] =array();
+	if(CIJE('CTS_SEARCH') === TRUE){EJE($RETURN);}
+	$COUNT = 0;
+	$Que = QuerySelect("SELECT DISTINCT(`localidad`) FROM ".$DBT['OMINT_PRESTADORES']." WHERE `localidad` LIKE '%".$sJ['CTS_SEARCH']."%' ORDER BY `localidad` ASC LIMIT 0,50");
+	if(QueryNumRows($Que) > 0){
+		while($Row = QueryFetch($Que)){
+			unset($TMP);
+			$COUNT ++ ;
+			$TMP = array("ID" => $COUNT, "VALUE"=> $Row['localidad']); 
+			array_push($RETURN['items'], $TMP);
+		}
+	}
+	EJE($RETURN);
+}
+
+
+if($ROUTE_OPC == 'Listado_Prestadores'){
+	$RETURN['COUNT'] = 0;
+	$RETURN['TOTAL'] = 0;
+	$RETURN['PAGINAS'] = 1;
+	$RETURN['ROWS'] = [];
+	if($PP['C'] != 1){EJE($RETURN);}
+	$ARRAY_ORDER = array(1 => '`nombre` {METHOD}', 2 => '`telefono` {METHOD}', 3 => '`especialidad` {METHOD}', 4 => '`categoria` {METHOD}', 5 => '`domicilio` {METHOD}', 6 => '`localidad` {METHOD}', 7 => '`provincia` {METHOD}');
+	$FORM = LISTADO_QUERY($ARRAY_ORDER);
+	
+	//if(array_key_exists('CJS_ADVANCE',$sJ) && $sJ['CJS_ADVANCE'] != ''){EJE ($RETURN);}
+	//$sJ['CJS_ADVANCE'] = ('PRESTADOR' => 1, 'LOCALIDAD' => 2, 'ESPECIALIDAD' => 3)
+	if(array_key_exists('CJS_ADVANCE',$sJ) && $sJ['CJS_ADVANCE'] != ''){
+		$FORM['SEARCH'] = NULL ;
+		$SEARCH = 'WHERE ';
+		$cont = 0;
+
+		if(array_key_exists('PRESTADOR',$sJ['CJS_ADVANCE']) && $sJ['CJS_ADVANCE']['PRESTADOR'] != '' && $sJ['CJS_ADVANCE']['PRESTADOR'] != null){
+			$SEARCH .= "`nombre` LIKE '%".$sJ['CJS_ADVANCE']['PRESTADOR']."%'" ;
+			$cont++;
+		}
+		if(array_key_exists('ESPECIALIDAD',$sJ['CJS_ADVANCE']) && $sJ['CJS_ADVANCE']['ESPECIALIDAD'] != '' && $sJ['CJS_ADVANCE']['ESPECIALIDAD'] != null){
+			if($cont > 0 ){$SEARCH .= ' AND ';}
+			$SEARCH .= "`especialidad` LIKE '%".$sJ['CJS_ADVANCE']['ESPECIALIDAD']."%'" ;
+			$cont++;
+		}
+		if(array_key_exists('CATEGORIA',$sJ['CJS_ADVANCE']) && $sJ['CJS_ADVANCE']['CATEGORIA'] != '' && $sJ['CJS_ADVANCE']['CATEGORIA'] != null){
+			if($cont > 0 ){$SEARCH .= ' AND ';}
+			$SEARCH .= "`categoria` LIKE '%".$sJ['CJS_ADVANCE']['CATEGORIA']."%'" ;
+			$cont++;
+		}
+		if(array_key_exists('LOCALIDAD',$sJ['CJS_ADVANCE']) && $sJ['CJS_ADVANCE']['LOCALIDAD'] != '' && $sJ['CJS_ADVANCE']['LOCALIDAD'] != null){
+			if($cont > 0 ){$SEARCH .= ' AND ';}
+			$SEARCH .= "`localidad` LIKE '%".$sJ['CJS_ADVANCE']['LOCALIDAD']."%'" ;
+			$cont++;
+		}
+		if(array_key_exists('PROVINCIA',$sJ['CJS_ADVANCE']) && $sJ['CJS_ADVANCE']['PROVINCIA'] != '' && $sJ['CJS_ADVANCE']['PROVINCIA'] != null){
+			if($cont > 0 ){$SEARCH .= ' AND ';}
+			$SEARCH .= "`provincia` LIKE '%".$sJ['CJS_ADVANCE']['PROVINCIA']."%'" ;
+			$cont++;
+		}
+	}
+	elseif($FORM['SEARCH'] == NULL){
+		EJE($RETURN);
+	}else{ $SEARCH = "WHERE `nombre` LIKE '%".$FORM['SEARCH']."%' or `especialidad` LIKE'%".$FORM['SEARCH']."%' or `localidad` LIKE'%".$FORM['SEARCH']."%' or `provincia` LIKE'%".$FORM['SEARCH']."%'";}
+	
+	// elseif($FORM['SEARCH'] != NULL){ $SEARCH = "WHERE `descripcion` LIKE '%".$FORM['SEARCH']."%' or `fec_ini` LIKE'%".$FORM['SEARCH']."%'";}else{$SEARCH = "";}
+	// if($FORM['SEARCH'] != NULL){ $SEARCH = "WHERE `descripcion` LIKE '%".$FORM['SEARCH']."%' or `fec_ini` LIKE'%".$FORM['SEARCH']."%'";}else{$SEARCH = "";}
+	
+	$Que = QuerySelect("SELECT * FROM ".$DBT['OMINT_PRESTADORES'].$SEARCH." ORDER BY ".$FORM['ORDENAR']." LIMIT ".$FORM['LIMIT']." ,".$FORM['ROWS']);
+	while($Row = QueryFetch($Que)){
+		$RETURN['COUNT']++;
+		$TMP = [];
+		$TMP['ID'] 						= $RETURN['COUNT']; //$Row['nombre']; //le doy un id desde aca ya que no esta en la base?
+		$TMP['DATA']['NOMBRE'] 			= $Row['nombre'];
+		$TMP['DATA']['DOMICILIO'] 		= $Row['domicilio'];
+		$TMP['DATA']['TELEFONO'] 		= $Row['telefono'];
+		$TMP['DATA']['ESPECIALIDAD'] 	= $Row['especialidad'];
+		$TMP['DATA']['CATEGORIA'] 		= $Row['categoria'];
+		$TMP['DATA']['LOCALIDAD'] 		= $Row['localidad'];
+		$TMP['DATA']['PROVINCIA'] 		= $Row['provincia'];
+		
+		array_push($RETURN['ROWS'], $TMP);
+		unset($TMP);
+	}
+	$Que = QuerySelect("SELECT COUNT(*) AS 'total' FROM ".$DBT['OMINT_PRESTADORES'].$SEARCH);
+	while($Row = QueryFetch($Que)){	
+		$RETURN['TOTAL'] = $Row['total'];
+		$RETURN['PAGINAS'] = ceil($RETURN['TOTAL']/$FORM['ROWS']);
+	}
+	EJE($RETURN);
+}
+elseif($ROUTE_OPC == 'Procesar_Reportes'){
+
+	
+	if($PP['A'] == 0){RJRE();}
+	if(!array_key_exists('CTS_1',$ROUTE_PARAMS) || SANITIZE_TEXT($ROUTE_PARAMS['CTS_1'], 1, 50) == ''){EE('NO_SE_PUEDE_PROCESAR_LA_SOLICITUD');}	//#DESCRIPCION	
+	if(!array_key_exists('CTS_2',$ROUTE_PARAMS) || SANITIZE_TEXT($ROUTE_PARAMS['CTS_2'], 1, 50) == ''){EE('NO_SE_PUEDE_PROCESAR_LA_SOLICITUD');}	//#ID_ARCHIVO
+	if(!array_key_exists('CTS_3',$ROUTE_PARAMS) || SANITIZE_DATE($ROUTE_PARAMS['CTS_3']) == ''){EE('NO_SE_PUEDE_PROCESAR_LA_SOLICITUD');}			//#FECHA_INICIAL
+	if(!array_key_exists('CTS_4',$ROUTE_PARAMS) || SANITIZE_DATE($ROUTE_PARAMS['CTS_4']) == ''){EE('NO_SE_PUEDE_PROCESAR_LA_SOLICITUD');}			//#FECHA_FINAL
+	if(strlen($ROUTE_PARAMS['CTS_2']) > 32){$ROUTE_PARAMS['CTS_2'] = substr($ROUTE_PARAMS['CTS_2'],0,32);}
+	if(CFE(Str_Lo($ROUTE_PARAMS['CTS_2']), FALSE) === FALSE){RJRE("No se pudo procesar el archivo");};
+	$ARCHIVO = CFE(Str_Lo($ROUTE_PARAMS['CTS_2']), FALSE);
+	if(!in_array(Str_Lo($ARCHIVO['TYPE']),$CFG_UPLOADFILES['TYPE']['EXCEL'])){RJRE("Solo se admiten archivos XLS o XLSX");}
+	
+	
+/*	PRINT_R($ROUTE_PARAMS); 
+	Array
+(
+    [CTS_1] => DASD
+    [CTS_2] => 7F48A74DE633C5E520AAE090776A80D9.XLSX
+    [CTS_3] => 2024-08-01
+    [CTS_4] => 2024-08-02
+    [CTS_5] => 83675
+)*/
+/*  PRINT_R($ARCHIVO);
+Array
+(
+    [ID] => 7b0db4337633ce974495b74861a870f2
+    [FECHA] => 2024-08-01 10:50:46
+    [NOMBRE] => RESUMIDA.XLSX
+    [TYPE] => APPLICATION/VND.OPENXMLFORMATS-OFFICEDOCUMENT.SPREADSHEETML.SHEET
+    [SIZE] => 17033
+    [FILE] => C:\Servidor\www\desa-alexis.daslocal.gob.ar\public_html\files\upload\2024\8\7b0db4337633ce974495b74861a870f2.npi
+)
+*/
+	try{
+		if(RFE($ARCHIVO['TYPE']) == 'xls'){     
+			$reader = new \PhpOffice\PhpSpreadsheet\Reader\Xls();
+		}elseif(RFE($ARCHIVO['TYPE']) == 'csv'){
+			$reader = new \PhpOffice\PhpSpreadsheet\Reader\Csv();
+		}else{     
+			$reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+		}	
+		$reader->setReadDataOnly(true);
+		$spreadsheet = $reader->load($ARCHIVO['FILE']);
+	} catch (\PhpOffice\PhpSpreadsheet\Exception $e) {
+		RJRE("No se pudo leer el archivo");
+	}
+	
+	$sheet = $spreadsheet->getSheet($spreadsheet->getFirstSheetIndex());
+	$data['reporte'] = $sheet->toArray();
+	
+	$index = $spreadsheet->getSheetCount() - 1;
+	$sheet = $spreadsheet->getSheet($index);
+	$data['area']= $sheet->toArray();
+	
+	$area['agentes'] = array();
+	$area['evaluaciones'] = array();
+
+	foreach($data['area'] as $valor){
+		$area['agentes'][$valor[0]] = 0;
+		if($valor[1]==null){continue;};
+		$area['evaluaciones'][$valor[1]] = 0;
+	};
+	
+	$regMalCargado = array();
+	$data['reporte'] = array_slice($data['reporte'],2);
+	
+	foreach($data['reporte'] as $KEY => $LINEA){
+		/*echo ($LINEA[1]);*/
+		/*$objetoDateTime = Date::excelToDateTimeObject($LINEA[1]);*/
+		
+		$objetoDateTime = excelDateToDateTime($LINEA[1]);
+		
+		if ($objetoDateTime->format('Y-m-d') == '1990-01-01'){
+			continue ;
+		}
+		if ($objetoDateTime->format('Y-m-d') == '1990-01-02'){
+			continue ;
+		}
+		
+		$data['reporte'][$KEY][1] = $objetoDateTime->format('Y-m-d');
+		if(new DateTime($data['reporte'][$KEY][1]) < new DateTime($ROUTE_PARAMS['CTS_3'])){unset($data['reporte'][$KEY]);continue;}
+		if(new DateTime($data['reporte'][$KEY][1]) > new DateTime($ROUTE_PARAMS['CTS_4'])){unset($data['reporte'][$KEY]);continue;}
+	  
+		if(!array_key_exists($LINEA[4],$area['agentes'])){
+			$regMalCargado[] = $LINEA[2]; 
+			unset($data['reporte'][$KEY]); 
+			continue;
+		};
+		if(!array_key_exists($LINEA[3],$area['evaluaciones'])){
+			$regMalCargado[] = $LINEA[2]; 
+			unset($data['reporte'][$KEY]);
+			continue;
+		};
+		if($LINEA[3]!="BIEN CARGADO"){
+			$area['agentes'][$LINEA[4]]++;
+		}
+		$area['evaluaciones'][$LINEA[3]]++;
+	};	
+	
+	/*------------------------------------------------------- empieza carga*/ 
+	
+	if ($area['agentes'] === null || $area['evaluaciones'] === null) {
+		echo "No hay datos para procesar.";
+		exit();
+	}; 
+
+	$nombreArchivo = "ListadoErrores.xlsx";
+
+	/*------------------------------------------------------- hasta aca llegue */ 
+	
+	$spreadsheet_desc = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+	
+	$spreadsheet_desc	->getProperties()
+						->setCreator('Sistema')
+						->setTitle("Reporte CIP")
+						->setDescription('Proceso de errores - CIP');
+
+	$spreadsheet_desc	->setActiveSheetIndex(0); 
+	
+	$spreadsheet_desc	->getActiveSheet()->setTitle("Reporte");
+
+	//guardo Arrays de estilos para luego aplicar
+	$bordesAll=[
+		'borders' => [
+			'allBorders' => [
+				'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+				'color' => ['argb' => \PhpOffice\PhpSpreadsheet\Style\Color::COLOR_BLACK],
+			],
+		],
+	]; 
+	$fondoTit=[ 
+		'fill' => [
+			'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+			'startColor' => [
+				'argb' => '0092BC',
+			],
+		],
+	];
+	$fondoSec=[ 
+		'fill' => [
+			'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+			'startColor' => [
+				'argb' => '00516E', 
+			],
+		],
+	];
+
+	//Encabezados
+	$spreadsheet_desc	->getActiveSheet()
+						->setCellValue('A1', 'Agente') // doy valor a celda
+						->setCellValue('B1', 'Errores')
+						->setCellValue('D1', 'Evaluaciones')
+						->setCellValue('E1', 'Cantidad')
+						->getStyle('A1:B1')->applyFromArray($fondoTit);
+	
+	$spreadsheet_desc	->getActiveSheet()
+						->getStyle('D1:E1')->applyFromArray($fondoTit);
+
+	//Estilo tabla
+	for($A = 1; $A <= 8; $A++){
+		$spreadsheet_desc	->getActiveSheet()
+							->getColumnDimension(Excel_Letra($A))->setAutoSize(true);  
+	}
+
+	//Carga de datos
+	$row = 2;
+	foreach($area['agentes'] as $clave => $valor){
+		$spreadsheet_desc	->getActiveSheet()	
+							->setCellValue('A'.$row, $clave)
+							->setCellValue('B'.$row, $valor);
+		$row++;
+	};
+	$spreadsheet_desc	->getActiveSheet()
+						->setCellValue('A'.$row, 'TOTAL')
+						->setCellValue('B'.$row, array_sum($area['agentes']));
+	$spreadsheet_desc	->getActiveSheet()->getStyle('A1:B'.$row)->applyFromArray($bordesAll);
+	$spreadsheet_desc	->getActiveSheet()->getStyle('A'.$row.':B'.$row)->applyFromArray($fondoSec);
+
+	$row = 2;
+	foreach($area['evaluaciones'] as $clave => $valor){
+		$spreadsheet_desc	->getActiveSheet()	
+							->setCellValue('D'.$row, $clave)
+							->setCellValue('E'.$row, $valor);
+		$row++;
+	};
+	
+	$spreadsheet_desc	->getActiveSheet()	
+						->setCellValue('D'.$row, 'TOTAL')
+						->setCellValue('E'.$row, array_sum($area['evaluaciones']));
+	$spreadsheet_desc	->getActiveSheet()->getStyle('D1:E'.$row)->applyFromArray($bordesAll);
+	$spreadsheet_desc	->getActiveSheet()->getStyle('D'.$row.':E'.$row)->applyFromArray($fondoSec);
+
+	if ($regMalCargado != null){
+		$spreadsheet_desc	->getActiveSheet()	
+							->setCellValue('H1', 'Tickets mal cargados')
+							->getColumnDimension('H')->setWidth(25);
+		$row = 2;
+		foreach($regMalCargado as $e){
+			$spreadsheet_desc	->getActiveSheet()
+								->setCellValue('H'.$row, $e);
+			$row++;
+		}
+		$spreadsheet_desc	->getActiveSheet()->getStyle('H1')->applyFromArray($fondoTit);		
+		$spreadsheet_desc	->getActiveSheet()->getStyle('H1:H'.$row-1)->applyFromArray($bordesAll);
+	}
+	
+	$Que = QuerySelect("SELECT `id_reporte`, `fec_ini`, `fec_fin`, `descripcion` FROM ".$DBT['VIANDAS_REPORTES']." WHERE `fec_ini` = '".$ROUTE_PARAMS['CTS_3']."' AND `fec_fin` = '".$ROUTE_PARAMS['CTS_4']."' AND `id_archivo` = '".$ARCHIVO['ID']."'");
+	if(QueryNumRows($Que) < 1){
+			QueryInsert("INSERT INTO ".$DBT['VIANDAS_REPORTES']."(`descripcion`, `fec_ini`, `fec_fin`, `reg_fecha`, `reg_usuario`, `id_archivo`) VALUES ('".$ROUTE_PARAMS['CTS_1']."', '".$ROUTE_PARAMS['CTS_3']."', '".$ROUTE_PARAMS['CTS_4']."', NOW(), '".$C_USER['ID']."', '".$ARCHIVO['ID']."')");
+	}else{
+		while($Row = QueryFetch($Que)){
+			if($Row['descripcion'] != $ROUTE_PARAMS['CTS_1']){ 
+				QueryUpdate("UPDATE ".$DBT['VIANDAS_REPORTES']." SET `descripcion` = '".$ROUTE_PARAMS['CTS_1']."' WHERE `id_reporte` = '".$Row['id_reporte']."' AND `descripcion` != '".$ROUTE_PARAMS['CTS_1']."'");
+			}
+		}
+	}
+
+	//Descarga de archivo
+	$writer = new PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet_desc);
+	header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+	header('Content-Disposition: attachment; filename="'.$nombreArchivo.'"');
+	$writer->save('php://output');
+}
+elseif($ROUTE_OPC == 'Procesar_Empleados_Status'){
+	if($PP['B'] == 0){RJRE();}
+	if(CIJE('CES_ID') === TRUE){RJRE();};
+	
+	$Que = QuerySelect("SELECT `id_reporte`, `disponible` FROM ".$DBT['VIANDAS_COPIA']." WHERE `id_reporte` = '".$sJ['CES_ID']."'");
+	if(QueryNumRows($Que) < 1){RJRE();}
+	while($Row = QueryFetch($Que)){
+		if($Row['disponible'] == 1){
+			$Que = QueryUpdate("UPDATE ".$DBT['VIANDAS_COPIA']." SET `disponible` = '0', `reg_fecha` = NOW(), `reg_usuario` = '".$C_USER['ID']."' WHERE `id_reporte` = '".$sJ['CES_ID']."'");
+			$Que = QueryUpdate("UPDATE ".$DBT['VIANDAS_PEDIDOS']." SET `estado` = '0', `reg_fecha` = NOW(), `reg_usuario` = '".$C_USER['ID']."' WHERE `id_empleado` = '".$sJ['CES_ID']."' AND `estado` = '1'");
+		}
+		if($Row['disponible'] == 0){
+			$Que = QueryUpdate("UPDATE ".$DBT['VIANDAS_COPIA']." SET `disponible` = '1', `reg_fecha` = NOW(), `reg_usuario` = '".$C_USER['ID']."' WHERE `id_reporte` = '".$sJ['CES_ID']."'");
+		}
+	}
+	RJRO();
+}
+elseif($ROUTE_OPC == 'Ver_Reportes'){
+	$RETURN['ID_REPORTE'] = 0;
+	if($PP['C'] != 1){EJE($RETURN);}
+	if(CIJE('CES_ID') === TRUE){$sJ['CES_ID'] = 0;};
+
+	$Que = QuerySelect("SELECT `id_reporte`, `descripcion`, `fec_ini`, `fec_fin`, `id_archivo` FROM ".$DBT['VIANDAS_REPORTES']." WHERE `id_reporte` = '".$sJ['CES_ID']."'");	
+	while($Row = QueryFetch($Que)){
+		$RETURN['ID_REPORTE'] 		= $Row['id_reporte'];
+		$RETURN['DESCRIPCION'] 		= $Row['descripcion'];
+		$RETURN['FECHA_INICIAL'] 	= $Row['fec_ini'];
+		$RETURN['FECHA_FINAL'] 		= $Row['fec_fin'];
+		$RETURN['ID_ARCHIVO'] 		= $Row['id_archivo'];
+	}
+	EJE($RETURN);
+}
+elseif($ROUTE_OPC == 'Procesar_Pdf'){
+	// PRINT_R($sP);
+	$SEARCH = 'WHERE ';
+	$cont = 0;
+	if(array_key_exists('CTS_PRESTADOR',$sP) && $sP['CTS_PRESTADOR'] != ''){
+		$SEARCH .= "`nombre` LIKE '%".$sP['CTS_PRESTADOR']."%'" ;
+		$cont++;
+	}
+	if(array_key_exists('CTS_ESPECIALIDAD',$sP) && $sP['CTS_ESPECIALIDAD'] != ''){
+		if($cont > 0 ){$SEARCH .= ' AND ';}
+		$SEARCH .= "`especialidad` LIKE '%".$sP['CTS_ESPECIALIDAD']."%'" ;
+		$cont++;
+	}
+	if(array_key_exists('CTS_CATEGORIA',$sP) && $sP['CTS_CATEGORIA'] != ''){
+		if($cont > 0 ){$SEARCH .= ' AND ';}
+		$SEARCH .= "`categoria` LIKE '%".$sP['CTS_CATEGORIA']."%'" ;
+		$cont++;
+	}
+	if(array_key_exists('CTS_LOCALIDAD',$sP) && $sP['CTS_LOCALIDAD'] != ''){
+		if($cont > 0 ){$SEARCH .= ' AND ';}
+		$SEARCH .= "`localidad` LIKE '%".$sP['CTS_LOCALIDAD']."%'" ;
+		$cont++;
+	}
+	if(array_key_exists('CTS_PROVINCIA',$sP) && $sP['CTS_PROVINCIA'] != ''){
+		if($cont > 0 ){$SEARCH .= ' AND ';}
+		$SEARCH .= "`provincia` LIKE '%".$sP['CTS_PROVINCIA']."%'" ;
+		$cont++;
+	}
+	
+	if($cont < 1){EE('DEJA DE ROMPER POLLO');};
+	
+	$Que = QuerySelect("SELECT * FROM ".$DBT['OMINT_PRESTADORES'].$SEARCH." ORDER BY `nombre`");
+	while($Row = QueryFetch($Que)){
+		$TMP = [];
+		$TMP['NOMBRE'] 			= $Row['nombre'];
+		$TMP['DOMICILIO'] 		= $Row['domicilio'];
+		$TMP['TELEFONO'] 		= $Row['telefono'];
+		$TMP['ESPECIALIDAD'] 	= $Row['especialidad'];
+		$TMP['CATEGORIA'] 		= $Row['categoria'];
+		$TMP['LOCALIDAD'] 		= $Row['localidad'];
+		$TMP['PROVINCIA'] 		= $Row['provincia'];
+		
+		PRINT_R($TMP);
+		// array_push($RETURN['ROWS'], $TMP);
+		unset($TMP);
+	}
+}
+else{
+	EE("NO_SE_PUEDE_PROCESAR_LA_SOLICITUD");
+}
+?>

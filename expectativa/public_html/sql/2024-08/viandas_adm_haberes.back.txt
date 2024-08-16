@@ -1,6 +1,0 @@
-2024-08-02 12:53:38 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `fecha`, `total_viandas`, `estado` FROM `desa__alexis`.`viandas__resumen` ORDER BY `fecha` ASC LIMIT 0 ,100
-2024-08-02 12:53:38 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__resumen`
-2024-08-02 13:10:47 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `fecha`, `total_viandas`, `estado` FROM `desa__alexis`.`viandas__resumen` ORDER BY `fecha` ASC LIMIT 0 ,100
-2024-08-02 13:10:47 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__resumen`
-2024-08-02 13:22:53 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `fecha`, `total_viandas`, `estado` FROM `desa__alexis`.`viandas__resumen` ORDER BY `fecha` ASC LIMIT 0 ,100
-2024-08-02 13:22:53 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`viandas__resumen`

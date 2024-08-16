@@ -1,0 +1,4 @@
+2024-08-12 12:53:45 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT P.`id_procesos`, F.`nombre`, P.`observacion` FROM `desa__alexis`.`alfabeta__procesos` P LEFT JOIN `desa__alexis`.`sys__files` F ON F.`id_file`=P.`archivo` ORDER BY `nombre` DESC LIMIT 0 ,100
+2024-08-12 12:53:45 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`alfabeta__procesos` P LEFT JOIN `desa__alexis`.`sys__files` F ON F.`id_file`=P.`archivo`
+2024-08-13 10:07:27 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT P.`id_procesos`, F.`nombre`, P.`observacion` FROM `desa__alexis`.`alfabeta__procesos` P LEFT JOIN `desa__alexis`.`sys__files` F ON F.`id_file`=P.`archivo` ORDER BY `nombre` DESC LIMIT 0 ,100
+2024-08-13 10:07:27 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`alfabeta__procesos` P LEFT JOIN `desa__alexis`.`sys__files` F ON F.`id_file`=P.`archivo`

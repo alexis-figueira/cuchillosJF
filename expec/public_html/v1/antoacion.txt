@@ -1,0 +1,9 @@
+
+
+if(start_with(api)){
+	https://desa-alexis.daslocal.gob.ar			api/ViandasChamba/Listado_Reportes
+	v1/app.back?EsPorAca=ViandasChamba/Listado_Reportes
+else{
+	https://desa-alexis.daslocal.gob.ar			ViandasChamba/
+	v1/app.front?EsPorAca=ViandasChamba
+}

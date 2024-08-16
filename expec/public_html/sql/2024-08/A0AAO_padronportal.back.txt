@@ -1,0 +1,4 @@
+2024-08-13 10:07:44 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `date`, U.`usuario` FROM `desa__alexis`.`padron__sync` P LEFT JOIN `desa__alexis`.`sys__users` U ON U.id_usuario=P.id_usuario  ORDER BY `date` DESC LIMIT 0 ,100
+2024-08-13 10:07:44 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`padron__sync` P LEFT JOIN `desa__alexis`.`sys__users` U ON U.id_usuario=P.id_usuario
+2024-08-15 13:36:49 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT `date`, U.`usuario` FROM `desa__alexis`.`padron__sync` P LEFT JOIN `desa__alexis`.`sys__users` U ON U.id_usuario=P.id_usuario  ORDER BY `date` DESC LIMIT 0 ,100
+2024-08-15 13:36:49 -> 172.16.5.42 -> ALEXIS.FIGUEIRA -> QuerySelect -> SELECT COUNT(*) AS 'total' FROM `desa__alexis`.`padron__sync` P LEFT JOIN `desa__alexis`.`sys__users` U ON U.id_usuario=P.id_usuario
