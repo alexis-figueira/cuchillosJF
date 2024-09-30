@@ -1,3 +1,5 @@
+console.log('hola');
+
 /* Botones destacados */
 $(".card-btn.ant-dest").click(function(){
     let tit = $(".cont-card-dest h3.card__tit"); 

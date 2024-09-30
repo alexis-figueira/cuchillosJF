@@ -1,36 +1,17 @@
-const mysql = require('mysql');
-
-function respuesta (){
-    const conection = mysql.createConnection ({
-        host:'localhost',
-        user:'root',
-        password:'',
-        database:'cuchillos_jf'
-    });
-
-    conection.connect( (err) => {
-        if(err) throw err ;
-        console.log ('la conexión funciona');
-    });
-
-    const devolucion = conection.query('SELECT * from productos', (err,rows) => {
-            if(err) throw err ;
-            console.log ('los datos de la tabla son:');
-            console.log (rows);
-        });
-
-    conection.end();
-    return devolucion ;  
-}
-
-
-console.log("ahora muestro los datos en respuesta")
-console.log(respuesta())
-
-setTimeout(function(){
-    console.log("Hola Mundo");
-}, 100);
-console.log("setTimeout() Ejemplo...");
-
-
-console.log("acabo de mostrar")
+fetch('http://localhost/bdtconnect.php', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+        accion: 'obtenerDatos' // Asegúrate de que la acción sea correcta
+    })
+})
+.then(response => response.json())
+.then(data => {
+    console.log('Respuesta del servidor perri:', data);
+    // Aquí puedes manejar los datos recibidos
+})
+.catch(error => {
+    console.error('Error en la solicitud:', error);
+});
