@@ -1,4 +1,4 @@
-console.log('hola');
+Connect ('SELECT * FROM probando', 'select')
 
 /* Botones destacados */
 $(".card-btn.ant-dest").click(function(){
@@ -24,8 +24,7 @@ $(".card-btn.ant-dest").click(function(){
     }
     $(".cont-card-dest .img__card").css("animation-name", "ani-translate-ing")
     $(".cont-card-dest .img__card").css("animation-duration", "1.5s")
-})
-
+});
 $(".card-btn.sig-dest").click(function(){
     let tit = $(".cont-card-dest h3.card__tit");
     $(".cont-card-dest .img__card").remove();
@@ -51,8 +50,7 @@ $(".card-btn.sig-dest").click(function(){
     }
     $(".cont-card-dest .img__card").css("animation-name", "ani-translate-sal")
     $(".cont-card-dest .img__card").css("animation-duration", "1.5s");
-})
-
+});
 /* Botones novedades */
 $(".card-btn.ant-nov").click(function(){
     let tit = $(".cont-card-nov h3.card__tit"); 
@@ -77,8 +75,7 @@ $(".card-btn.ant-nov").click(function(){
     }
     $(".cont-card-nov .img__card").css("animation-name", "ani-translate-ing")
     $(".cont-card-nov .img__card").css("animation-duration", "1.5s")
-})
-
+});
 $(".card-btn.sig-nov").click(function(){
     let tit = $(".cont-card-nov h3.card__tit");
     $(".cont-card-nov .img__card").remove();
@@ -104,7 +101,7 @@ $(".card-btn.sig-nov").click(function(){
     }
     $(".cont-card-nov .img__card").css("animation-name", "ani-translate-sal")
     $(".cont-card-nov .img__card").css("animation-duration", "1.5s");
-})
+});
 
 
 
