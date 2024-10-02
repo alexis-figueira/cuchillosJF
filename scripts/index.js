@@ -1,4 +1,12 @@
-Connect ('SELECT * FROM probando', 'select')
+// Connect ('SELECT * FROM probando', 'select')
+// const data = QuerySelect('SELECT * FROM probando');
+
+(async () => {
+    const data = await QuerySelect('SELECT * FROM probando');
+    console.log("Respuesta desde mi index.js:", data);
+})();
+
+
 
 /* Botones destacados */
 $(".card-btn.ant-dest").click(function(){
