@@ -1,16 +1,15 @@
 <?php
 // Este codigo lo creo en xampp htdocs y desde el bdt.js apunto a donde lo haya guardado. Esto para poder utilizar y combinar el liveserver con el servidor de php de xampp para utilizar la base de datos.
-
-header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Origin: *"); // Permitir todas las conexiones de cualquier origen (puedes restringirlo según sea necesario)
 header("Access-Control-Allow-Headers: Content-Type");
-header("Access-Control-Allow-Methods: POST");
+header("Access-Control-Allow-Methods: POST, OPTIONS"); // Incluye OPTIONS si Chrome está haciendo preflight requests
 
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 $host = 'localhost';
-$dbname = 'cuchillos_jf';
+$dbname = 'cuchillos__figueira';
 $username = 'root';
 $password = '';
 $port = '3306';
@@ -28,9 +27,9 @@ try {
         exit;
     }
 
-    if (isset($postData['accion']) && $postData['accion'] === 'obtenerDatos') {
+    if (isset($postData['ACTION']) && $postData['ACTION'] === 'select') {
         // Realizar una consulta a la base de datos
-        $stmt = $pdo->query('SELECT * FROM productos');
+        $stmt = $pdo->query($postData['QUE']);
         $datos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         // Enviar los datos en formato JSON
