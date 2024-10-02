@@ -202,10 +202,9 @@ section{
 
 }
 
-
 .img__card{
-    height: 300px;
-    flex-basis: 220px; 
+    height: 350px;
+    flex-basis: 250px; 
     width: 220px;
     background-color: white;
     border-radius: 10px;
@@ -220,13 +219,23 @@ section{
     /* color: white; */
 }
 
-.img__card img {
+/* .img__card img {
     height: 200px;
-    max-width: 200px;
-}
+} */
 
 .card__item{
     margin-bottom: 5px;
+}
+
+.card__tit{
+    height: 12%;
+    overflow: hidden;
+}
+
+.card__lnk{
+    height: 70%;
+    /* max-width: 200px; */
+
 }
 
 .card-btn{

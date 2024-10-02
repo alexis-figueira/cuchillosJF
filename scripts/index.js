@@ -1,10 +1,37 @@
 // Connect ('SELECT * FROM probando', 'select')
 // const data = QuerySelect('SELECT * FROM probando');
+var destacados;
+var novedades;
+var CDest = 4 ;
+var CNov = 3 ;
 
-(async () => {
-    const data = await QuerySelect('SELECT * FROM probando');
-    console.log("Respuesta desde mi index.js:", data);
-})();
+$(document).ready(function(){
+    (async () => {
+        destacados = await QuerySelect('SELECT * FROM productos WHERE `destacado` = "1" ORDER BY `producto_id` ASC');
+        console.log("Mis destacados", destacados);
+        for (let i=0 ; i<CDest; i++){
+            setCard(destacados[i].nombre, destacados[i].medidas, "../img/"+destacados[i].img + ".jpg", destacados[i].precio,"cont-card-dest");
+        };
+    })();
+    (async () => {
+        novedades = await QuerySelect('SELECT * FROM productos WHERE `novedad` = "1" ORDER BY `producto_id` ASC');
+        console.log("Mis novedades", novedades);
+        for (let i=0 ; i<CNov; i++){
+            setCard(novedades[i].nombre, novedades[i].medidas, "../img/"+novedades[i].img + ".jpg", novedades[i].precio,"cont-card-nov");
+        };
+
+    })();
+    
+    // for (let i=0 ; i<longDest; i++){
+    //     setCard(destacados[i].nombre, arrProdDest[i].descripcion, "../img/"+arrProdDest[i].img, arrProdDest[i].precio,"cont-card-dest");
+    // };
+
+    // arrProdNov = resultado;
+    // for (let i=0 ; i<longNov; i++){
+    //     setCard(arrProdNov[i].nombre, arrProdNov[i].descripcion, "../img/"+arrProdNov[i].img, arrProdNov[i].precio,"cont-card-nov");
+    // };
+})
+
 
 
 

@@ -45,9 +45,6 @@
 //     return data ;
 // }
 
-
-
-
 async function Connect(QUERY, ACT) {
     try {
         const response = await fetch('http://localhost/bdtconnect.php', {
@@ -61,7 +58,7 @@ async function Connect(QUERY, ACT) {
             })
         });
         const data = await response.json();
-        console.log('Respuesta del servidor perri:', data);
+        // console.log('Respuesta del servidor perri:', data);
         return data; // Retorna los datos cuando estén listos
     } catch (error) {
         console.error('Error en la solicitud:', error);
