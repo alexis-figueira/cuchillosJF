@@ -14,31 +14,57 @@ $username = 'root';
 $password = '';
 $port = '3306';
 
-try {
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname;port=$port;charset=utf8mb4", $username, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+$GLOBALS['QWE'] = new PDO("mysql:host=$host;dbname=$dbname;port=$port;charset=utf8mb4", $username, $password);
+$GLOBALS['QWE']->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // Leer los datos enviados por el frontend
-    $postData = json_decode(file_get_contents("php://input"), true);
+// ok ------------------------------------------------------------------------------------
+// try {
+//     $pdo = new PDO("mysql:host=$host;dbname=$dbname;port=$port;charset=utf8mb4", $username, $password);
+//     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+//     // Leer los datos enviados por el frontend
+//     $postData = json_decode(file_get_contents("php://input"), true);
+//     // Verificar si los datos han sido enviados correctamente
+//     if ($postData === null) {
+//         echo json_encode(['error' => 'No se recibieron datos']);
+//         exit;
+//     }
+//     if (isset($postData['ACTION']) && $postData['ACTION'] === 'select') {
+//         // Realizar una consulta a la base de datos
+//         $stmt = $pdo->query($postData['QUE']);
+//         $datos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+//         // Enviar los datos en formato JSON
+//         echo json_encode($datos);
+//     } else {
+//         echo json_encode(['error' => 'Acción no válida']);
+//     }
+// } catch (PDOException $e) {
+//     // Enviar error en caso de falla en la base de datos
+//     echo json_encode(['error' => $e->getMessage()]);
+// }
+// ok ------------------------------------------------------------------------------------
 
-    // Verificar si los datos han sido enviados correctamente
-    if ($postData === null) {
-        echo json_encode(['error' => 'No se recibieron datos']);
-        exit;
-    }
-
-    if (isset($postData['ACTION']) && $postData['ACTION'] === 'select') {
-        // Realizar una consulta a la base de datos
-        $stmt = $pdo->query($postData['QUE']);
+function QuerySelect($QUE, $CON = "QWE"){
+    try{
+        $stmt = $GLOBALS[$CON]->query($QUE);
         $datos = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        // Enviar los datos en formato JSON
         echo json_encode($datos);
-    } else {
-        echo json_encode(['error' => 'Acción no válida']);
+    }catch(PDOException $e) {
+        echo json_encode(['error' => $e->getMessage()]);
     }
-} catch (PDOException $e) {
-    // Enviar error en caso de falla en la base de datos
-    echo json_encode(['error' => $e->getMessage()]);
+}
+
+$postData = json_decode(file_get_contents("php://input"), true);
+if ($postData === null) {
+    echo json_encode(['error' => 'No se recibieron datos']);
+    exit;
+} 
+if (isset($postData['BACK']) && $postData['BACK'] === 'Procesar_Productos'){
+    $RETURN = QuerySelect("SELECT * FROM `productos` WHERE 1");
+}
+else if(isset($postData['BACK']) && $postData['BACK'] === 'Procesar_Temporales') {
+    $RETURN = QuerySelect("SELECT * FROM `productos` WHERE `".$postData['DATA']."`");
+}
+else{
+    echo json_encode(['error' => 'Acción no válida']);
 }
 ?>

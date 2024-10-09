@@ -1,4 +1,17 @@
+var productos=[];
+
+$(document).ready(function(){
+    (async () => {
+        productos = await Procesar("Procesar_Productos", "producto");
+        // console.log(productos);
+        console.log(productos[10].nombre);
+        for(let i=0 ; i< productos.length ; i++){
+            setCard(productos[i].producto_id ,productos[i].nombre, productos[i].medidas, "../img/"+productos[i].img + ".jpg", productos[i].precio,"article-prod");
+        }
+    })();
+});
 // Productos por tipo
+
 $(".item-cuch").click(function(){
     $(".img__card").remove();
     for (let i=0 ; i<arrProductos.cuchillos.length ; i++){

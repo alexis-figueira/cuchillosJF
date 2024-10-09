@@ -202,7 +202,7 @@ section{
 
 }
 
-.img__card{
+.prod__card{
     height: 350px;
     flex-basis: 250px; 
     width: 220px;
@@ -213,13 +213,13 @@ section{
     padding: 10px;
 }
 
-.img__card:hover{
+.prod__card:hover{
     box-shadow: 0.4rem 0.1rem   1.2rem rgba(0, 0, 0, 0.3);
     background: var(--color-select) ;
     /* color: white; */
 }
 
-/* .img__card img {
+/* .prod__card img {
     height: 200px;
 } */
 

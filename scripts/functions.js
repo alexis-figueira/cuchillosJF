@@ -1,10 +1,10 @@
-function setCard (titulo, descripcion, imagen, precio, contenedor){
+function setCard (id=0, titulo, medidas, imagen, precio, contenedor){
     let card = document.createElement ("div");
-    card.setAttribute("class", "img__card");
-    card.setAttribute("id", titulo); /// ID y poner a la funcion y al base 
+    card.setAttribute("class", "prod__card");
+    card.setAttribute("id", id); /// ID y poner a la funcion y al base 
     
     $("."+contenedor).append(card);
-    
+
     let card_tit = document.createElement("h3");
     let text_tit = document.createTextNode(titulo);
     card_tit.appendChild(text_tit);
@@ -12,7 +12,7 @@ function setCard (titulo, descripcion, imagen, precio, contenedor){
     $(card).append(card_tit);
     
     let card_desc = document.createElement("p");
-    let text_desc = document.createTextNode(descripcion);
+    let text_desc = document.createTextNode(medidas);
     card_desc.appendChild(text_desc);
     card_desc.setAttribute("class", "card__item card__desc");  
     $(card).append(card_desc);
@@ -37,7 +37,7 @@ function setCard (titulo, descripcion, imagen, precio, contenedor){
     
     console.log(lala)
 
-    $(".miModal .img__card").remove();
+    $(".miModal .prod__card").remove();
     $(".miModal").css("display", "block");
 
     let encontro = false;
@@ -89,41 +89,41 @@ function setCard (titulo, descripcion, imagen, precio, contenedor){
 //     if(prodIngresado.toUpperCase() == "CUCHILLO" || prodIngresado.toUpperCase() == "CUCHILLOS" ){
 //         encontro = true;
 //         $("#prodBuscado").val("");
-//         $(".img__card").remove();
+//         $(".prod__card").remove();
 //         for (let i=0 ; i<arrProductos.cuchillos.length ; i++){
 //             setCard(arrProductos.cuchillos[i].nombre, arrProductos.cuchillos[i].descripcion, "../img/"+arrProductos.cuchillos[i].img, arrProductos.cuchillos[i].precio,"article-prod");
 //         };
-//         $(".article-prod .img__card").css("animation-name", "ani-translate-ing")
-//         $(".article-prod .img__card").css("animation-duration", "1.5s");
+//         $(".article-prod .prod__card").css("animation-name", "ani-translate-ing")
+//         $(".article-prod .prod__card").css("animation-duration", "1.5s");
 //     }else if(prodIngresado.toUpperCase() == "MATE" || prodIngresado.toUpperCase() == "MATES" ){
 //         encontro = true;
 //         $("#prodBuscado").val("");
-//         $(".img__card").remove();
+//         $(".prod__card").remove();
 //         for (let i=0 ; i<arrProductos.mates.length ; i++){
 //             setCard(arrProductos.mates[i].nombre, arrProductos.mates[i].descripcion, "../img/"+arrProductos.mates[i].img, arrProductos.mates[i].precio,"article-prod");
 //         };
-//         $(".article-prod .img__card").css("animation-name", "ani-translate-ing")
-//         $(".article-prod .img__card").css("animation-duration", "1.5s");
+//         $(".article-prod .prod__card").css("animation-name", "ani-translate-ing")
+//         $(".article-prod .prod__card").css("animation-duration", "1.5s");
 //     }else if(prodIngresado.toUpperCase() == "BOMBILLA" || prodIngresado.toUpperCase() == "BOMBILLAS" ){
 //         encontro = true;
 //         $("#prodBuscado").val("");
-//         $(".img__card").remove();
+//         $(".prod__card").remove();
 //         for (let i=0 ; i<arrProductos.bombillas.length ; i++){
 //             setCard(arrProductos.bombillas[i].nombre, arrProductos.bombillas[i].descripcion, "../img/"+arrProductos.bombillas[i].img, arrProductos.bombillas[i].precio,"article-prod");
 //         };
-//         $(".article-prod .img__card").css("animation-name", "ani-translate-ing")
-//         $(".article-prod .img__card").css("animation-duration", "1.5s");
+//         $(".article-prod .prod__card").css("animation-name", "ani-translate-ing")
+//         $(".article-prod .prod__card").css("animation-duration", "1.5s");
 //     }else if(prodIngresado.toUpperCase() == "BOLEADORA" || prodIngresado.toUpperCase() == "BOLEADORAS" ){
 //         encontro = true;
 //         $("#prodBuscado").val("");
-//         $(".img__card").remove();
+//         $(".prod__card").remove();
 //         for (let i=0 ; i<arrProductos.boleadoras.length ; i++){
 //             setCard(arrProductos.boleadoras[i].nombre, arrProductos.boleadoras[i].descripcion, "../img/"+arrProductos.boleadoras[i].img, arrProductos.boleadoras[i].precio,"article-prod");
 //         };
-//         $(".article-prod .img__card").css("animation-name", "ani-translate-ing");
-//         $(".article-prod .img__card").css("animation-duration", "1.5s");
+//         $(".article-prod .prod__card").css("animation-name", "ani-translate-ing");
+//         $(".article-prod .prod__card").css("animation-duration", "1.5s");
 //     }else { ///No se ingreso un tipo
-//         $(".img__card").remove();
+//         $(".prod__card").remove();
 //         for (let i=0 ; i<arrProductos.cuchillos.length ; i++){
 //             if (arrProductos.cuchillos[i].nombre.toUpperCase().includes(prodIngresado.toUpperCase())){
 //                 encontro = true;
@@ -152,8 +152,8 @@ function setCard (titulo, descripcion, imagen, precio, contenedor){
 //                 setCard(arrProductos.boleadoras[i].nombre, arrProductos.boleadoras[i].descripcion, "../img/"+arrProductos.boleadoras[i].img, arrProductos.boleadoras[i].precio,"article-prod");
 //             }
 //         };
-//         $(".article-prod .img__card").css("animation-name", "ani-translate-ing");
-//         $(".article-prod .img__card").css("animation-duration", "1.5s");
+//         $(".article-prod .prod__card").css("animation-name", "ani-translate-ing");
+//         $(".article-prod .prod__card").css("animation-duration", "1.5s");
 //     }
 //     if(encontro == false){
 //         Swal.fire({
@@ -164,8 +164,8 @@ function setCard (titulo, descripcion, imagen, precio, contenedor){
 //         for (let i=0 ; i<arrProductos.cuchillos.length ; i++){
 //             setCard(arrProductos.cuchillos[i].nombre, arrProductos.cuchillos[i].descripcion, "../img/"+arrProductos.cuchillos[i].img, arrProductos.cuchillos[i].precio,"article-prod");
 //         };
-//         $(".article-prod .img__card").css("animation-name", "ani-translate-ing")
-//         $(".article-prod .img__card").css("animation-duration", "1.5s");
+//         $(".article-prod .prod__card").css("animation-name", "ani-translate-ing")
+//         $(".article-prod .prod__card").css("animation-duration", "1.5s");
 //     }
 //     $("#prodBuscado").val("");
  }; */
