@@ -1,5 +1,8 @@
 <?php
 // Este codigo lo creo en xampp htdocs y desde el bdt.js apunto a donde lo haya guardado. Esto para poder utilizar y combinar el liveserver con el servidor de php de xampp para utilizar la base de datos.
+
+// Hacer un archivo, bdtconnect.sys y uno backCuchillos.php usando un require o include. para ver si funciona.
+
 header("Access-Control-Allow-Origin: *"); // Permitir todas las conexiones de cualquier origen (puedes restringirlo según sea necesario)
 header("Access-Control-Allow-Headers: Content-Type");
 header("Access-Control-Allow-Methods: POST, OPTIONS"); // Incluye OPTIONS si Chrome está haciendo preflight requests
