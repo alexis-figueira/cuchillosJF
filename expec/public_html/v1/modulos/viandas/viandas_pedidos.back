@@ -17,6 +17,9 @@ elseif($ROUTE_OPC == 'Listado_Pedidos'){
 	$RETURN['TOTAL'] = 0;
 	$RETURN['PAGINAS'] = 1;
 	$RETURN['ROWS'] = [];
+	
+	die("hola");
+	
 	if($PP['C'] != 1){EJE($RETURN);}
 	$ARRAY_ORDER = array(1 => '`fecha` {METHOD}', 2 => '`tipo` {METHOD}', 3 => '`menu` {METHOD}');
 	$FORM = LISTADO_QUERY($ARRAY_ORDER);

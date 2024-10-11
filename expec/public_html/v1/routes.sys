@@ -1,7 +1,7 @@
 <?php
 $ROUTES_SYS = array(
-	"Sistema" 				=> array(	"Archivo" => "menu",	"PermisosDefault" => array(),	"Padre" => "Inicio",	"menu" => array("Display" => "Sistema",		"Icono" => "fa-house")),
-		"Usuarios"			=> array(	"Archivo" => "sistema/usuarios",	"PermisosDefault" => array(),	"Padre" => "Sistema",	"menu" => array("Display" => "Usuarios", 	"Icono" => "fa-user",),		"Permisos" => array('C','A','B','M')),
+	"Sistema" 				=> array(	"Archivo" => "menu",	"PermisosDefault" => array('C'),	"Padre" => "Inicio",	"menu" => array("Display" => "Sistema",		"Icono" => "fa-house")),
+		"Usuarios"			=> array(	"Archivo" => "sistema/usuarios",	"PermisosDefault" => array('C','A','B','M'),	"Padre" => "Sistema",	"menu" => array("Display" => "Usuarios", 	"Icono" => "fa-user",),		"Permisos" => array('C','A','B','M')),
 	
 	"Viandas" 				=> array(	"Archivo" => "menu",	"PermisosDefault" => array("C"),	"Padre" => "Inicio",	"menu" => array("Display" => "Viandas",		"Icono" => "fa-burger")),
 		"ViandasAdm" 		=> array(	"Archivo" => "menu",	"PermisosDefault" => array(),		"Padre" => "Viandas",	"menu" => array("Display" => "Administracion",		"Icono" => "fa-gear")),
@@ -48,9 +48,6 @@ $ROUTES_SYS = array(
 			"TurnosCarga" 		=> array(	"Archivo" => "turnos/turnos_carga",	"PermisosDefault" => array(),		"Padre" => "Turnos",	"menu" => array("Display" => "Carga",		"Icono" => "fa-calendar-days"),	"Permisos" => array('C','A','B','M','E')),
 			//"TurnosCalendario" 		=> array(	"Archivo" => "turnos/turnos",	"PermisosDefault" => array(),		"Padre" => "Turnos",	"menu" => array("Display" => "Carga",			"Icono" => "fa-calendar-days"),	"Permisos" => array('C','A','B','M','E')),
 			//"TurnosAdministrar" 		=> array(	"Archivo" => "turnos/turnos",	"PermisosDefault" => array(),		"Padre" => "Turnos",	"menu" => array("Display" => "Administrar",		"Icono" => "fa-calendar-days"),	"Permisos" => array('C','A','B','M','E')),
-	
-	
-	
 	
 	"Inicio"				=> array(	"Archivo" => "menu",	"PermisosDefault" => array('C')),
 	"Perfil"				=> array(	"Archivo" => "perfil",	"PermisosDefault" => array('C')),

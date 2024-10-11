@@ -150,21 +150,21 @@ $SYS_FOLDER['ARCHIVOS']	= '/files/';
 $SYS_FOLDER['SQL'] 		= '/sql/';
 
 //SESSION
-$CFG_SESSION['LASTLOGIN']		= 'CodeUser';  		//NOMBRE DE USUARIO
-$CFG_SESSION['LASTHASH']		= 'CodeHash';   	//HASH DE USUARIO
-$CFG_SESSION['NAME']			= 'CodeName';		//NOMBRE DE LA SESSION
-$CFG_SESSION['CONFIG']			= ['use_strict_mode' => true, 'cookie_domain' => $_SERVER['HTTP_HOST'], 'cookie_secure' => true, 'cookie_samesite' => 'Strict'];
+// $CFG_SESSION['LASTLOGIN']		= 'CodeUser';  		//NOMBRE DE USUARIO
+// $CFG_SESSION['LASTHASH']		= 'CodeHash';   	//HASH DE USUARIO
+// $CFG_SESSION['NAME']			= 'CodeName';		//NOMBRE DE LA SESSION
+// $CFG_SESSION['CONFIG']			= ['use_strict_mode' => true, 'cookie_domain' => $_SERVER['HTTP_HOST'], 'cookie_secure' => true, 'cookie_samesite' => 'Strict'];
 
 //TIMEZONE
 date_default_timezone_set('America/Argentina/Buenos_Aires');
 
 //SMTP ENVIO DE MAILS
-$SMTP_MAIL['HOST'] 			= 'smtp.office365.com';
-$SMTP_MAIL['PORT'] 			= '587';
-$SMTP_MAIL['FROM'] 			= 'contacto@das.gob.ar';
-$SMTP_MAIL['NOMBRE'] 		= 'Contacto Das';
-$SMTP_MAIL['CUENTA'] 		= 'sio@das.gob.ar';
-$SMTP_MAIL['PASSWORD'] 		= 'Kug15666';
+// $SMTP_MAIL['HOST'] 			= 'smtp.office365.com';
+// $SMTP_MAIL['PORT'] 			= '587';
+// $SMTP_MAIL['FROM'] 			= 'contacto@das.gob.ar';
+// $SMTP_MAIL['NOMBRE'] 		= 'Contacto Das';
+// $SMTP_MAIL['CUENTA'] 		= 'sio@das.gob.ar';
+// $SMTP_MAIL['PASSWORD'] 		= 'Kug15666';
 
 $ROUTE_ACT 		= "Inicio";
 $ROUTE_OPC 		= "";
@@ -174,10 +174,10 @@ $ROUTE_FILE 	= "";
 $TABLE_FUNCTION = (array) array();
 
 //VALIDACION PASSWORD
-$VALIDAPASS['MIN']			= 6; 		//CARACTERES MINIMOS
-$VALIDAPASS['MAX']			= 11;		//CARACTERES MAXIMOS
-$VALIDAPASS['MINISCULA']	= TRUE; 	//VALIDA AL MENOS 1 MINUSCULA
-$VALIDAPASS['MAYUSCULA']	= TRUE;	    //VALIDA AL MENOS 1 MAYUSCULA
-$VALIDAPASS['NUMERO']		= TRUE;		//VALIDA AL MENOS 1 NUMERO
-$VALIDAPASS['LIFE']			= 90;		//CANTIDAD DE DIAS
+// $VALIDAPASS['MIN']			= 6; 		//CARACTERES MINIMOS
+// $VALIDAPASS['MAX']			= 11;		//CARACTERES MAXIMOS
+// $VALIDAPASS['MINISCULA']	= TRUE; 	//VALIDA AL MENOS 1 MINUSCULA
+// $VALIDAPASS['MAYUSCULA']	= TRUE;	    //VALIDA AL MENOS 1 MAYUSCULA
+// $VALIDAPASS['NUMERO']		= TRUE;		//VALIDA AL MENOS 1 NUMERO
+// $VALIDAPASS['LIFE']			= 90;		//CANTIDAD DE DIAS
 ?>
